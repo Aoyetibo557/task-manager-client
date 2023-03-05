@@ -179,6 +179,19 @@ const Sidebar = () => {
               />
             )}
           </div>
+
+          <div>
+            <div
+              className={`font-light text-sm golos-font tracking-widest ${
+                theme === "light" ? "text-task-dark" : "text-task-light-white"
+              }`}>
+              ARCHIVED TASKS (0)
+            </div>
+
+            <div>
+              {/* this will have all tasks, tasks by board and others */}
+            </div>
+          </div>
         </div>
       </div>
 

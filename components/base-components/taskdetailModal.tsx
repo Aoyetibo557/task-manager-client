@@ -2,6 +2,12 @@ import React, { useState, Dispatch, SetStateAction } from "react";
 import Modal from "../Utility/Modal/modal";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Task } from "@/lib/utils/types";
+import type { MenuProps } from "antd";
+import { Dropdown } from "antd";
+import { archiveTask, deleteTask } from "@/lib/queries/task";
+import { useAuth } from "@/lib/hooks/useAuth";
+import { ActionTypes } from "@/lib/utils/actions";
+import { message } from "antd";
 
 type Props = {
   title: string;
@@ -18,6 +24,7 @@ type Props = {
 
 const TaskDetailModal = (props: Props) => {
   const [status, setStatus] = useState(props.task.status);
+  const { dispatch } = useAuth();
 
   const handleUpdateStatus = (status: string) => {
     setStatus(status);
@@ -26,6 +33,59 @@ const TaskDetailModal = (props: Props) => {
       props.updateStatus("status", status);
     }
   };
+
+  const handleArchive = async () => {
+    const res = await archiveTask(props.task.taskId);
+
+    if (res.status === "success") {
+      message.success(res.message);
+      props.setOpen(false);
+      dispatch({
+        type: ActionTypes.TASK_UPDATED,
+        payload: true,
+      });
+    } else {
+      if (res.status === "error") {
+        message.error(res.message);
+      }
+    }
+  };
+
+  const handleDelete = async () => {
+    const res = await deleteTask(props.task.taskId);
+
+    if (res.status === "success") {
+      message.success(res.message);
+      props.setOpen(false);
+      dispatch({
+        type: ActionTypes.TASK_UPDATED,
+        payload: true,
+      });
+    } else {
+      if (res.status === "error") {
+        message.error(res.message);
+      }
+    }
+  };
+
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <button type="submit" onClick={handleDelete}>
+          Delete
+        </button>
+      ),
+    },
+    {
+      key: "2",
+      label: (
+        <button type="submit" onClick={handleArchive}>
+          Archive
+        </button>
+      ),
+    },
+  ];
 
   return (
     <Modal
@@ -36,7 +96,14 @@ const TaskDetailModal = (props: Props) => {
           }`}>
           <div className="w-3/4">{props.task.name}</div>
 
-          <BsThreeDotsVertical className="cursor-pointer" />
+          <div>
+            <Dropdown
+              menu={{ items }}
+              trigger={["click"]}
+              placement="bottomRight">
+              <BsThreeDotsVertical className="cursor-pointer" />
+            </Dropdown>
+          </div>
         </div>
       }
       open={props.open}

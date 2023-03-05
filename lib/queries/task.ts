@@ -7,6 +7,8 @@ const GET_TASKS_ROUTE = "/tasks/getboardtasks";
 const UPDATE_TASK_ROUTE = "/tasks/updatetask";
 const DELETE_TASK_ROUTE = "/tasks/deletetask";
 const UPDATE_TASK_STATUS = "/tasks/updatetaskstatus";
+const ARCHIVE_TASK_ROUTE = "/tasks/archivetask";
+const GET_ARCHIVED_TASKS_ROUTE = "/tasks/getarchivedtasks";
 
 // create a new task
 async function createTask(task: Task) {
@@ -40,4 +42,25 @@ async function updateTaskStatus(taskid: string, status: string) {
   return data;
 }
 
-export { createTask, getBoardTasks, updateTask, deleteTask, updateTaskStatus };
+// archive a task
+async function archiveTask(taskid: string) {
+  const { data } = await API.put<Task>(`${ARCHIVE_TASK_ROUTE}/${taskid}`);
+  return data;
+}
+
+// get all archived tasks for a board
+async function getArchivedTasks(boardid: string) {
+  const { data } = await API.get<Task[]>(
+    `${GET_ARCHIVED_TASKS_ROUTE}/${boardid}`
+  );
+  return data;
+}
+
+export {
+  createTask,
+  getBoardTasks,
+  updateTask,
+  deleteTask,
+  updateTaskStatus,
+  archiveTask,
+};
