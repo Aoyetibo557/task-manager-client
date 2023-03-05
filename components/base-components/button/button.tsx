@@ -4,10 +4,17 @@ type props = {
   label: string;
   bgColor?: "primary" | "secondary" | "tertiary" | "quaternary";
   onClick?: () => void;
+  className?: string;
   theme?: string;
 };
 
-export const Button = ({ label, bgColor, onClick, theme }: props) => {
+export const Button = ({
+  label,
+  bgColor,
+  onClick,
+  theme,
+  className,
+}: props) => {
   const getBgColor = () => {
     switch (bgColor) {
       case "primary":
@@ -24,7 +31,7 @@ export const Button = ({ label, bgColor, onClick, theme }: props) => {
   };
   return (
     <button
-      className={`golos-font p-3 rounded-lg text-white font-bold ${getBgColor()} ${theme}`}
+      className={`golos-font p-2 rounded-lg text-white font-bold ${getBgColor()} ${theme} ${className}}`}
       onClick={onClick}>
       {label}
     </button>

@@ -1,7 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import API from "../../../lib/hooks/axios";
 import { auth } from "../../../lib/firebase";
-import axios from "axios";
 
 const LOGIN_ROUTE = "/auth/login";
 const SIGNUP_ROUTE = "/auth/signup";
@@ -15,10 +14,19 @@ type AuthContextType = {
   signUp: (email: string, password: string) => Promise<void>;
   findUserByEmail: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
+  dispatch: (action: { type: string; payload: {} }) => void;
+  isTaskCreated: boolean;
 };
 
 type AuthProviderProps = {
   children: React.ReactNode;
+};
+
+export const AuthActionTypes = {
+  UPDATE_USER: "UPDATE_USER",
+  TASK_CREATED: "TASK_CREATED",
+  TASK_UPDATED: "TASK_UPDATED",
+  TASK_DELETED: "TASK_DELETED",
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -29,6 +37,8 @@ export const AuthContext = createContext<AuthContextType>({
   signUp: async () => {},
   findUserByEmail: async () => {},
   signOut: async () => {},
+  dispatch: () => {},
+  isTaskCreated: false,
 } as AuthContextType);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
@@ -36,6 +46,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState<Error | null>(null);
+  const [isTaskCreated, setIsTaskCreated] = useState(false);
 
   const handleSetUser = (user: {}) => {
     localStorage.setItem("task-user", JSON.stringify(user));
@@ -111,6 +122,20 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const dispatch = (action: { type: string; payload: {} }) => {
+    setIsTaskCreated(false);
+    switch (action.type) {
+      case AuthActionTypes.UPDATE_USER:
+        setUser(action.payload);
+        break;
+      case AuthActionTypes.TASK_CREATED:
+        setIsTaskCreated(action.payload);
+        break;
+      default:
+        break;
+    }
+  };
+
   useEffect(() => {
     checkIsLoggedIn();
     const unsubscribe = auth.onAuthStateChanged(handleAuthStateChanged);
@@ -127,6 +152,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     signOut,
     setUser,
     isLoggedIn,
+    dispatch,
+    isTaskCreated,
   };
 
   return (
