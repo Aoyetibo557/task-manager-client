@@ -17,6 +17,7 @@ interface Task {
   userId?: string;
   subtasks?: Task[];
   timestamp?: string;
+  parentTaskId?: string;
 }
 
 const BoardColumn = ({ columntype, tasks, theme }: BoardColumnProps) => {

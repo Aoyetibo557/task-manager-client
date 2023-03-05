@@ -1,6 +1,7 @@
 import React, { useState, Dispatch, SetStateAction } from "react";
 import Modal from "../Utility/Modal/modal";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import { Task } from "@/lib/utils/types";
 
 type Props = {
   title: string;
@@ -11,28 +12,18 @@ type Props = {
   setOpen: Dispatch<SetStateAction<boolean>>;
   theme?: string;
   task: Task;
-  updateStatus?: (status: string) => void;
+  updateStatus?: (name: keyof Task, value: string) => void;
   onClick: () => void;
 };
 
-interface Task {
-  name: string;
-  description: string;
-  taskid?: string;
-  status: string;
-  boardId?: string;
-  userId?: string;
-  subtasks: Task[];
-  timestamp?: string;
-}
-
 const TaskDetailModal = (props: Props) => {
-  const [status, setStatus] = React.useState(props.task.status);
+  const [status, setStatus] = useState(props.task.status);
 
   const handleUpdateStatus = (status: string) => {
     setStatus(status);
+
     if (props.task.status !== status) {
-      props.updateStatus && props.updateStatus(status);
+      props.updateStatus("status", status);
     }
   };
 
@@ -71,9 +62,7 @@ const TaskDetailModal = (props: Props) => {
               }
             `}
             value={status}
-            onChange={(e) => {
-              handleUpdateStatus(e.target.value);
-            }}>
+            onChange={(e) => handleUpdateStatus(e.target.value)}>
             <option value="todo">ToDo</option>
             <option value="doing">Doing</option>
             <option value="done">Done</option>

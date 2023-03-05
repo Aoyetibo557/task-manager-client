@@ -1,22 +1,12 @@
 import API from "../hooks/axios";
 import { auth } from "../firebase.js";
+import { Task } from "../utils/types";
 
 const CREATE_TASK_ROUTE = "/tasks/createtask";
 const GET_TASKS_ROUTE = "/tasks/getboardtasks";
 const UPDATE_TASK_ROUTE = "/tasks/updatetask";
 const DELETE_TASK_ROUTE = "/tasks/deletetask";
 const UPDATE_TASK_STATUS = "/tasks/updatetaskstatus";
-
-interface Task {
-  taskname: string;
-  description?: string;
-  taskid?: string;
-  boardId: string;
-  userId: string;
-  status: string;
-  subtasks?: Task[];
-  timestamp?: string;
-}
 
 // create a new task
 async function createTask(task: Task) {
@@ -44,9 +34,9 @@ async function deleteTask(taskid: string) {
 
 // update a task status
 async function updateTaskStatus(taskid: string, status: string) {
-  const { data } = await API.put<Task>(
-    `${UPDATE_TASK_STATUS}/${taskid}/${status}`
-  );
+  const { data } = await API.put<Task>(`${UPDATE_TASK_STATUS}/${taskid}`, {
+    status,
+  });
   return data;
 }
 

@@ -94,7 +94,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`h-screen w-1/5 p-4 flex flex-col justify-between
+      className={`w-1/5 p-4 flex flex-col justify-between
       ${
         theme === "light"
           ? "bg-task-light-white border-r-[0.6px] border-neutral-300"

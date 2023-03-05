@@ -2,6 +2,7 @@ import React from "react";
 import Modal from "../Utility/Modal/modal";
 import { Button } from "../base-components/button/button";
 import { message } from "antd";
+import { Task } from "@/lib/utils/task";
 
 type Props = {
   title: string;
@@ -14,17 +15,6 @@ type Props = {
   onInputChange?: (name: keyof Task, value: string) => void;
   onClick?: () => void;
 };
-
-interface Task {
-  name: string;
-  description: string;
-  taskid?: string;
-  status: string;
-  boardId?: string;
-  userId?: string;
-  subtasks: Task[];
-  timestamp?: string;
-}
 
 const AddTaskModal = (props: Props) => {
   const handleClick = () => {

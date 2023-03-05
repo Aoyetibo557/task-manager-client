@@ -2,25 +2,46 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import TaskDetailModal from "../base-components/taskdetailModal";
 import { truncate } from "@/lib/utils/truncate";
-
+import { Task } from "@/lib/utils/task";
+import { updateTaskStatus } from "@/lib/queries/task";
+import { useAuth } from "@/lib/hooks/useAuth";
+import { message } from "antd";
+import { ActionTypes } from "@/lib/utils/actions";
 type Props = {
   task: Task;
   theme: string;
 };
 
-interface Task {
-  name: string;
-  description: string;
-  taskid?: string;
-  status: string;
-  boardId?: string;
-  userId?: string;
-  subtasks?: Task[];
-  timestamp?: string;
-}
-
 export const TaskCard = ({ task, theme }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [status, setStatus] = useState("");
+  const { dispatch, isTaskActionDispatched } = useAuth();
+
+  const updateStatus = (name: keyof Task, value: string) => {
+    setStatus(value);
+  };
+
+  const handleUpdateStatus = async () => {
+    try {
+      const res = await updateTaskStatus(task.taskId, status);
+
+      if (res.status === "success") {
+        message.success(res.message);
+        setIsModalOpen(false);
+        dispatch({
+          type: ActionTypes.TASK_UPDATED,
+          payload: true,
+        });
+      } else {
+        if (res.status === "error") {
+          message.error(res.message);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+      message.error(`Something went wrong, ${error.message}`);
+    }
+  };
 
   return (
     <div
@@ -55,6 +76,8 @@ export const TaskCard = ({ task, theme }: Props) => {
           theme={theme}
           open={isModalOpen}
           setOpen={setIsModalOpen}
+          updateStatus={updateStatus}
+          onClick={handleUpdateStatus}
         />
       )}
     </div>

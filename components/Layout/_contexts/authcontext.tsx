@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import API from "../../../lib/hooks/axios";
 import { auth } from "../../../lib/firebase";
-
+import { ActionTypes } from "@/lib/utils/actions";
 const LOGIN_ROUTE = "/auth/login";
 const SIGNUP_ROUTE = "/auth/signup";
 const FINDUSERBYEMAIL_ROUTE = "/auth/finduser";
@@ -15,18 +15,11 @@ type AuthContextType = {
   findUserByEmail: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
   dispatch: (action: { type: string; payload: {} }) => void;
-  isTaskCreated: boolean;
+  isTaskActionDispatched: boolean;
 };
 
 type AuthProviderProps = {
   children: React.ReactNode;
-};
-
-export const AuthActionTypes = {
-  UPDATE_USER: "UPDATE_USER",
-  TASK_CREATED: "TASK_CREATED",
-  TASK_UPDATED: "TASK_UPDATED",
-  TASK_DELETED: "TASK_DELETED",
 };
 
 export const AuthContext = createContext<AuthContextType>({
@@ -38,7 +31,7 @@ export const AuthContext = createContext<AuthContextType>({
   findUserByEmail: async () => {},
   signOut: async () => {},
   dispatch: () => {},
-  isTaskCreated: false,
+  isTaskActionDispatched: false,
 } as AuthContextType);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
@@ -46,7 +39,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [isTaskCreated, setIsTaskCreated] = useState(false);
+  const [isTaskActionDispatched, setIsTaskAction] = useState(false);
 
   const handleSetUser = (user: {}) => {
     localStorage.setItem("task-user", JSON.stringify(user));
@@ -123,13 +116,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   const dispatch = (action: { type: string; payload: {} }) => {
-    setIsTaskCreated(false);
+    setIsTaskAction(false);
     switch (action.type) {
-      case AuthActionTypes.UPDATE_USER:
+      case ActionTypes.UPDATE_USER:
         setUser(action.payload);
         break;
-      case AuthActionTypes.TASK_CREATED:
-        setIsTaskCreated(action.payload);
+      case ActionTypes.TASK_CREATED:
+        setIsTaskAction(action.payload);
+        break;
+      case ActionTypes.TASK_DELETED:
+        setIsTaskAction(action.payload);
+        break;
+      case ActionTypes.TASK_UPDATED:
+        setIsTaskAction(action.payload);
         break;
       default:
         break;
@@ -153,7 +152,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser,
     isLoggedIn,
     dispatch,
-    isTaskCreated,
+    isTaskActionDispatched,
   };
 
   return (

@@ -8,26 +8,17 @@ import AddTaskModal from "../../base-components/addtaskModal";
 import { message } from "antd";
 import { createTask } from "@/lib/queries/task";
 import { AuthActionTypes } from "@/components/Layout/_contexts/authcontext";
+import { Task } from "@/lib/utils/types";
 
 type Props = {
   boardname: string;
   boardId?: string;
 };
 
-interface Task {
-  name: string;
-  description: string;
-  taskid?: string;
-  status: string;
-  boardId?: string;
-  userId?: string;
-  subtasks: Task[];
-  timestamp?: string;
-}
-
 const DashboardHeader = (props: Props) => {
   const router = useRouter();
-  const { user, loading, isLoggedIn, dispatch, isTaskCreated } = useAuth();
+  const { user, loading, isLoggedIn, dispatch, isTaskActionDispatched } =
+    useAuth();
   const { theme } = useContext(ThemeContext);
   const [openModal, setOpenModal] = useState(false);
   const [error, setError] = useState("");
@@ -55,7 +46,6 @@ const DashboardHeader = (props: Props) => {
 
     try {
       const res = await createTask(newTask);
-      console.log(res);
       if (res.status === "success") {
         message.success("Task created successfully");
         setOpenModal(false);

@@ -2,22 +2,12 @@ import React, { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "@/components/Layout/_contexts/themecontext";
 import { BsInbox } from "react-icons/bs";
 import BoardColumn from "@/components/_board/boardcolumn";
+import { Task } from "@/lib/utils/task";
 
 type Props = {
   boardtasks: Task[];
   loading: boolean;
 };
-
-interface Task {
-  name: string;
-  description: string;
-  taskid?: string;
-  status: string;
-  boardId?: string;
-  userId?: string;
-  subtasks: Task[];
-  timestamp?: string;
-}
 
 const BoardTable = ({ boardtasks, loading }: Props) => {
   const { theme } = useContext(ThemeContext);

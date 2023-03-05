@@ -7,17 +7,7 @@ import BoardTable from "@/components/_board/boardtable";
 import { getBoardTasks } from "@/lib/queries/task";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { AuthContext } from "@/components/Layout/_contexts/authcontext";
-
-interface Task {
-  name: string;
-  description: string;
-  taskid: string;
-  status: string;
-  boardId?: string;
-  userId?: string;
-  subtasks: Task[];
-  timestamp?: string;
-}
+import { Task } from "@/lib/utils/types";
 
 const BoardDetail = () => {
   const router = useRouter();
@@ -30,7 +20,7 @@ const BoardDetail = () => {
     user,
     loading: authLoading,
     isLoggedIn,
-    isTaskCreated,
+    isTaskActionDispatched,
     dispatch,
   } = useAuth();
 
@@ -52,7 +42,7 @@ const BoardDetail = () => {
   useEffect(() => {
     setLoading(true);
     const unsubscribe = handleGetBoardTasks();
-    if (isTaskCreated) {
+    if (isTaskActionDispatched) {
       handleGetBoardTasks();
     }
     return () => {
@@ -62,7 +52,7 @@ const BoardDetail = () => {
         payload: false,
       });
     };
-  }, [id, name, isTaskCreated]);
+  }, [id, name, isTaskActionDispatched]);
 
   return (
     <div
