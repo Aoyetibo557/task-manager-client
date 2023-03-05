@@ -5,14 +5,21 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import { useState, useEffect, useContext } from "react";
 import { ThemeContext } from "../_contexts/themecontext";
 import AddTaskModal from "../../base-components/addtaskModal";
-import { message } from "antd";
 import { createTask } from "@/lib/queries/task";
 import { AuthActionTypes } from "@/components/Layout/_contexts/authcontext";
 import { Task } from "@/lib/utils/types";
+import type { MenuProps } from "antd";
+import { Dropdown, message } from "antd";
+import Link from "next/link";
+import { IoSettingsOutline } from "react-icons/io5";
+import { IoMdHelpCircleOutline } from "react-icons/io";
+import { HiOutlineUserCircle } from "react-icons/hi";
+import { MdLogout } from "react-icons/md";
 
 type Props = {
   boardname: string;
   boardId?: string;
+  contentType?: "board" | "page";
 };
 
 const DashboardHeader = (props: Props) => {
@@ -34,6 +41,56 @@ const DashboardHeader = (props: Props) => {
       [name]: value,
     }));
   };
+
+  const items: MenuProps["items"] = [
+    {
+      key: "1",
+      label: (
+        <Link href={`/profile/${user.email}`} type="submit" onClick={() => {}}>
+          {`${user?.firstName} ${user?.lastName}`}
+          <div>
+            <span className="text-xs text-gray-400">{user?.email}</span>
+          </div>
+        </Link>
+      ),
+      icon: <HiOutlineUserCircle className="mr-2 w-5 h-5" />,
+    },
+    {
+      key: "2",
+      type: "divider",
+    },
+    {
+      key: "3",
+      label: (
+        <Link
+          className="flex-flex-row items-center"
+          href={`/setting/${user.email}`}
+          type="submit"
+          onClick={() => {}}>
+          Account Settings
+        </Link>
+      ),
+      icon: <IoSettingsOutline className="mr-2 w-5 h-5" />,
+    },
+    {
+      key: "4",
+      label: (
+        <Link href="/hlep" type="submit" onClick={() => {}}>
+          Help & Feedback
+        </Link>
+      ),
+      icon: <IoMdHelpCircleOutline className="mr-2 w-5 h-5" />,
+    },
+    {
+      key: "5",
+      type: "divider",
+    },
+    {
+      key: "6",
+      label: <button type="submit">Log out</button>,
+      icon: <MdLogout className="mr-2 w-5 h-5" />,
+    },
+  ];
 
   const handleCreateTask = async () => {
     const newTask = {
@@ -81,18 +138,20 @@ const DashboardHeader = (props: Props) => {
       </div>
 
       <div className={`flex flex-row gap-4`}>
-        <button
-          className={`flex flex-row items-center justify-center gap-1 p-2  w-40 center rounded-full golos-font text-sm font-light 
+        {props.contentType === "board" && (
+          <button
+            className={`flex flex-row items-center justify-center gap-1 p-2  w-40 center rounded-full golos-font text-sm font-light 
         ${
           theme === "light"
             ? "bg-task-sidebar-light-dark text-task-light-white hover:bg-opacity-100 bg-opacity-75"
             : "bg-task-sidebar-dark text-task-light-white hover:border-neutral-200 border-[0.5px] border-neutral-400"
         }
         `}
-          onClick={() => setOpenModal(true)}>
-          <BsPlus className="w-5 h-5" />
-          Add New Task
-        </button>
+            onClick={() => setOpenModal(true)}>
+            <BsPlus className="w-5 h-5" />
+            Add New Task
+          </button>
+        )}
 
         {openModal && (
           <AddTaskModal
@@ -106,9 +165,20 @@ const DashboardHeader = (props: Props) => {
           />
         )}
 
-        <button>
-          <BsThreeDotsVertical className="w-6 h-6" />
-        </button>
+        <div>
+          <Dropdown
+            menu={{ items }}
+            trigger={["click"]}
+            placement="bottomRight">
+            <button
+              type="submit"
+              className={`${
+                theme === "light" ? "text-task-dark" : "text-task-light-white"
+              }`}>
+              <BsThreeDotsVertical className="cursor-pointer w-6 h-6" />
+            </button>
+          </Dropdown>
+        </div>
       </div>
     </div>
   );

@@ -9,6 +9,8 @@ import { RxDashboard } from "react-icons/rx";
 import { getUserBoards, createBoard } from "@/lib/queries/board";
 import { SidebarLink } from "../_sidebar/sidebarlink";
 import { message } from "antd";
+import { Toggle } from "../base-components/toggle/toggle";
+import { IoExitOutline } from "react-icons/io5";
 
 interface BoardLink {
   title: string;
@@ -25,11 +27,12 @@ type Board = {
 };
 
 const Sidebar = () => {
-  const { user, loading, isLoggedIn } = useAuth();
+  const { user, loading, isLoggedIn, signOut } = useAuth();
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
+  const [toggle, setToggle] = useState(false);
 
   const [userBoards, setUserBoards] = useState<BoardLink[]>([]);
   const [activeBoard, setActiveBoard] = useState<BoardLink>({
@@ -45,6 +48,11 @@ const Sidebar = () => {
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInput(e);
+  };
+
+  const handleSignOut = () => {
+    signOut();
+    router.push("/loginform");
   };
 
   const handleClick = () => {
@@ -82,6 +90,11 @@ const Sidebar = () => {
     }
   };
 
+  const handleToggle = () => {
+    setToggle(!toggle);
+    toggleTheme();
+  };
+
   // use the getUserBoards hook to get the boards from the database
   useEffect(() => {
     if (!loading) {
@@ -94,7 +107,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`w-1/5 p-4 flex flex-col justify-between
+      className={`fixed h-screen w-1/5 p-4 flex flex-col justify-between
       ${
         theme === "light"
           ? "bg-task-light-white border-r-[0.6px] border-neutral-300"
@@ -185,7 +198,7 @@ const Sidebar = () => {
               className={`font-light text-sm golos-font tracking-widest ${
                 theme === "light" ? "text-task-dark" : "text-task-light-white"
               }`}>
-              ARCHIVED TASKS (0)
+              ARCHIVED
             </div>
 
             <div>
@@ -195,40 +208,29 @@ const Sidebar = () => {
         </div>
       </div>
 
-      <div className="flex flex-col gap-4">
-        {theme === "light" ? (
-          <div
-            className={`p-3 rounded-lg w-12
-            ${theme === "light" ? "bg-task-sidebar-dark" : "bg-neutral-600"}
-          `}>
-            <BsSun
-              className={`cursor-pointer w-6 h-6
+      <div>
+        <Toggle
+          checked={toggle}
+          theme={theme}
+          onChange={handleToggle}
+          iconOff={<BsCloudMoon />}
+          iconOn={<BsSun />}
+          label="Task Mode"
+        />
+        <div>
+          <button
+            className={`flex flex-row items-center gap-2 p-2 font-light text-sm golos-font 
             ${
               theme === "light"
-                ? "text-white "
-                : "text-task-light-white bg-neutral-600 "
-            }
-            `}
-              onClick={toggleTheme}
-            />
-          </div>
-        ) : (
-          <div
-            className={`p-3 rounded-lg w-12
-            ${theme === "light" ? "bg-task-light" : "bg-neutral-600"}
-          `}>
-            <BsCloudMoon
-              className={`cursor-pointer w-6 h-6
-            ${
-              theme === "light"
-                ? "text-task-dark bg-neutral-200"
-                : "text-task-light-white bg-neutral-600 "
-            }
-            `}
-              onClick={toggleTheme}
-            />
-          </div>
-        )}
+                ? "text-task-dark hover:text-task-blue hover:bg-task-sidebar-light-dark hover:bg-opacity-10"
+                : "text-task-light-white hover:text-blue-400 hover:bg-task-sidebar-light-dark hover:bg-opacity-10"
+            }`}
+            type="button"
+            onClick={handleSignOut}>
+            Sign out
+            <IoExitOutline className="w-5 h-5" />
+          </button>
+        </div>
       </div>
     </div>
   );

@@ -45,6 +45,7 @@ const BoardDetail = () => {
     if (isTaskActionDispatched) {
       handleGetBoardTasks();
     }
+
     return () => {
       unsubscribe;
       dispatch({
@@ -52,15 +53,15 @@ const BoardDetail = () => {
         payload: false,
       });
     };
-  }, [id, name, isTaskActionDispatched]);
+  }, [id, name, isLoggedIn, isTaskActionDispatched]);
 
   return (
     <div
-      className={`w-full
+      className={`ml-80 pl-5 w-full h-screen
     ${theme === "light" ? "bg-task-light" : "bg-task-sidebar-dark"}
     `}>
       <div>
-        <DashboardHeader boardname={name} boardId={id} />
+        <DashboardHeader boardname={name} boardId={id} contentType="board" />
       </div>
       <div>
         <BoardTable boardtasks={tasks as Task[]} loading={loading} />

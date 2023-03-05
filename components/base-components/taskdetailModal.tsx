@@ -3,11 +3,10 @@ import Modal from "../Utility/Modal/modal";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { Task } from "@/lib/utils/types";
 import type { MenuProps } from "antd";
-import { Dropdown } from "antd";
+import { Dropdown, message } from "antd";
 import { archiveTask, deleteTask } from "@/lib/queries/task";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { ActionTypes } from "@/lib/utils/actions";
-import { message } from "antd";
 
 type Props = {
   title: string;
