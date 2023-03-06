@@ -50,11 +50,6 @@ const Sidebar = () => {
     setInput(e);
   };
 
-  const handleSignOut = () => {
-    signOut();
-    router.push("/loginform");
-  };
-
   const handleClick = () => {
     console.log("clicked", input);
   };
@@ -98,8 +93,10 @@ const Sidebar = () => {
   // use the getUserBoards hook to get the boards from the database
   useEffect(() => {
     if (!loading) {
-      if (!user || isLoggedIn === false) setError("You are not logged in");
-      else {
+      if (!user || isLoggedIn === false) {
+        router.push("/loginform");
+        setError("You are not logged in");
+      } else {
         getBoards();
       }
     }
@@ -217,20 +214,6 @@ const Sidebar = () => {
           iconOn={<BsSun />}
           label="Task Mode"
         />
-        <div>
-          <button
-            className={`flex flex-row items-center gap-2 p-2 font-light text-sm golos-font 
-            ${
-              theme === "light"
-                ? "text-task-dark hover:text-task-blue hover:bg-task-sidebar-light-dark hover:bg-opacity-10"
-                : "text-task-light-white hover:text-blue-400 hover:bg-task-sidebar-light-dark hover:bg-opacity-10"
-            }`}
-            type="button"
-            onClick={handleSignOut}>
-            Sign out
-            <IoExitOutline className="w-5 h-5" />
-          </button>
-        </div>
       </div>
     </div>
   );

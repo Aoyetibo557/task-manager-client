@@ -43,9 +43,9 @@ const BoardTable = ({ boardtasks, loading, searchQuery }: Props) => {
         `}>
         <div>
           <div
-            className={`flex flex-col h-96 justify-center items-center font-bold text-3xl opacity-50 golos-font mb-4`}>
+            className={`flex flex-col h-96 justify-center items-center font-medium text-xl golos-font mb-4`}>
             No Tasks For This Board Yet!
-            <BsInbox size={100} className={`opacity-50`} />
+            <BsInbox size={50} className={`opacity-50`} />
           </div>
         </div>
       </div>

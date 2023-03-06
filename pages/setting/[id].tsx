@@ -4,6 +4,8 @@ import { ThemeContext } from "@/components/Layout/_contexts/themecontext";
 import { useAuth } from "@/lib/hooks/useAuth";
 import DashboardLayout from "@/components/Layout/dashboardlayout";
 import DashboardHeader from "@/components/Layout/Header/dashboardheader";
+import { AiFillSetting } from "react-icons/ai";
+import { SettingsTab } from "@/components/_setting/settingstab";
 
 const AccountSetting = () => {
   const router = useRouter();
@@ -12,10 +14,34 @@ const AccountSetting = () => {
 
   return (
     <div
-      className={`ml-80 pl-5 w-full h-screen
+      className={`ml-80 pl-5 w-full h-full
     ${theme === "light" ? "bg-task-light" : "bg-task-sidebar-dark"}
     `}>
-      <DashboardHeader boardname={"Account Setting"} />
+      <DashboardHeader />
+
+      <div className="p-8">
+        <div className="flex flex-row items-center gap-4">
+          <AiFillSetting
+            className={`text-3xl ${
+              theme === "light"
+                ? "text-task-sidebar-dark"
+                : "text-task-light-white"
+            }`}
+          />
+          <div
+            className={`text-2xl golos-font font-medium ${
+              theme === "light"
+                ? "text-task-sidebar-dark"
+                : "text-task-light-white"
+            }`}>
+            Account Setting
+          </div>
+        </div>
+
+        <div className="m-10">
+          <SettingsTab theme={theme} userId={id} />
+        </div>
+      </div>
     </div>
   );
 };

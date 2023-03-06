@@ -18,7 +18,7 @@ import { ActionTypes } from "@/lib/utils/actions";
 import { SearchBar } from "@/components/base-components/searchbar/searchbar";
 
 type Props = {
-  boardname: string;
+  boardname?: string;
   boardId?: string;
   contentType?: "board" | "page";
   onSearch?: (query: string) => void;
@@ -26,8 +26,14 @@ type Props = {
 
 const DashboardHeader = (props: Props) => {
   const router = useRouter();
-  const { user, loading, isLoggedIn, dispatch, isTaskActionDispatched } =
-    useAuth();
+  const {
+    user,
+    signOut,
+    loading,
+    isLoggedIn,
+    dispatch,
+    isTaskActionDispatched,
+  } = useAuth();
   const [searchQuery, setSearchQuery] = useState("");
   const { theme } = useContext(ThemeContext);
   const [openModal, setOpenModal] = useState(false);
@@ -52,6 +58,11 @@ const DashboardHeader = (props: Props) => {
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const handleSignOut = () => {
+    signOut();
+    router.push("/loginform");
   };
 
   const items: MenuProps["items"] = [
@@ -102,7 +113,11 @@ const DashboardHeader = (props: Props) => {
     },
     {
       key: "6",
-      label: <button type="submit">Log out</button>,
+      label: (
+        <button type="submit" onClick={handleSignOut}>
+          Log out
+        </button>
+      ),
       icon: <MdLogout className="mr-2 w-5 h-5" />,
     },
   ];

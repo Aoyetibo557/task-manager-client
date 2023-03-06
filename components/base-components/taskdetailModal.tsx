@@ -7,6 +7,7 @@ import { Dropdown, message } from "antd";
 import { archiveTask, deleteTask } from "@/lib/queries/task";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { ActionTypes } from "@/lib/utils/actions";
+import { formatDate } from "@/lib/utils/truncate";
 
 type Props = {
   title: string;
@@ -150,6 +151,18 @@ const TaskDetailModal = (props: Props) => {
             </button>
           </div>
         )}
+
+        <div
+          className={`border-t-[0.6px] 
+        ${props.theme === "light" ? "border-neutral-400" : "border-neutral-600"}
+        `}>
+          <div
+            className={`text-sm golos-font font-normal mt-2
+          ${props.theme === "light" ? "text-neutral-500" : "text-neutral-400"}
+          `}>
+            This task was created on {formatDate(props.task?.timestamp || "")}
+          </div>
+        </div>
       </div>
     </Modal>
   );
