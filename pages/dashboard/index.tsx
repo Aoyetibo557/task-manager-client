@@ -11,7 +11,9 @@ const Dashboard = () => {
 
   useEffect(() => {
     if (!loading) {
-      if (!user || isLoggedIn === false) router.push("/loginform");
+      if (!user || !isLoggedIn) {
+        router.push("/loginform");
+      }
     }
   }, [user, loading, isLoggedIn]);
   return (
@@ -21,7 +23,7 @@ const Dashboard = () => {
     `}>
       <div className="flex flex-col items-center mt-10">
         This is the dashboard {isLoggedIn ? "logged in" : "not logged in"}{" "}
-        {user?.email} {user.userid}
+        {user?.email} {user?.userid}
       </div>
     </div>
   );

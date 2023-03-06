@@ -3,24 +3,30 @@ import { Button } from "@/components/base-components/button/button";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { Spin } from "antd";
 
 const Login = () => {
   const { findUserByEmail } = useAuth();
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async () => {
+    setLoading(true);
     try {
       const response = await findUserByEmail(email);
       const { user } = response;
       if (user) {
+        setLoading(false);
         router.push(`/loginform?email=${user.email}`);
       } else if (response.status === "error") {
+        setLoading(false);
         router.push("/signup");
       }
     } catch (error) {
       console.error(error);
+      setLoading(false);
     }
   };
 
@@ -46,7 +52,11 @@ const Login = () => {
           />
         </div>
         <div className="w-full">
-          <Button label="Continue" onClick={handleLogin} />
+          {loading ? (
+            <Spin size="large" />
+          ) : (
+            <Button label="Continue" onClick={handleLogin} />
+          )}
         </div>
       </div>
     </div>

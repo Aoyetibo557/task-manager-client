@@ -7,6 +7,7 @@ import {
   usePasswordValidate,
 } from "@/lib/hooks/useFormValidation";
 import { useAuth } from "@/lib/hooks/useAuth";
+import { Spin } from "antd";
 
 const LoginForm: NextPage<LoginFormProps> = () => {
   const router = useRouter();
@@ -23,11 +24,15 @@ const LoginForm: NextPage<LoginFormProps> = () => {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
+    setLoginError("");
 
     const isEmailValid = validateEmail(emailinput);
     const isPasswordValid = validatePassword(password);
 
     if (!isEmailValid || !isPasswordValid) {
+      setLoading(false);
+      setLoginError("Please enter valid email and password");
       return;
     }
 
@@ -35,7 +40,10 @@ const LoginForm: NextPage<LoginFormProps> = () => {
       const response = await signIn(emailinput, password);
       if (response.status === "error") {
         setLoginError(response.message);
+        setLoading(false);
       } else if (response.status === "success") {
+        setLoginError("");
+        setLoading(false);
         setUser(response.user);
         router.push("/dashboard");
       }
@@ -44,14 +52,6 @@ const LoginForm: NextPage<LoginFormProps> = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (!email) {
-  //     router.push("/login");
-  //     return;
-  //   }
-  //   setLoading(false);
-  // }, [email]);
-  // if (loading) return <div>Loading...</div>;
   return (
     <div className="flex flex-col items-center mt-10">
       <div className="flex flex-col w-2/5 gap-3">
@@ -75,6 +75,7 @@ const LoginForm: NextPage<LoginFormProps> = () => {
               className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
               placeholder="Email"
               value={emailinput}
+              required
               onChange={(e) => setEmail(e.target.value)}
             />
             <div>
@@ -89,6 +90,7 @@ const LoginForm: NextPage<LoginFormProps> = () => {
               className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
               placeholder="Password"
               value={password}
+              required
               onChange={(e) => setPassword(e.target.value)}
             />
             <div>
@@ -100,7 +102,11 @@ const LoginForm: NextPage<LoginFormProps> = () => {
             </div>
           </div>
           <div className="w-full">
-            <Button label="Continue" onClick={handleLogin} />
+            {loading ? (
+              <Spin size="large" />
+            ) : (
+              <Button label={"Login"} onClick={handleLogin} />
+            )}
           </div>
         </form>
       </div>

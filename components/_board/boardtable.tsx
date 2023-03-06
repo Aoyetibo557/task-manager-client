@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useMemo } from "react";
 import { ThemeContext } from "@/components/Layout/_contexts/themecontext";
 import { BsInbox } from "react-icons/bs";
 import BoardColumn from "@/components/_board/boardcolumn";
@@ -7,9 +7,10 @@ import { Task } from "@/lib/utils/task";
 type Props = {
   boardtasks: Task[];
   loading: boolean;
+  searchQuery: string;
 };
 
-const BoardTable = ({ boardtasks, loading }: Props) => {
+const BoardTable = ({ boardtasks, loading, searchQuery }: Props) => {
   const { theme } = useContext(ThemeContext);
   const [donetasks, setDonetasks] = useState<Task[]>([]);
   const [doingtasks, setDoingtasks] = useState<Task[]>([]);
@@ -17,14 +18,22 @@ const BoardTable = ({ boardtasks, loading }: Props) => {
 
   // use effect to filter tasks by status into done, doing, todo
   useEffect(() => {
-    const donetasks = boardtasks.filter((task) => task.status === "done");
-    const doingtasks = boardtasks.filter((task) => task.status === "doing");
-    const todo = boardtasks.filter((task) => task.status === "todo");
+    let filteredTasks = boardtasks;
+
+    if (searchQuery) {
+      filteredTasks = boardtasks.filter((task) =>
+        task.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    const donetasks = filteredTasks.filter((task) => task.status === "done");
+    const doingtasks = filteredTasks.filter((task) => task.status === "doing");
+    const todo = filteredTasks.filter((task) => task.status === "todo");
 
     setDonetasks(donetasks);
     setDoingtasks(doingtasks);
     setTodo(todo);
-  }, [boardtasks]);
+  }, [boardtasks, searchQuery]);
 
   return boardtasks.length === 0 ? (
     <div className="flex flex-col w-full h-full p-5">

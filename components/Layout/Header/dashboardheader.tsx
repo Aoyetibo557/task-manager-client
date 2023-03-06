@@ -6,7 +6,6 @@ import { useState, useEffect, useContext } from "react";
 import { ThemeContext } from "../_contexts/themecontext";
 import AddTaskModal from "../../base-components/addtaskModal";
 import { createTask } from "@/lib/queries/task";
-import { AuthActionTypes } from "@/components/Layout/_contexts/authcontext";
 import { Task } from "@/lib/utils/types";
 import type { MenuProps } from "antd";
 import { Dropdown, message } from "antd";
@@ -15,17 +14,21 @@ import { IoSettingsOutline } from "react-icons/io5";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { MdLogout } from "react-icons/md";
+import { ActionTypes } from "@/lib/utils/actions";
+import { SearchBar } from "@/components/base-components/searchbar/searchbar";
 
 type Props = {
   boardname: string;
   boardId?: string;
   contentType?: "board" | "page";
+  onSearch?: (query: string) => void;
 };
 
 const DashboardHeader = (props: Props) => {
   const router = useRouter();
   const { user, loading, isLoggedIn, dispatch, isTaskActionDispatched } =
     useAuth();
+  const [searchQuery, setSearchQuery] = useState("");
   const { theme } = useContext(ThemeContext);
   const [openModal, setOpenModal] = useState(false);
   const [error, setError] = useState("");
@@ -34,6 +37,15 @@ const DashboardHeader = (props: Props) => {
     description: "",
     status: "",
   });
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    props.onSearch && props.onSearch(query);
+  };
+
+  const handleOpenModal = (query: string) => {
+    setSearchQuery(query);
+  };
 
   const handleInput = (name: keyof Task, value: string) => {
     setTaskObj((prevState) => ({
@@ -46,7 +58,10 @@ const DashboardHeader = (props: Props) => {
     {
       key: "1",
       label: (
-        <Link href={`/profile/${user.email}`} type="submit" onClick={() => {}}>
+        <Link
+          href={`/profile/${user?.userid}`}
+          type="submit"
+          onClick={() => {}}>
           {`${user?.firstName} ${user?.lastName}`}
           <div>
             <span className="text-xs text-gray-400">{user?.email}</span>
@@ -64,7 +79,7 @@ const DashboardHeader = (props: Props) => {
       label: (
         <Link
           className="flex-flex-row items-center"
-          href={`/setting/${user.email}`}
+          href={`/setting/${user?.userid}`}
           type="submit"
           onClick={() => {}}>
           Account Settings
@@ -107,7 +122,7 @@ const DashboardHeader = (props: Props) => {
         message.success("Task created successfully");
         setOpenModal(false);
         dispatch({
-          type: AuthActionTypes.TASK_CREATED,
+          type: ActionTypes.TASK_CREATED,
           payload: true,
         });
       } else {
@@ -116,7 +131,7 @@ const DashboardHeader = (props: Props) => {
         }
       }
     } catch (error) {
-      message.error("Something went wrong");
+      message.error(`Something went wrong, ${error.message}`);
       setError(error.message);
     }
   };
@@ -138,6 +153,9 @@ const DashboardHeader = (props: Props) => {
       </div>
 
       <div className={`flex flex-row gap-4`}>
+        <div>
+          <SearchBar theme={theme} onSearch={handleSearch} />
+        </div>
         {props.contentType === "board" && (
           <button
             className={`flex flex-row items-center justify-center gap-1 p-2  w-40 center rounded-full golos-font text-sm font-light 

@@ -23,7 +23,7 @@ export const TaskCard = ({ task, theme }: Props) => {
 
   const handleUpdateStatus = async () => {
     try {
-      const res = await updateTaskStatus(task.taskId, status);
+      const res = await updateTaskStatus(task?.taskId, status);
 
       if (res.status === "success") {
         message.success(res.message);

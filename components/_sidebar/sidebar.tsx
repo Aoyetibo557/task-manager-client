@@ -63,7 +63,7 @@ const Sidebar = () => {
     const newBoard = {
       name: input,
       description: "This is a new board",
-      userid: user.userid,
+      userid: user?.userid,
     };
 
     const data = await createBoard(newBoard);

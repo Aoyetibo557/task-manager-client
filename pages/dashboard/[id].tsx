@@ -16,6 +16,8 @@ const BoardDetail = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const {
     user,
     loading: authLoading,
@@ -39,6 +41,10 @@ const BoardDetail = () => {
     }
   };
 
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
   useEffect(() => {
     setLoading(true);
     const unsubscribe = handleGetBoardTasks();
@@ -57,14 +63,23 @@ const BoardDetail = () => {
 
   return (
     <div
-      className={`ml-80 pl-5 w-full h-screen
+      className={`ml-80 pl-5 w-full h-screen overflow-auto
     ${theme === "light" ? "bg-task-light" : "bg-task-sidebar-dark"}
     `}>
-      <div>
-        <DashboardHeader boardname={name} boardId={id} contentType="board" />
+      <div className="sticky top-0">
+        <DashboardHeader
+          boardname={name}
+          boardId={id}
+          contentType="board"
+          onSearch={handleSearch}
+        />
       </div>
       <div>
-        <BoardTable boardtasks={tasks as Task[]} loading={loading} />
+        <BoardTable
+          boardtasks={tasks as Task[]}
+          loading={loading}
+          searchQuery={searchQuery}
+        />
       </div>
     </div>
   );
