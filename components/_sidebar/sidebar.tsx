@@ -71,7 +71,7 @@ const Sidebar = () => {
   };
 
   const getBoards = async () => {
-    const data = await getUserBoards(user?.userid);
+    const data = await getUserBoards(user.userid);
     if (data.status === "success") {
       setUserBoards(data.boards);
       setBoardCount(data.boards?.length);
@@ -91,11 +91,12 @@ const Sidebar = () => {
       if (!user || isLoggedIn === false) {
         router.push("/loginform");
         setError("You are not logged in");
-      } else {
+      } else if (user.userid.length > 0) {
         getBoards();
       }
     }
-  }, [isLoggedIn, loading, user, router]);
+    getBoards();
+  }, [isLoggedIn, user, router]);
 
   return (
     <div
