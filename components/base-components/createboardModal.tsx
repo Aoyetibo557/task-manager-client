@@ -3,7 +3,6 @@ import Modal from "../Utility/Modal/modal";
 
 type Props = {
   title: string;
-  subtitle: string;
   className?: string;
   loading?: boolean;
   error?: Error | null;
@@ -13,14 +12,14 @@ type Props = {
   theme?: string;
   btnLabel?: string;
   inputVal?: string;
-  setInputVal?: Dispatch<SetStateAction<string>>;
+  setInputVal?: (e: any) => void;
 };
 
 const CreateBoardModal = (props: Props) => {
   const handleClick = () => {
-    props.onClick();
-    props.setOpen(false);
-    props.setInputVal("");
+    props.onClick && props.onClick();
+    props.setOpen && props.setOpen(false);
+    props.setInputVal && props.setInputVal("");
   };
   return (
     <Modal
@@ -59,7 +58,9 @@ const CreateBoardModal = (props: Props) => {
             }
             `}
             value={props.inputVal}
-            onChange={(e) => props.setInputVal(e.target.value)}
+            onChange={(e) =>
+              props.setInputVal && props.setInputVal(e.target.value)
+            }
             placeholder="e.g My Board"
           />
         </div>

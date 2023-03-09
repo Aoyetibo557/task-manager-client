@@ -12,7 +12,7 @@ const ProfilePage = () => {
 
   return (
     <div
-      className={`ml-80 pl-5 w-full h-screen
+      className={`w-full h-screen
     ${theme === "light" ? "bg-task-light" : "bg-task-sidebar-dark"}
     `}>
       <div>
@@ -22,7 +22,7 @@ const ProfilePage = () => {
   );
 };
 
-ProfilePage.getLayout = (page) => {
+ProfilePage.getLayout = (page: React.ReactNode) => {
   return <DashboardLayout>{page}</DashboardLayout>;
 };
 

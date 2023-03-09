@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 type props = {
-  label: string;
+  label: string | JSX.Element;
   bgColor?: "primary" | "secondary" | "other" | "quaternary";
   onClick?: () => void;
   className?: string;
@@ -24,7 +24,7 @@ export const Button = ({
           theme === "light" ? "bg-task-light" : "bg-task-dark"
         } hover:bg-task-dark`;
       case "secondary":
-        return "bg-red-500 hover:bg-green-600";
+        return "bg-blue-400 hover:bg-blue-500";
       case "other":
         return "bg-neutral-400 text-neutral-600 hover:bg-neutral-500";
       case "quaternary":

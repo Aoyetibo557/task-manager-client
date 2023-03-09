@@ -7,7 +7,7 @@ type Props = {
 };
 
 export const SearchBar = (props: Props) => {
-  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = (event: any) => {
     event.preventDefault();
     const query = event.currentTarget.value;
     props.onSearch(query);
@@ -18,7 +18,6 @@ export const SearchBar = (props: Props) => {
         type="text"
         // value={search}
         onChange={handleSearch}
-        placement="bottomRight"
         placeholder="e.g update the profie page avatar..."
         className={`w-96 p-3 h-full px-2 rounded-lg golos-font text-sm font-light border-[0.8px] 
         ${

@@ -1,4 +1,4 @@
-import PageLayout from "@/components/Layout/pagelayout";
+import PageLayout from "@/components/Layout/layout";
 import { Button } from "@/components/base-components/button/button";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
@@ -8,32 +8,50 @@ import {
 } from "@/lib/hooks/useFormValidation";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { Spin, message } from "antd";
+import { AuthType } from "@/lib/utils/types";
 
 const Signup = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [firstName, setFirstName] = useState<string | null>("");
-  const [lastName, setLastName] = useState<string | null>("");
-  const [emailinput, setEmail] = useState<string | null>("");
+  const [firstName, setFirstName] = useState<string | any>("");
+  const [lastName, setLastName] = useState<string | any>("");
+  const [emailinput, setEmail] = useState<string | any>("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [signupError, setSignupError] = useState<string | null>(null);
-  const [checkbox, setCheckbox] = useState(false);
+  const [signupError, setSignupError] = useState<string | any>(null);
+  const [checkbox, setCheckbox] = useState<boolean | any>(false);
 
-  const { signUp } = useAuth();
+  const { signUp } = useAuth() as AuthType;
 
   const { errorMessage: emailErrorMessage, validate: validateEmail } =
     useEmailValidate();
   const { errorMessage: passwordErrorMessage, validate: validatePassword } =
     usePasswordValidate();
 
-  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    const { name, value } = e.target;
+    if (name === "firstName") {
+      setFirstName(value);
+    } else if (name === "lastName") {
+      setLastName(value);
+    } else if (name === "email") {
+      setEmail(value);
+    } else if (name === "password") {
+      setPassword(value);
+    } else if (name === "confirmPassword") {
+      setConfirmPassword(value);
+    } else if (name === "checkbox") {
+      setCheckbox(!checkbox);
+    }
+  };
+
+  const handleSignup = async () => {
     setLoading(true);
     setSignupError("");
 
-    const isEmailValid = validateEmail(emailinput);
-    const isPasswordValid = validatePassword(password);
+    const isEmailValid = validateEmail(emailinput as any);
+    const isPasswordValid = validatePassword(password as any);
     const passwordMatch = password === confirmPassword;
 
     if (!isEmailValid || !isPasswordValid || !passwordMatch) {
@@ -65,7 +83,12 @@ const Signup = () => {
     }
 
     try {
-      const response = await signUp(emailinput, password, firstName, lastName);
+      const response = (await signUp(
+        emailinput,
+        password,
+        firstName,
+        lastName
+      )) as any;
 
       if (response.status === "error") {
         setSignupError(response.message);
@@ -75,7 +98,7 @@ const Signup = () => {
         router.push("/dashboard");
         setLoading(false);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
     }
   };
@@ -99,40 +122,45 @@ const Signup = () => {
               <input
                 className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
                 placeholder="First Name"
+                name="firstName"
                 value={firstName}
                 required
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={handleInput}
               />
               <input
                 className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
                 placeholder="Last Name"
+                name="lastName"
                 value={lastName}
                 required
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={handleInput}
               />
             </div>
             <div className="flex flex-col gap-3">
               <input
                 className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
                 placeholder="Email"
+                name="email"
                 value={emailinput}
                 required
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={handleInput}
               />
 
               <input
                 className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
                 placeholder="Password"
+                name="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={handleInput}
               />
 
               <input
                 className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
                 placeholder="Confirm Password"
+                name="confirmPassword"
                 value={confirmPassword}
                 required
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={handleInput}
               />
               <div className="text-sm font-medium border-b-[0.8px] border-neutral-300 pb-4">
                 Password must contain at least 8 characters, including 1
@@ -143,10 +171,11 @@ const Signup = () => {
               <div className="flex flex-row gap-3">
                 <input
                   type="checkbox"
+                  name="checkbox"
                   className="w-5 h-5 border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
                   value={checkbox}
                   required
-                  onChange={(e) => setCheckbox(e.target.checked)}
+                  onChange={handleInput}
                 />
                 <div className="font-light text-normal golos-font">
                   I have read and agree to the Terms of Service and Privacy
@@ -169,7 +198,7 @@ const Signup = () => {
   );
 };
 
-Signup.getLayout = (page) => {
+Signup.getLayout = (page: React.ReactNode) => {
   return <PageLayout>{page}</PageLayout>;
 };
 export default Signup;

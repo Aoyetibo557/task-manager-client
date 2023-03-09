@@ -2,7 +2,8 @@ import React, { useContext, useState, useEffect, useMemo } from "react";
 import { ThemeContext } from "@/components/Layout/_contexts/themecontext";
 import { BsInbox } from "react-icons/bs";
 import BoardColumn from "@/components/_board/boardcolumn";
-import { Task } from "@/lib/utils/task";
+import { Task } from "@/lib/utils/types";
+import { Spin } from "antd";
 
 type Props = {
   boardtasks: Task[];
@@ -22,7 +23,7 @@ const BoardTable = ({ boardtasks, loading, searchQuery }: Props) => {
 
     if (searchQuery) {
       filteredTasks = boardtasks.filter((task) =>
-        task.name.toLowerCase().includes(searchQuery.toLowerCase())
+        task?.name?.toLowerCase().includes(searchQuery?.toLowerCase())
       );
     }
 
@@ -42,11 +43,15 @@ const BoardTable = ({ boardtasks, loading, searchQuery }: Props) => {
         ${theme === "light" ? "text-task-dark" : "text-task-light-white"}
         `}>
         <div>
-          <div
-            className={`flex flex-col h-96 justify-center items-center font-medium text-xl golos-font mb-4`}>
-            No Tasks For This Board Yet!
-            <BsInbox size={50} className={`opacity-50`} />
-          </div>
+          {loading ? (
+            <Spin size="large" />
+          ) : (
+            <div
+              className={`flex flex-col h-96 justify-center items-center font-medium text-xl golos-font mb-4`}>
+              No Tasks For This Board Yet!
+              <BsInbox size={50} className={`opacity-50`} />
+            </div>
+          )}
         </div>
       </div>
     </div>

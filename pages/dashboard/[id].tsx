@@ -7,7 +7,7 @@ import BoardTable from "@/components/_board/boardtable";
 import { getBoardTasks } from "@/lib/queries/task";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { AuthContext } from "@/components/Layout/_contexts/authcontext";
-import { Task } from "@/lib/utils/types";
+import { Task, AuthType } from "@/lib/utils/types";
 
 const BoardDetail = () => {
   const router = useRouter();
@@ -23,8 +23,9 @@ const BoardDetail = () => {
     loading: authLoading,
     isLoggedIn,
     isTaskActionDispatched,
+    isTaskPinned,
     dispatch,
-  } = useAuth();
+  } = useAuth() as AuthType;
 
   const handleGetBoardTasks = async () => {
     setTasks([]);
@@ -34,9 +35,10 @@ const BoardDetail = () => {
       setError(boardtasks.message);
       setLoading(false);
     } else {
+      setLoading(false);
       if (boardtasks.status === "success") {
-        setLoading(false);
         setTasks(boardtasks.tasks);
+        setLoading(false);
       }
     }
   };
@@ -48,7 +50,7 @@ const BoardDetail = () => {
   useEffect(() => {
     setLoading(true);
     const unsubscribe = handleGetBoardTasks();
-    if (isTaskActionDispatched) {
+    if (isTaskActionDispatched || isTaskPinned) {
       handleGetBoardTasks();
     }
 
@@ -58,23 +60,28 @@ const BoardDetail = () => {
         type: "TASK_CREATED",
         payload: false,
       });
+      dispatch({
+        type: "TASK_PINACTION",
+        payload: false,
+      });
     };
-  }, [id, name, isLoggedIn, isTaskActionDispatched]);
+  }, [id, name, isLoggedIn, isTaskActionDispatched, isTaskPinned, dispatch]);
 
   return (
     <div
-      className={`ml-80 pl-5 w-full h-screen overflow-auto
-    ${theme === "light" ? "bg-task-light" : "bg-task-sidebar-dark"}
+      className={`w-full h-screen overflow-auto ${
+        theme === "light" ? "bg-task-light" : "bg-task-sidebar-dark"
+      }
     `}>
       <div className="sticky top-0">
         <DashboardHeader
-          boardname={name}
-          boardId={id}
+          boardname={name as string}
+          boardId={id as string}
           contentType="board"
           onSearch={handleSearch}
         />
       </div>
-      <div>
+      <div className="overflow-x-scroll">
         <BoardTable
           boardtasks={tasks as Task[]}
           loading={loading}
@@ -85,7 +92,7 @@ const BoardDetail = () => {
   );
 };
 
-BoardDetail.getLayout = (page) => {
+BoardDetail.getLayout = function getLayout(page: React.ReactNode) {
   return <DashboardLayout>{page}</DashboardLayout>;
 };
 

@@ -2,7 +2,7 @@ import React from "react";
 import Modal from "../Utility/Modal/modal";
 import { Button } from "../base-components/button/button";
 import { message } from "antd";
-import { Task } from "@/lib/utils/task";
+import { Task } from "@/lib/utils/types";
 
 type Props = {
   title: string;
@@ -18,11 +18,11 @@ type Props = {
 
 const AddTaskModal = (props: Props) => {
   const handleClick = () => {
-    props.onClick();
-    props.setOpen(false);
-    props.onInputChange("name", "");
-    props.onInputChange("description", "");
-    props.onInputChange("status", "");
+    props.onClick && props.onClick();
+    props.setOpen && props.setOpen(false);
+    props.onInputChange && props.onInputChange("name", "");
+    props.onInputChange && props.onInputChange("description", "");
+    props.onInputChange && props.onInputChange("status", "");
   };
   return (
     <Modal
@@ -67,7 +67,9 @@ const AddTaskModal = (props: Props) => {
               }
             `}
             value={props.task.name}
-            onChange={(e) => props.onInputChange("name", e.target.value)}
+            onChange={(e) =>
+              props.onInputChange && props.onInputChange("name", e.target.value)
+            }
           />
         </div>
 
@@ -85,9 +87,8 @@ const AddTaskModal = (props: Props) => {
             </div>
           </label>
           <textarea
-            rows="7"
+            rows={7}
             required
-            type="text"
             placeholder="e.g It's always good to take a break. This will help you to be more productive"
             className={`w-full p-3 rounded-md border-[0.4px] golos-font text-sm font-light resize-none
               ${
@@ -98,6 +99,7 @@ const AddTaskModal = (props: Props) => {
             `}
             value={props.task?.description}
             onChange={(e) =>
+              props.onInputChange &&
               props.onInputChange("description", e.target.value)
             }></textarea>
         </div>
@@ -126,7 +128,10 @@ const AddTaskModal = (props: Props) => {
               }
             `}
             value={props.task?.status}
-            onChange={(e) => props.onInputChange("status", e.target.value)}>
+            onChange={(e) =>
+              props.onInputChange &&
+              props.onInputChange("status", e.target.value)
+            }>
             <option value="">Select Status</option>
             <option value="todo">TODO</option>
             <option value="doing">DOING</option>

@@ -1,13 +1,20 @@
 import "@/styles/globals.css";
+import { ReactNode } from "react";
 import { ThemeProvider } from "@/components/Layout/_contexts/themecontext";
-import type { AppProps } from "next/app";
+import { AppContext, AppInitialProps, AppLayoutProps } from "next/app";
+import type { NextComponentType } from "next";
 import { AuthProvider } from "@/components/Layout/_contexts/authcontext";
 
-export default function App({ Component, pageProps }: AppProps) {
-  const getLayout = Component.getLayout || ((page) => page);
+const App: NextComponentType<AppContext, AppInitialProps, AppLayoutProps> = ({
+  Component,
+  pageProps,
+}: AppLayoutProps) => {
+  const getLayout = Component.getLayout || ((page: ReactNode) => page);
   return (
     <ThemeProvider>
       <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
     </ThemeProvider>
   );
-}
+};
+
+export default App;

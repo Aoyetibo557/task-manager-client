@@ -1,12 +1,13 @@
-import PageLayout from "@/components/Layout/pagelayout";
+import PageLayout from "@/components/Layout/layout";
 import { Button } from "@/components/base-components/button/button";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { Spin } from "antd";
+import { AuthType } from "@/lib/utils/types";
 
 const Login = () => {
-  const { findUserByEmail } = useAuth();
+  const { findUserByEmail } = useAuth() as AuthType;
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,16 +16,16 @@ const Login = () => {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const response = await findUserByEmail(email);
+      const response = (await findUserByEmail(email)) as any;
       const { user } = response;
-      if (user) {
+      if (response.status === "success") {
         setLoading(false);
-        router.push(`/loginform?email=${user.email}`);
+        router.push(`/loginform?email=${user?.email}`);
       } else if (response.status === "error") {
         setLoading(false);
         router.push("/signup");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       setLoading(false);
     }
@@ -65,6 +66,6 @@ const Login = () => {
 
 export default Login;
 
-Login.getLayout = (page) => {
+Login.getLayout = (page: React.ReactNode) => {
   return <PageLayout>{page}</PageLayout>;
 };

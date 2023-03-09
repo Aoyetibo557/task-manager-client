@@ -16,6 +16,7 @@ type Props = {
 export const Toggle = (props: Props) => {
   return (
     <div
+      id="toggle-theme"
       className={`flex flex-row items-center justify-center p-3 gap-6 w-4/5
       ${
         props.theme === "light"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useRouter } from "next/router";
 import { ThemeContext } from "../Layout/_contexts/themecontext";
@@ -11,6 +11,8 @@ import { SidebarLink } from "../_sidebar/sidebarlink";
 import { message } from "antd";
 import { Toggle } from "../base-components/toggle/toggle";
 import { IoExitOutline } from "react-icons/io5";
+import Link from "next/link";
+import { AuthType, Board } from "@/lib/utils/types";
 
 interface BoardLink {
   title: string;
@@ -19,15 +21,8 @@ interface BoardLink {
   isActive: boolean;
 }
 
-type Board = {
-  name: string;
-  description?: string;
-  userid: string;
-  boardId?: string;
-};
-
 const Sidebar = () => {
-  const { user, loading, isLoggedIn, signOut } = useAuth();
+  const { user, loading, isLoggedIn, signOut } = useAuth() as AuthType;
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState("");
@@ -46,7 +41,7 @@ const Sidebar = () => {
   const router = useRouter();
   const path = router.pathname.toLowerCase();
 
-  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInput = (e: any) => {
     setInput(e);
   };
 
@@ -59,7 +54,7 @@ const Sidebar = () => {
       name: input,
       description: "This is a new board",
       userid: user?.userid,
-    };
+    } as Board;
 
     const data = await createBoard(newBoard);
     console.log("Data:", data);
@@ -70,13 +65,13 @@ const Sidebar = () => {
     } else {
       if (data.status === "error") {
         message.error(data.message);
-        setError(data.message);
+        setError(data.message as string);
       }
     }
   };
 
   const getBoards = async () => {
-    const data = await getUserBoards(user.userid);
+    const data = await getUserBoards(user?.userid);
     if (data.status === "success") {
       setUserBoards(data.boards);
       setBoardCount(data.boards?.length);
@@ -100,11 +95,11 @@ const Sidebar = () => {
         getBoards();
       }
     }
-  }, [isLoggedIn, loading, user]);
+  }, [isLoggedIn, loading, user, router]);
 
   return (
     <div
-      className={`fixed h-screen w-1/5 p-4 flex flex-col justify-between
+      className={` h-screen w-80 p-4 flex flex-col justify-between
       ${
         theme === "light"
           ? "bg-task-light-white border-r-[0.6px] border-neutral-300"
@@ -122,7 +117,7 @@ const Sidebar = () => {
             height={30}
             alt="Tassker Logo"
           />
-          Tassker
+          <Link href="/dashboard">Tassker</Link>
         </div>
 
         <div className="flex flex-col gap-4">
@@ -144,9 +139,9 @@ const Sidebar = () => {
                 You have no boards yet {error}
               </div>
             )}
-            {userBoards?.map((board) => (
+            {userBoards?.map((board: any, idx: any) => (
               <SidebarLink
-                key={board.id}
+                key={idx}
                 title={board.name}
                 url={`/dashboard/${board.id}/?name=${board.name}`}
                 isActive={
@@ -160,6 +155,7 @@ const Sidebar = () => {
 
             <div>
               <button
+                id="create-board"
                 className={`font-light text-sm golos-font flex flex-row items-center gap-2 p-2
               ${
                 theme === "light"
@@ -182,9 +178,7 @@ const Sidebar = () => {
                 theme={theme}
                 btnLabel="Create Board"
                 inputVal={input}
-                setInputVal={(e: React.ChangeEvent<HTMLInputElement>) =>
-                  handleInput(e)
-                }
+                setInputVal={(e: any) => handleInput(e)}
                 onClick={handleCreateBoard}
               />
             )}

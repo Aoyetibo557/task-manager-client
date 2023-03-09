@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { MenuItem } from "../Header/Navbar/menuItem";
+import { MenuItem } from "../Header/Navbar/menuitem";
 import { ThemeContext } from "../_contexts/themecontext";
 import { useRouter } from "next/router";
 

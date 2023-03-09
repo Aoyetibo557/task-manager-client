@@ -9,8 +9,6 @@ export const truncate = (str: string, length: number): string => {
 };
 
 // format dayjs unix timestamp to a readable date
-export const formatDate = (timestamp: number): string => {
-  return dayjs
-    .unix(timestamp)
-    .format("MMMM D, YYYY HH:MM:ssa", { useUtc: true });
+export const formatDate = (timestamp: any): string => {
+  return dayjs.unix(parseInt(timestamp)).format("MMMM D, YYYY hh:mm:ssa");
 };

@@ -2,20 +2,33 @@ import { createContext, useContext, useState, useEffect } from "react";
 import API from "../../../lib/hooks/axios";
 import { auth } from "../../../lib/firebase";
 import { ActionTypes } from "@/lib/utils/actions";
+import { User, ReturnObject } from "@/lib/utils/types";
+
 const LOGIN_ROUTE = "/auth/login";
 const SIGNUP_ROUTE = "/auth/signup";
 const FINDUSERBYEMAIL_ROUTE = "/auth/finduser";
+const FIND_USER_BY_ID_ROUTE = "/auth/finduserbyid";
 
 type AuthContextType = {
   user: {};
   loading: boolean;
   error: Error | null;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (
+    email: string,
+    password: string,
+    firstName: string,
+    lastName: string
+  ) => Promise<void>;
   findUserByEmail: (email: string) => Promise<void>;
   signOut: () => Promise<void>;
-  dispatch: (action: { type: string; payload: {} }) => void;
+  dispatch: (action: { type: string; payload: boolean }) => void;
+  setUser: (user: {}) => void;
+  isLoggedIn: boolean;
+  handleSetUser: (user: {}) => void;
   isTaskActionDispatched: boolean;
+  isTaskPinned: boolean;
+  isUserActionDispatched: boolean;
 };
 
 type AuthProviderProps = {
@@ -31,15 +44,22 @@ export const AuthContext = createContext<AuthContextType>({
   findUserByEmail: async () => {},
   signOut: async () => {},
   dispatch: () => {},
+  setUser: () => {},
+  isLoggedIn: false,
+  handleSetUser: () => {},
   isTaskActionDispatched: false,
+  isTaskPinned: false,
+  isUserActionDispatched: false,
 } as AuthContextType);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<{} | null>({});
+  const [user, setUser] = useState<{}>({});
   const [loading, setLoading] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [isTaskActionDispatched, setIsTaskAction] = useState(false);
+  const [isTaskPinned, setIsTaskPinned] = useState(false);
+  const [isUserActionDispatched, setIsUserAction] = useState(false);
 
   const handleSetUser = (user: {}) => {
     localStorage.setItem("task-user", JSON.stringify(user));
@@ -58,7 +78,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(response.data.user);
       handleSetUser(response.data.user);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
     }
   }
@@ -79,7 +99,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(response.data.user);
       handleSetUser(response.data.user);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
     }
   }
@@ -88,9 +108,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       await auth.signOut();
       localStorage.removeItem("task-user");
-      setUser(null);
+      setUser({});
       setIsLoggedIn(false);
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
     }
   };
@@ -99,7 +119,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     try {
       const response = await API.get(FINDUSERBYEMAIL_ROUTE + `/${email}`);
       return response.data;
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
     }
   }
@@ -113,16 +133,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setUser(JSON.parse(user));
         setIsLoggedIn(true);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
     }
   };
 
-  const dispatch = (action: { type: string; payload: {} }) => {
+  const dispatch = (action: { type: string; payload: boolean }) => {
     setIsTaskAction(false);
+    setIsUserAction(false);
+
     switch (action.type) {
       case ActionTypes.UPDATE_USER:
-        setUser(action.payload);
+        setIsUserAction(action.payload);
         break;
       case ActionTypes.TASK_CREATED:
         setIsTaskAction(action.payload);
@@ -132,6 +154,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         break;
       case ActionTypes.TASK_UPDATED:
         setIsTaskAction(action.payload);
+      case ActionTypes.TASK_PINACTION:
+        setIsTaskPinned(action.payload);
         break;
       default:
         break;
@@ -140,8 +164,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   useEffect(() => {
     checkIsLoggedIn();
-    const unsubscribe = auth.onAuthStateChanged(handleAuthStateChanged);
-    return () => unsubscribe();
+    // const unsubscribe = auth.onAuthStateChanged(handleAuthStateChanged);
+    // return () => unsubscribe();
   }, []);
 
   const value: AuthContextType = {
@@ -155,7 +179,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setUser,
     isLoggedIn,
     dispatch,
+    handleSetUser,
+    isTaskPinned,
     isTaskActionDispatched,
+    isUserActionDispatched,
   };
 
   return (

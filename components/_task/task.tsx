@@ -2,20 +2,21 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import TaskDetailModal from "../base-components/taskdetailModal";
 import { truncate } from "@/lib/utils/truncate";
-import { Task } from "@/lib/utils/task";
+import { Task, AuthType } from "@/lib/utils/types";
 import { updateTaskStatus } from "@/lib/queries/task";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { message } from "antd";
 import { ActionTypes } from "@/lib/utils/actions";
+
 type Props = {
   task: Task;
-  theme: string;
+  theme: string | undefined;
 };
 
 export const TaskCard = ({ task, theme }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [status, setStatus] = useState("");
-  const { dispatch, isTaskActionDispatched } = useAuth();
+  const { dispatch, isTaskActionDispatched } = useAuth() as AuthType;
 
   const updateStatus = (name: keyof Task, value: string) => {
     setStatus(value);
@@ -23,7 +24,7 @@ export const TaskCard = ({ task, theme }: Props) => {
 
   const handleUpdateStatus = async () => {
     try {
-      const res = await updateTaskStatus(task?.taskId, status);
+      const res = await updateTaskStatus(task?.taskid, status);
 
       if (res.status === "success") {
         message.success(res.message);
@@ -37,7 +38,7 @@ export const TaskCard = ({ task, theme }: Props) => {
           message.error(res.message);
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       message.error(`Something went wrong, ${error.message}`);
     }
@@ -58,16 +59,16 @@ export const TaskCard = ({ task, theme }: Props) => {
           theme === "light" ? "text-task-dark" : "text-task-light-white"
         }
       `}>
-        {truncate(task.name, 55)}
+        {truncate(task?.name, 55)}
       </div>
       <div
         className={` font-medium text-sm golos-font ${
           theme === "light" ? "text-task-dark" : "text-neutral-400"
         }
       `}>
-        {task.subtasks?.length > 0
-          ? `${task.subtasks?.length} subtasks`
-          : `${task.subtasks?.length || 0} subtask`}
+        {/* {task?.subtasks?.length > 0
+          ? `${task?.subtasks.length} subtasks`
+          : `${task?.subtasks.length || 0} subtask`} */}
       </div>
 
       {isModalOpen && (

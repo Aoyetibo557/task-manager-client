@@ -2,25 +2,21 @@ import Image from "next/image";
 import { Button } from "@/components/base-components/button/button";
 import { User } from "@/lib/utils/types";
 import { formatDate } from "@/lib/utils/truncate";
-import ProfileDetails from "@/components/_profile/profiledetails";
-import { PasswordReset } from "@/components/_setting/passwordreset";
-import { CloseAccount } from "@/components/_setting/closeaccount";
+import { SubscriptionDetails } from "@/components/_setting/subscription/subscriptiondetails";
+import { ReceiptHistory } from "@/components/_setting/subscription/receipthistory";
 
 type Props = {
   user: User | undefined;
   theme?: string;
 };
 
-export const AccountSetting = ({ user, theme }: Props) => {
+export const SubscriptionSetting = ({ user, theme }: Props) => {
   return (
     <div className="flex flex-col gap-6 pt-5">
-      <div className="inline-flex flex-row gap-6">
-        <ProfileDetails user={user} theme={theme} />
-
-        <div className="inline-flex flex-col gap-6">
-          <PasswordReset theme={theme} />
-          <CloseAccount theme={theme} />
-        </div>
+      <div className="inline-flex flex-col gap-6">
+        <SubscriptionDetails user={user} theme={theme} />
+        <ReceiptHistory theme={theme} />
+        <div className="inline-flex flex-col gap-6"></div>
       </div>
 
       <div

@@ -1,4 +1,4 @@
-import PageLayout from "@/components/Layout/pagelayout";
+import PageLayout from "@/components/Layout/layout";
 import { Button } from "@/components/base-components/button/button";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
@@ -8,27 +8,38 @@ import {
 } from "@/lib/hooks/useFormValidation";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { Spin } from "antd";
+import { AuthType } from "@/lib/utils/types";
+import { NextPage } from "next/types";
 
-const LoginForm: NextPage<LoginFormProps> = () => {
+const LoginForm = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [emailinput, setEmail] = useState<string | null>("");
+  const [emailinput, setEmail] = useState<string | any>("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState<string | null>(null);
-  const { signIn, setUser } = useAuth();
+  const { signIn, setUser } = useAuth() as AuthType;
 
   const { errorMessage: emailErrorMessage, validate: validateEmail } =
     useEmailValidate();
   const { errorMessage: passwordErrorMessage, validate: validatePassword } =
-    usePasswordValidate();
+    usePasswordValidate() as any;
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    const { name, value } = e.target;
+    if (name === "email") {
+      setEmail(value);
+    } else if (name === "password") {
+      setPassword(value);
+    }
+  };
+
+  const handleLogin = async () => {
     setLoading(true);
     setLoginError("");
 
-    const isEmailValid = validateEmail(emailinput);
-    const isPasswordValid = validatePassword(password);
+    const isEmailValid = validateEmail(emailinput as any);
+    const isPasswordValid = validatePassword(password as any);
 
     if (!isEmailValid || !isPasswordValid) {
       setLoading(false);
@@ -37,18 +48,19 @@ const LoginForm: NextPage<LoginFormProps> = () => {
     }
 
     try {
-      const response = await signIn(emailinput, password);
+      const response = (await signIn(emailinput, password)) as any;
       if (response.status === "error") {
         setLoginError(response.message);
         setLoading(false);
       } else if (response.status === "success") {
+        setLoading(true);
         setLoginError("");
-        setLoading(false);
         setUser(response.user);
         router.push("/dashboard");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
+      setLoading(false);
     }
   };
 
@@ -74,9 +86,10 @@ const LoginForm: NextPage<LoginFormProps> = () => {
             <input
               className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
               placeholder="Email"
+              name="email"
               value={emailinput}
               required
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleInput}
             />
             <div>
               {emailErrorMessage && (
@@ -89,9 +102,10 @@ const LoginForm: NextPage<LoginFormProps> = () => {
             <input
               className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
               placeholder="Password"
+              name="password"
               value={password}
               required
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleInput}
             />
             <div>
               {passwordErrorMessage && (
@@ -114,7 +128,7 @@ const LoginForm: NextPage<LoginFormProps> = () => {
   );
 };
 
-LoginForm.getLayout = (page) => {
+LoginForm.getLayout = (page: React.ReactNode) => {
   return <PageLayout>{page}</PageLayout>;
 };
 

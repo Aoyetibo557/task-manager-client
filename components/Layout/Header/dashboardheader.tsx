@@ -6,16 +6,11 @@ import { useState, useEffect, useContext } from "react";
 import { ThemeContext } from "../_contexts/themecontext";
 import AddTaskModal from "../../base-components/addtaskModal";
 import { createTask } from "@/lib/queries/task";
-import { Task } from "@/lib/utils/types";
-import type { MenuProps } from "antd";
-import { Dropdown, message } from "antd";
-import Link from "next/link";
-import { IoSettingsOutline } from "react-icons/io5";
-import { IoMdHelpCircleOutline } from "react-icons/io";
-import { HiOutlineUserCircle } from "react-icons/hi";
-import { MdLogout } from "react-icons/md";
+import { Task, AuthType } from "@/lib/utils/types";
+import { message } from "antd";
 import { ActionTypes } from "@/lib/utils/actions";
 import { SearchBar } from "@/components/base-components/searchbar/searchbar";
+import DropdownMenu from "@/components/_menu/dropdownmenu";
 
 type Props = {
   boardname?: string;
@@ -33,12 +28,12 @@ const DashboardHeader = (props: Props) => {
     isLoggedIn,
     dispatch,
     isTaskActionDispatched,
-  } = useAuth();
+  } = useAuth() as AuthType;
   const [searchQuery, setSearchQuery] = useState("");
   const { theme } = useContext(ThemeContext);
   const [openModal, setOpenModal] = useState(false);
   const [error, setError] = useState("");
-  const [taskObj, setTaskObj] = useState<Task>({
+  const [taskObj, setTaskObj] = useState<Task | any>({
     name: "",
     description: "",
     status: "",
@@ -54,73 +49,11 @@ const DashboardHeader = (props: Props) => {
   };
 
   const handleInput = (name: keyof Task, value: string) => {
-    setTaskObj((prevState) => ({
+    setTaskObj((prevState: any) => ({
       ...prevState,
       [name]: value,
     }));
   };
-
-  const handleSignOut = () => {
-    signOut();
-    router.push("/loginform");
-  };
-
-  const items: MenuProps["items"] = [
-    {
-      key: "1",
-      label: (
-        <Link
-          href={`/profile/${user?.userid}`}
-          type="submit"
-          onClick={() => {}}>
-          {`${user?.firstName} ${user?.lastName}`}
-          <div>
-            <span className="text-xs text-gray-400">{user?.email}</span>
-          </div>
-        </Link>
-      ),
-      icon: <HiOutlineUserCircle className="mr-2 w-5 h-5" />,
-    },
-    {
-      key: "2",
-      type: "divider",
-    },
-    {
-      key: "3",
-      label: (
-        <Link
-          className="flex-flex-row items-center"
-          href={`/setting/${user?.userid}`}
-          type="submit"
-          onClick={() => {}}>
-          Account Settings
-        </Link>
-      ),
-      icon: <IoSettingsOutline className="mr-2 w-5 h-5" />,
-    },
-    {
-      key: "4",
-      label: (
-        <Link href="/hlep" type="submit" onClick={() => {}}>
-          Help & Feedback
-        </Link>
-      ),
-      icon: <IoMdHelpCircleOutline className="mr-2 w-5 h-5" />,
-    },
-    {
-      key: "5",
-      type: "divider",
-    },
-    {
-      key: "6",
-      label: (
-        <button type="submit" onClick={handleSignOut}>
-          Log out
-        </button>
-      ),
-      icon: <MdLogout className="mr-2 w-5 h-5" />,
-    },
-  ];
 
   const handleCreateTask = async () => {
     const newTask = {
@@ -145,7 +78,7 @@ const DashboardHeader = (props: Props) => {
           message.error(res.message);
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       message.error(`Something went wrong, ${error.message}`);
       setError(error.message);
     }
@@ -199,18 +132,7 @@ const DashboardHeader = (props: Props) => {
         )}
 
         <div>
-          <Dropdown
-            menu={{ items }}
-            trigger={["click"]}
-            placement="bottomRight">
-            <button
-              type="submit"
-              className={`${
-                theme === "light" ? "text-task-dark" : "text-task-light-white"
-              }`}>
-              <BsThreeDotsVertical className="cursor-pointer w-6 h-6" />
-            </button>
-          </Dropdown>
+          <DropdownMenu theme={theme} />
         </div>
       </div>
     </div>

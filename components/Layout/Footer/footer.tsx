@@ -1,4 +1,4 @@
-import FooterNavbar from "./FooterNavbar";
+import FooterNavbar from "./footernavbar";
 
 const Footer = () => {
   return (

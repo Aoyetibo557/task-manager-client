@@ -14,7 +14,7 @@ const AccountSetting = () => {
 
   return (
     <div
-      className={`ml-80 pl-5 w-full h-full
+      className={`w-full h-screen overflow-auto
     ${theme === "light" ? "bg-task-light" : "bg-task-sidebar-dark"}
     `}>
       <DashboardHeader />
@@ -46,7 +46,7 @@ const AccountSetting = () => {
   );
 };
 
-AccountSetting.getLayout = (page) => {
+AccountSetting.getLayout = function getLayout(page: React.ReactNode) {
   return <DashboardLayout>{page}</DashboardLayout>;
 };
 

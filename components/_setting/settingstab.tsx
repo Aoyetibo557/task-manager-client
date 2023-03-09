@@ -1,19 +1,22 @@
 import React, { useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
 import { AccountSetting } from "@/components/_setting/accountsetting";
+import { SubscriptionSetting } from "@/components/_setting/subscriptionsetting";
 import { getUserDetails } from "@/lib/queries/user";
 import { message } from "antd";
-import { User } from "@/lib/utils/types";
+import { User, AuthType } from "@/lib/utils/types";
 import dayjs from "dayjs";
+import { useAuth } from "@/lib/hooks/useAuth";
 
 type Props = {
   children?: React.ReactNode;
   theme?: string;
-  userId: string;
+  userId: string | any;
 };
 
 export const SettingsTab = (props: Props) => {
-  const [user, setUser] = useState<User>({});
+  const [user, setStateUser] = useState<User>();
+  const { dispatch, isUserActionDispatched, setUser } = useAuth() as AuthType;
   const tabs = [
     {
       name: "General settings",
@@ -25,7 +28,11 @@ export const SettingsTab = (props: Props) => {
     },
     {
       name: "Subscription",
-      content: <div>This page is under construction</div>,
+      content: (
+        <div>
+          <SubscriptionSetting user={user} theme={props.theme} />
+        </div>
+      ),
     },
   ];
 
@@ -33,22 +40,31 @@ export const SettingsTab = (props: Props) => {
   const handleUserProfile = async (id: string) => {
     const res = await getUserDetails(id);
     if (res.status === "success") {
-      setUser(res.user);
+      setStateUser(res.user);
+      // setUser(res.user);
       return res.user;
     } else {
       if (res.status === "error") {
-        console.log(res.message);
-        // message.error(`Something went wrong!  ${res.message}`);
+        // console.log(res.message);
+        message.error(`Something went wrong!  ${res.message}`);
       }
     }
   };
   useEffect(() => {
     try {
       handleUserProfile(props.userId);
-    } catch (error) {
+
+      if (isUserActionDispatched) {
+        handleUserProfile(props.userId);
+      }
+
+      return () => {
+        dispatch({ type: "UPDATE_USER", payload: false });
+      };
+    } catch (error: any) {
       console.log(error.message);
     }
-  }, [props.userId]);
+  }, [props.userId, isUserActionDispatched, dispatch]);
 
   return (
     <Tab.Group>

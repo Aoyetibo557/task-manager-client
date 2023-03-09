@@ -1,24 +1,13 @@
 import React from "react";
 import { RxDotFilled as Dot } from "react-icons/rx";
 import { TaskCard } from "../_task/task";
+import { Task } from "@/lib/utils/types";
 
 type BoardColumnProps = {
   columntype: "done" | "doing" | "todo";
   tasks: Task[];
   theme: string;
 };
-
-interface Task {
-  name: string;
-  description: string;
-  taskid?: string;
-  status: string;
-  boardId?: string;
-  userId?: string;
-  subtasks?: Task[];
-  timestamp?: string;
-  parentTaskId?: string;
-}
 
 const BoardColumn = ({ columntype, tasks, theme }: BoardColumnProps) => {
   const getDot = () => {
