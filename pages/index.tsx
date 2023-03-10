@@ -19,7 +19,7 @@ const Home: NextPage = () => {
     }
   }, [user, loading, isLoggedIn]);
 
-  return <div>Checking Sessions...</div>;
+  return;
 };
 
 export default Home;
