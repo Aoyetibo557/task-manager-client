@@ -16,9 +16,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 You can check out the live version.
 
-```bash
 [Live Version](https://task-manager-client-nu.vercel.app/login)
-```
 
 You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
 
