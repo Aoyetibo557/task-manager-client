@@ -1,17 +1,18 @@
-import { BsThreeDotsVertical, BsPlus } from "react-icons/bs";
+import { BsPlus } from "react-icons/bs";
 import { Button } from "../base-components/button/button";
 import { useRouter } from "next/router";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useState, useEffect, useContext } from "react";
 import { ThemeContext } from "../Layout/_contexts/themecontext";
 import type { MenuProps } from "antd";
-import { Dropdown, message } from "antd";
+import { Dropdown, message, Avatar } from "antd";
 import Link from "next/link";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { MdLogout } from "react-icons/md";
 import { AuthType } from "@/lib/utils/types";
+import { CgMenuGridO } from "react-icons/cg";
 
 type Props = {
   theme?: string;
@@ -21,6 +22,7 @@ const DropdownMenu = ({ theme }: Props) => {
   const router = useRouter();
   const { user, signOut, loading, isLoggedIn, dispatch } =
     useAuth() as AuthType;
+  const [image, setImage] = useState<any>(user?.profileImage);
 
   const handleSignOut = () => {
     signOut();
@@ -38,7 +40,14 @@ const DropdownMenu = ({ theme }: Props) => {
           </div>
         </div>
       ),
-      icon: <HiOutlineUserCircle className="mr-2 w-5 h-5" />,
+      // icon: <HiOutlineUserCircle className="mr-2 w-5 h-5" />,
+      icon: (
+        <Avatar
+          className="w-10 h-10"
+          src={image ? image : user?.profileImage}
+          alt="user"
+        />
+      ),
     },
     {
       key: "2",
@@ -89,7 +98,7 @@ const DropdownMenu = ({ theme }: Props) => {
           className={`${
             theme === "light" ? "text-task-dark" : "text-task-light-white"
           }`}>
-          <BsThreeDotsVertical className="cursor-pointer w-6 h-6" />
+          <CgMenuGridO className="cursor-pointer w-7 h-7" />
         </button>
       </Dropdown>
     </div>

@@ -81,7 +81,7 @@ const BoardDetail = () => {
           onSearch={handleSearch}
         />
       </div>
-      <div className="overflow-x-scroll">
+      <div className="">
         <BoardTable
           boardtasks={tasks as Task[]}
           loading={loading}

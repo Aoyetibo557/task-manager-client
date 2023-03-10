@@ -3,10 +3,11 @@ import Link from "next/link";
 import TaskDetailModal from "../base-components/taskdetailModal";
 import { truncate } from "@/lib/utils/truncate";
 import { Task, AuthType } from "@/lib/utils/types";
-import { updateTaskStatus } from "@/lib/queries/task";
+import { updateTask } from "@/lib/queries/task";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { message } from "antd";
 import { ActionTypes } from "@/lib/utils/actions";
+import Image from "next/image";
 
 type Props = {
   task: Task;
@@ -16,15 +17,26 @@ type Props = {
 export const TaskCard = ({ task, theme }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [status, setStatus] = useState("");
+  const [priority, setPriority] = useState("");
+  const [updateValues, setUpdateValues] = useState({
+    status: "",
+    priority: "",
+  });
+
   const { dispatch, isTaskActionDispatched } = useAuth() as AuthType;
 
-  const updateStatus = (name: keyof Task, value: string) => {
-    setStatus(value);
+  const updateTaskInput = (name: keyof Task, value: string) => {
+    setUpdateValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleUpdateStatus = async () => {
+  const handleUpdateTask = async () => {
+    const taskValues = {
+      status: updateValues.status || task?.status,
+      priority: updateValues.priority,
+    };
+
     try {
-      const res = await updateTaskStatus(task?.taskid, status);
+      const res = await updateTask(task?.taskId, taskValues);
 
       if (res.status === "success") {
         message.success(res.message);
@@ -51,24 +63,34 @@ export const TaskCard = ({ task, theme }: Props) => {
         theme === "light"
           ? "bg-task-light-white shadow-slate-300 shadow-sm hover:border-task-light-dark"
           : "bg-task-sidebar-light-dark shadow-md hover:border-task-light-white"
-      }
-    `}
+      }`}
       onClick={() => setIsModalOpen(true)}>
       <div
-        className={` font-medium text-base golos-font  ${
+        className={` font-medium text-base golos-font flex flex-row justify-between  ${
           theme === "light" ? "text-task-dark" : "text-task-light-white"
         }
       `}>
         {truncate(task?.name, 55)}
+
+        <Image
+          src={`/static/images/${
+            task.priority ? task?.priority : "low"
+          }priority.png`}
+          alt="priority"
+          width={20}
+          height={20}
+          title={`${task.priority ? task?.priority : "low"} priority`}
+          className="w-7 h-7"
+        />
       </div>
       <div
-        className={` font-medium text-sm golos-font ${
-          theme === "light" ? "text-task-dark" : "text-neutral-400"
+        className={` font-light text-sm golos-font ${
+          theme === "light" ? "text-neutral-700" : "text-neutral-400"
         }
       `}>
-        {/* {task?.subtasks?.length > 0
-          ? `${task?.subtasks.length} subtasks`
-          : `${task?.subtasks.length || 0} subtask`} */}
+        {task?.subtasks && task?.subtasks?.length > 0
+          ? `${task?.subtasks && task?.subtasks?.length} subtasks`
+          : `${(task?.subtasks && task?.subtasks?.length) || 0} subtask`}
       </div>
 
       {isModalOpen && (
@@ -77,8 +99,8 @@ export const TaskCard = ({ task, theme }: Props) => {
           theme={theme}
           open={isModalOpen}
           setOpen={setIsModalOpen}
-          updateStatus={updateStatus}
-          onClick={handleUpdateStatus}
+          updateTask={updateTaskInput}
+          onClick={handleUpdateTask}
         />
       )}
     </div>

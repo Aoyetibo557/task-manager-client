@@ -28,8 +28,11 @@ async function getBoardTasks(boardid: string) {
 }
 
 // update a task
-async function updateTask(task: Task) {
-  const { data } = await API.put<Task>(`${UPDATE_TASK_ROUTE}`, task);
+async function updateTask(taskid: string | any, task: Task | any) {
+  const { data } = await API.put<Task | any>(
+    `${UPDATE_TASK_ROUTE}/${taskid}`,
+    task
+  );
   return data;
 }
 

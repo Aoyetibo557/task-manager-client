@@ -1,11 +1,12 @@
 export interface Task {
   name: string;
   description?: string | undefined;
-  taskid?: string;
+  taskId?: string;
   boardId: string;
   boardName?: string;
   userId: string;
   status: string;
+  priority: string;
   subtasks?: Task[];
   timestamp: string | number | undefined;
   parentTaskId?: string | null | undefined;
@@ -23,6 +24,7 @@ export interface User {
   boards?: Board[] | undefined;
   tasks?: Task[];
   status: string;
+  profileImage?: string | undefined;
   url?: string | undefined;
   phone?: string | undefined;
   country?: string | undefined;
@@ -31,6 +33,7 @@ export interface User {
   tourtaken?: boolean | undefined;
   username?: string | undefined;
   returnObject?: ReturnObject | undefined;
+  subscription?: SubscriptionPlan | undefined;
 }
 
 export interface Board {
@@ -51,6 +54,14 @@ export interface ReturnObject {
   user?: User;
   error?: string;
   message?: string;
+}
+
+export interface SubscriptionPlan {
+  name: string;
+  description: string;
+  price: number;
+  features: string[];
+  id: string;
 }
 
 export interface AuthType {

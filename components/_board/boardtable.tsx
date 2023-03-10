@@ -37,7 +37,7 @@ const BoardTable = ({ boardtasks, loading, searchQuery }: Props) => {
   }, [boardtasks, searchQuery]);
 
   return boardtasks.length === 0 ? (
-    <div className="flex flex-col w-full h-full p-5">
+    <div className="flex flex-col w-full h-full p-5 ">
       <div
         className={` flex flex-col h-96 justify-center items-center
         ${theme === "light" ? "text-task-dark" : "text-task-light-white"}
@@ -56,7 +56,7 @@ const BoardTable = ({ boardtasks, loading, searchQuery }: Props) => {
       </div>
     </div>
   ) : (
-    <div className={`flex flex-row gap-10 p-10`}>
+    <div className={`flex flex-row gap-10 p-10 overflow-scroll`}>
       <BoardColumn theme={theme} columntype="todo" tasks={todo} />
       <BoardColumn theme={theme} columntype="doing" tasks={doingtasks} />
       <BoardColumn theme={theme} columntype="done" tasks={donetasks} />

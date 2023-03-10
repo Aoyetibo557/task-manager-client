@@ -3,6 +3,7 @@ import Modal from "../Utility/Modal/modal";
 import { Button } from "../base-components/button/button";
 import { message } from "antd";
 import { Task } from "@/lib/utils/types";
+import Image from "next/image";
 
 type Props = {
   title: string;
@@ -23,6 +24,7 @@ const AddTaskModal = (props: Props) => {
     props.onInputChange && props.onInputChange("name", "");
     props.onInputChange && props.onInputChange("description", "");
     props.onInputChange && props.onInputChange("status", "");
+    props.onInputChange && props.onInputChange("priority", "");
   };
   return (
     <Modal
@@ -140,8 +142,43 @@ const AddTaskModal = (props: Props) => {
         </div>
 
         <div>
+          <label>
+            <div
+              className={`font-medium text-sm golos-font mb-2
+              ${
+                props.theme === "light"
+                  ? "text-task-dark"
+                  : "text-task-light-white"
+              }
+            `}>
+              Priority
+            </div>
+          </label>
+
+          <select
+            required
+            className={`w-full p-3 rounded-md border-[0.4px] golos-font text-sm font-light
+              ${
+                props.theme === "light"
+                  ? "bg-task-light-white text-task-sidebar-dark border-neutral-800 focus:outline-neutral-400"
+                  : "bg-task-sidebar-dark text-task-light-white border-neutral-500 outline-[0.2px] focus:outline-neutral-800"
+              }
+            `}
+            value={props.task?.priority}
+            onChange={(e) =>
+              props.onInputChange &&
+              props.onInputChange("priority", e.target.value)
+            }>
+            <option value="">Select Priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+
+        <div>
           <button
-            className={`w-full p-3 rounded-full golos-font text-sm font-semibold
+            className={`w-full p-3 rounded-sm golos-font text-sm font-semibold opacity-80 hover:opacity-100
               ${
                 props.theme === "light"
                   ? "bg-blue-400 text-task-light-white"

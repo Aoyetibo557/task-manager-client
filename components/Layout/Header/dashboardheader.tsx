@@ -37,6 +37,7 @@ const DashboardHeader = (props: Props) => {
     name: "",
     description: "",
     status: "",
+    priority: "",
   });
 
   const handleSearch = (query: string) => {
@@ -60,6 +61,7 @@ const DashboardHeader = (props: Props) => {
       name: taskObj.name,
       description: taskObj.description,
       status: taskObj.status,
+      priority: taskObj.priority,
       boardId: props.boardId,
       userId: user?.userid,
     };

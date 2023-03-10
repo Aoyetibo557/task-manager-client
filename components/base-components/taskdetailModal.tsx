@@ -13,6 +13,7 @@ import {
 import { useAuth } from "@/lib/hooks/useAuth";
 import { ActionTypes } from "@/lib/utils/actions";
 import { formatDate } from "@/lib/utils/truncate";
+import Image from "next/image";
 
 type Props = {
   className?: string;
@@ -22,25 +23,37 @@ type Props = {
   setOpen: Dispatch<SetStateAction<boolean>>;
   theme?: string;
   task: Task;
-  updateStatus?: (name: keyof Task, value: string) => void;
+  updateTask?: (name: keyof Task, value: string) => void;
   onClick: () => void;
 };
 
 const TaskDetailModal = (props: Props) => {
   const [status, setStatus] = useState(props.task.status);
+  const [priority, setPriority] = useState(props.task.priority);
   const [pinLoading, setPinLoading] = useState(false);
   const { dispatch } = useAuth() as AuthType;
   const [isPinned, setIsPinned] = useState(props.task.pinned);
-  const handleUpdateStatus = (status: string) => {
-    setStatus(status);
 
-    if (props.task.status !== status) {
-      props.updateStatus && props.updateStatus("status", status);
-    }
+  const handleUpdateInput = (name: keyof Task, value: string) => {
+    setStatus(
+      name === "status" ? (value as Task["status"]) : props.task.status
+    );
+    setPriority(
+      name === "priority" ? (value as Task["priority"]) : props.task.priority
+    );
+
+    props.updateTask && props.updateTask(name, value);
+  };
+
+  const handleClick = () => {
+    props.onClick();
+
+    // props.updateTask && props.updateTask("status", "");
+    // props.updateTask && props.updateTask("priority", "");
   };
 
   const handleArchive = async () => {
-    const res = await archiveTask(props.task?.taskid);
+    const res = await archiveTask(props.task?.taskId);
 
     if (res.status === "success") {
       message.success(res.message);
@@ -57,7 +70,7 @@ const TaskDetailModal = (props: Props) => {
   };
 
   const handleDelete = async () => {
-    const res = await deleteTask(props.task?.taskid);
+    const res = await deleteTask(props.task?.taskId);
 
     if (res.status === "success") {
       message.success(res.message);
@@ -75,7 +88,7 @@ const TaskDetailModal = (props: Props) => {
 
   const handlePin = async () => {
     setPinLoading(true);
-    const res = await pinTask(props.task?.taskid);
+    const res = await pinTask(props.task.taskId);
 
     if (res.status === "success") {
       message.success(res.message);
@@ -95,7 +108,7 @@ const TaskDetailModal = (props: Props) => {
 
   const handleUnpin = async () => {
     setPinLoading(true);
-    const res = await unpinTask(props.task?.taskid);
+    const res = await unpinTask(props.task?.taskId);
 
     if (res.status === "success") {
       message.success(res.message);
@@ -111,6 +124,19 @@ const TaskDetailModal = (props: Props) => {
         message.error(res.message);
         setPinLoading(false);
       }
+    }
+  };
+
+  const getPriorityImage = (priority: string) => {
+    switch (priority) {
+      case "low":
+        return "/static/images/lowpriority.png";
+      case "medium":
+        return "/static/images/mediumpriority.png";
+      case "high":
+        return "/static/images/highpriority.png";
+      default:
+        return "/static/images/lowpriority.png";
     }
   };
 
@@ -140,7 +166,17 @@ const TaskDetailModal = (props: Props) => {
           className={`flex flex-row p-3 justify-between font-medium text-lg golos-font mb-2 ${
             props.theme === "light" ? "text-task-dark" : "text-task-light-white"
           }`}>
-          <div className="w-3/4">{props.task.name}</div>
+          <div className="w-3/4 flex flex-row items-center gap-2">
+            {props.task.name}
+
+            <Image
+              src={getPriorityImage(props.task.priority)}
+              alt="priority"
+              width={25}
+              height={25}
+              title={props.task.priority ? props.task.priority : "low Priority"}
+            />
+          </div>
 
           {props.task?.pinned || isPinned ? (
             <BsFillPinFill
@@ -184,14 +220,32 @@ const TaskDetailModal = (props: Props) => {
               }
             `}
             value={status}
-            onChange={(e) => handleUpdateStatus(e.target.value)}>
+            onChange={(e) => handleUpdateInput("status", e.target.value)}>
             <option value="todo">ToDo</option>
             <option value="doing">Doing</option>
             <option value="done">Done</option>
           </select>
         </div>
+        {/* this will have a select for priority update */}
+        <div>
+          <select
+            required
+            className={`w-full p-3 rounded-md border-[0.4px] golos-font text-sm font-light
+              ${
+                props.theme === "light"
+                  ? "bg-task-light-white text-task-sidebar-dark border-neutral-800 focus:outline-neutral-400"
+                  : "bg-task-sidebar-dark text-task-light-white border-neutral-500 outline-[0.2px] focus:outline-neutral-800"
+              }
+            `}
+            value={priority}
+            onChange={(e) => handleUpdateInput("priority", e.target.value)}>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
 
-        {props.task.status !== status && (
+        {(props.task.status !== status || props.task.priority !== priority) && (
           <div>
             <button
               className={`w-full p-3 rounded-full golos-font text-sm font-semibold
@@ -201,8 +255,8 @@ const TaskDetailModal = (props: Props) => {
                   : "bg-blue-400 text-task-light-white"
               }
           `}
-              onClick={props.onClick}>
-              Update Status
+              onClick={handleClick}>
+              Update Task
             </button>
           </div>
         )}

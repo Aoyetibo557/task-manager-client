@@ -15,14 +15,15 @@ type Props = {
 };
 
 export const SettingsTab = (props: Props) => {
-  const [user, setStateUser] = useState<User>();
+  const [userDetails, setStateUser] = useState<User>();
+  const [loading, setLoading] = useState<boolean>(false);
   const { dispatch, isUserActionDispatched, setUser } = useAuth() as AuthType;
   const tabs = [
     {
       name: "General settings",
       content: (
         <div>
-          <AccountSetting user={user} theme={props.theme} />
+          <AccountSetting user={userDetails} theme={props.theme} />
         </div>
       ),
     },
@@ -30,32 +31,35 @@ export const SettingsTab = (props: Props) => {
       name: "Subscription",
       content: (
         <div>
-          <SubscriptionSetting user={user} theme={props.theme} />
+          <SubscriptionSetting user={userDetails} theme={props.theme} />
         </div>
       ),
     },
   ];
 
   // get the user deailts with the id
-  const handleUserProfile = async (id: string) => {
-    const res = await getUserDetails(id);
-    if (res.status === "success") {
-      setStateUser(res.user);
-      // setUser(res.user);
-      return res.user;
+  const handleUserProfile = async () => {
+    const res = await getUserDetails(props?.userId);
+    if (res.status === "error") {
+      message.error(`Something went wrong!  ${res.message}`);
     } else {
-      if (res.status === "error") {
-        // console.log(res.message);
-        message.error(`Something went wrong!  ${res.message}`);
+      if (res.status === "success") {
+        setStateUser(res?.user);
+        return res.user;
       }
     }
   };
   useEffect(() => {
     try {
-      handleUserProfile(props.userId);
+      if (props?.userId.length < 0) {
+        setLoading(true);
+      } else {
+        setLoading(false);
+        handleUserProfile();
+      }
 
       if (isUserActionDispatched) {
-        handleUserProfile(props.userId);
+        handleUserProfile();
       }
 
       return () => {
@@ -64,7 +68,7 @@ export const SettingsTab = (props: Props) => {
     } catch (error: any) {
       console.log(error.message);
     }
-  }, [props.userId, isUserActionDispatched, dispatch]);
+  }, [props.userId]);
 
   return (
     <Tab.Group>
