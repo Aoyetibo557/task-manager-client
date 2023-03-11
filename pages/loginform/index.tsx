@@ -66,7 +66,7 @@ const LoginForm = () => {
 
   return (
     <div className="flex flex-col items-center mt-10">
-      <div className="flex flex-col w-2/5 gap-3">
+      <div className="flex flex-col items-center gap-3 w-full">
         <div className="font-bold text-2xl golos-font">
           Login to your account.
         </div>
@@ -81,10 +81,10 @@ const LoginForm = () => {
           )}
         </div>
 
-        <form className="flex flex-col gap-4 ">
+        <form className="flex flex-col gap-4 w-2/5 loginform">
           <div className="flex flex-col gap-3">
             <input
-              className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
+              className="golos-font text-base p-3 border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
               placeholder="Email"
               name="email"
               value={emailinput}

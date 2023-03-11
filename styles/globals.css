@@ -102,3 +102,26 @@ body {
     color-scheme: dark;
   }
 } */
+
+@media only screen and (max-width: 768px) {
+  .footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer_navbar {
+    display: none;
+  }
+
+  .loginform {
+    padding: 10px;
+    width: 80%;
+  }
+}

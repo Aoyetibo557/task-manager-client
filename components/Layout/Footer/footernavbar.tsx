@@ -8,7 +8,7 @@ const FooterNavbar = () => {
   const router = useRouter();
   const path = router.pathname.toLowerCase();
   return (
-    <div className="flex flex-row space-x-2">
+    <div className="flex flex-row space-x-2 footer_navbar">
       <MenuItem
         url="/terms"
         title="Terms of Use"
