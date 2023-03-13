@@ -51,7 +51,7 @@ const DropdownMenu = ({ theme, isMobile }: Props) => {
     },
     {
       key: "2",
-      type: "divider",
+      type: !isMobile && "divider",
     },
     {
       key: "3",

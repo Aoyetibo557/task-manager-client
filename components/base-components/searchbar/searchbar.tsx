@@ -9,14 +9,6 @@ type Props = {
 };
 
 export const SearchBar = (props: Props) => {
-  const [showSearch, setShowSearch] = useState(false);
-  const [hide, setHide] = useState(false);
-
-  const handleClick = () => {
-    // setShowSearch(!showSearch);
-    setHide(!hide);
-  };
-
   const handleSearch = (event: any) => {
     event.preventDefault();
     const query = event.currentTarget.value;
@@ -29,9 +21,7 @@ export const SearchBar = (props: Props) => {
         type="text"
         onChange={handleSearch}
         placeholder="e.g update the profie page avatar..."
-        className={`w-96 p-3 h-full px-2 rounded-lg golos-font text-sm font-light border-[0.8px] searchbar-input ${
-          showSearch === true ? "show-search" : "hide-search"
-        }
+        className={`w-96 p-3 h-full px-2 rounded-lg golos-font text-sm font-light border-[0.8px] searchbar-input 
         ${
           props.theme === "light"
             ? "text-task-dark border-task-light-dark focus:outline focus:outline-neutral-500"

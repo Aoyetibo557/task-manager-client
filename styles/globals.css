@@ -208,10 +208,30 @@ body {
     width: 70vw;
     margin-top: 10px;
   }
+
+  .mobile-board-table {
+    width: 100%;
+    overflow-x: scroll;
+  }
+
+  .help-page-search {
+    display: none;
+  }
+
+  .help-list-cards {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .help-card {
+    width: 100%;
+    margin-bottom: 10px;
+  }
 }
 
-@media only screen and (max-width: 1023px) {
-  .hide-search {
-    display: block;
+@media only screen and (max-width: 912px) {
+  .mobile-board-table {
+    width: 100%;
+    overflow-x: scroll;
   }
 }

@@ -17,7 +17,7 @@ export const HelpCard = ({
 }: Props) => {
   return (
     <div
-      className={`w-2/6 p-4 h-full flex flex-col gap-4 m-1 rounded-md golos-font ${
+      className={`w-2/6 p-4 h-full flex flex-col gap-4 m-1 rounded-md golos-font help-card ${
         theme === "light"
           ? "bg-task-light-white text-task-dark"
           : "bg-task-sidebar-light-dark text-task-light-white"
