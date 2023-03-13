@@ -8,7 +8,7 @@ import { AuthType } from "@/lib/utils/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const Home: NextPage = () => {
+const Home = () => {
   const router = useRouter();
   const { user, loading, isLoggedIn } = useAuth() as AuthType;
 
