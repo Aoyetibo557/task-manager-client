@@ -16,7 +16,7 @@ const Login = () => {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const response = (await findUserByEmail(email)) as any;
+      const response = (await findUserByEmail(email.toLowerCase())) as any;
       const { user } = response;
       if (response.status === "success") {
         setLoading(false);
@@ -32,7 +32,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex flex-col items-center mt-10">
+    <div className="flex flex-col items-center mt-10 p-4">
       <div className="flex flex-col gap-4 ">
         <div>
           <div className="font-bold text-2xl golos-font">

@@ -11,7 +11,7 @@ type Props = {
 export const SubscriptionDetails = ({ theme }: Props) => {
   return (
     <div
-      className={`w-2/4 p-4 h-full flex flex-col gap-4 rounded-md golos-font ${
+      className={`w-2/4 p-4 h-full flex flex-col gap-4 rounded-md golos-font subscription-details-container ${
         theme === "light"
           ? "bg-task-light-white text-task-dark"
           : "bg-task-sidebar-light-dark text-task-light-white"

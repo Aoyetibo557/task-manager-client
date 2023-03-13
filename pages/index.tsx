@@ -8,18 +8,20 @@ import { AuthType } from "@/lib/utils/types";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const Home: NextPage = () => {
+const Home = () => {
   const router = useRouter();
   const { user, loading, isLoggedIn } = useAuth() as AuthType;
 
   useEffect(() => {
-    if (!loading) {
-      if (user && isLoggedIn) router.push("/dashboard");
-      else router.push("/login");
-    }
-  }, [user, loading, isLoggedIn]);
+    // if (!loading) {
+    //   if (user && isLoggedIn) router.push("/dashboard");
+    //   else router.push("/login");
+    // }
 
-  return <div>Checking Sessions...</div>;
+    router.push("/login");
+  }, []);
+
+  return;
 };
 
 export default Home;

@@ -162,7 +162,7 @@ const ProfileDetails = ({ user, theme }: Props) => {
       <div className={`text-lg font-medium`}>Profile Details</div>
       <div className={`flex flex-row items-center gap-5`}>
         <Avatar
-          size={{ xs: 24, sm: 32, md: 40, lg: 64, xl: 80, xxl: 100 }}
+          size={{ xs: 120, sm: 38, md: 40, lg: 64, xl: 80, xxl: 100 }}
           src={imageURL ? imageURL : user?.profileImage}
           className={` rounded-lg`}
         />
@@ -209,7 +209,8 @@ const ProfileDetails = ({ user, theme }: Props) => {
         </div>
       </div>
 
-      <div className={`flex flex-row items-center gap-5`}>
+      <div
+        className={`flex flex-row items-center gap-5 profile-details-inputs-container`}>
         <div className={`flex flex-col`}>
           <label
             htmlFor="username"
@@ -235,7 +236,7 @@ const ProfileDetails = ({ user, theme }: Props) => {
               name="username"
               value={username}
               onChange={handleInput}
-              className={`text-sm golos-font font-medium p-1 w-80 rounded-sm shadow-sm
+              className={`text-sm golos-font font-medium p-1 w-80 rounded-sm shadow-sm profile-details-input
             ${
               theme === "light"
                 ? "text-neutral-500 bg-white border-[0.7px] border-neutral-500 outline-[0.6px] focus:outline-neutral-400"
@@ -257,7 +258,7 @@ const ProfileDetails = ({ user, theme }: Props) => {
             type="text"
             name="email"
             value={user?.email}
-            className={`text-sm golos-font font-medium p-1 w-80 rounded-sm shadow-sm ${
+            className={`text-sm golos-font font-medium p-1 w-80 rounded-sm shadow-sm profile-details-input ${
               theme === "light"
                 ? "text-neutral-500 bg-white border-[0.7px] border-neutral-400 outline-[0.6px] focus:outline-neutral-400"
                 : "text-neutral-200 bg-task-sidebar-light-dark border-[0.6px] border-task-light-white focus:outline-neutral-600"

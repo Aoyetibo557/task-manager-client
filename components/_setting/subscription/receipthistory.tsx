@@ -44,7 +44,7 @@ const tempReceipts = [
 export const ReceiptHistory = ({ theme, receipts }: Props) => {
   return (
     <div
-      className={`w-2/4 p-4 h-full flex flex-col gap-4 rounded-md golos-font ${
+      className={`w-2/4 p-4 h-full flex flex-col gap-4 rounded-md golos-font receipt-container ${
         theme === "light"
           ? "bg-task-light-white text-task-dark"
           : "bg-task-sidebar-light-dark text-task-light-white"
@@ -75,8 +75,8 @@ export const ReceiptHistory = ({ theme, receipts }: Props) => {
           <div
             key={receipt?.id}
             className={`flex flex-row items-center justify-between border-b-[0.6px] border-neutral-500 p-4`}>
-            <span>{receipt?.name}</span>
-            <span>{receipt?.date}</span>
+            <span className={`text-sm`}>{receipt?.name}</span>
+            <span className={`text-sm`}>{receipt?.date}</span>
             <span>{receipt?.format}</span>
           </div>
         ))}

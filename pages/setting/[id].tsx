@@ -17,7 +17,9 @@ const AccountSetting = () => {
       className={`w-full h-screen overflow-auto
     ${theme === "light" ? "bg-task-light" : "bg-task-sidebar-dark"}
     `}>
-      <DashboardHeader />
+      <div className="settings-search-header">
+        <DashboardHeader />
+      </div>
 
       <div className="p-8">
         <div className="flex flex-row items-center gap-4">
@@ -38,7 +40,7 @@ const AccountSetting = () => {
           </div>
         </div>
 
-        <div className="m-10">
+        <div className="m-10 settingstab-container">
           <SettingsTab theme={theme} userId={id} />
         </div>
       </div>

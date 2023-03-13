@@ -96,9 +96,177 @@ body {
 .bebas-neue-font {
   font-family: "Bebas Neue", sans-serif;
 }
+
+.mobile_sidebar {
+  display: none;
+}
+
+.mobile_layout_div {
+  width: 100%;
+}
+
+.mobile-add-btn {
+  display: none;
+}
+
 /* 
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
   }
 } */
+
+@media only screen and (max-width: 768px) {
+  .footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer_navbar {
+    display: none;
+  }
+
+  .loginform {
+    padding: 10px;
+    width: 80%;
+  }
+
+  .dashboard_layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mobile_layout_div {
+    position: relative;
+    top: 70px;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .mobile_sidebar {
+    display: block;
+    top: 0px;
+    z-index: 1000;
+    position: absolute;
+  }
+
+  .mobile_sidebar_div {
+    width: 92%;
+  }
+
+  .mobile-large-text {
+    font-size: 2rem;
+  }
+
+  .add-btn {
+    display: none;
+  }
+
+  .mobile-add-btn {
+    display: block;
+  }
+
+  .hide-dropdown {
+    display: none;
+  }
+
+  .hide-search {
+    display: none;
+  }
+
+  .show-search {
+    display: block;
+  }
+
+  .dashboard-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space;
+    border: none;
+    z-index: auto;
+  }
+
+  .dashboard-header-div {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .searchbar-input {
+    width: 70vw;
+    margin-top: 10px;
+  }
+
+  .mobile-board-table {
+    width: 100%;
+    overflow-x: scroll;
+  }
+
+  .help-page-search {
+    display: none;
+  }
+
+  .help-list-cards {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .help-card {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .settings-search-header {
+    display: none;
+  }
+
+  .settingstab-container {
+    margin: 3px;
+  }
+
+  .mobile-account-setting {
+    display: flex;
+    flex-direction: column;
+  }
+  .profile-details-inputs-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-details-input {
+    width: 100%;
+  }
+
+  .subscription-details-container {
+    width: 100%;
+  }
+
+  .receipt-container {
+    width: 100%;
+  }
+
+  .pinned-tasks-container {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@media only screen and (max-width: 912px) {
+  .mobile-board-table {
+    width: 100%;
+    overflow-x: scroll;
+  }
+}

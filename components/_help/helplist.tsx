@@ -31,7 +31,7 @@ const helpArray = [
 
 const HelpList = ({ theme }: Props) => {
   return (
-    <div className="flex flex-row p-5 gap-5">
+    <div className="flex flex-row p-5 gap-5 help-list-cards">
       {helpArray.map((help) => (
         <HelpCard
           key={help.id}

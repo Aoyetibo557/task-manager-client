@@ -88,7 +88,7 @@ const DashboardHeader = (props: Props) => {
 
   return (
     <div
-      className={`flex flex-row justify-between items-center p-4
+      className={`flex flex-row justify-between items-center p-4 dashboard-header
       ${
         theme === "light"
           ? "bg-task-light-white border-b-[0.6px] border-neutral-300"
@@ -102,22 +102,32 @@ const DashboardHeader = (props: Props) => {
         {props.boardname}
       </div>
 
-      <div className={`flex flex-row gap-4`}>
+      <div className={`flex flex-row gap-4 dashboard-header-div`}>
         <div>
           <SearchBar theme={theme} onSearch={handleSearch} />
         </div>
         {props.contentType === "board" && (
           <button
-            className={`flex flex-row items-center justify-center gap-1 p-2  w-40 center rounded-full golos-font text-sm font-light 
-        ${
-          theme === "light"
-            ? "bg-task-sidebar-light-dark text-task-light-white hover:bg-opacity-100 bg-opacity-75"
-            : "bg-task-sidebar-dark text-task-light-white hover:border-neutral-200 border-[0.5px] border-neutral-400"
-        }
-        `}
+            className={`add-btn flex flex-row items-center justify-center gap-1 p-2  w-40 center rounded-full golos-font text-sm font-light ${
+              theme === "light"
+                ? "bg-task-sidebar-light-dark text-task-light-white hover:bg-opacity-100 bg-opacity-75"
+                : "bg-task-sidebar-dark text-task-light-white hover:border-neutral-200 border-[0.5px] border-neutral-400"
+            }`}
             onClick={() => setOpenModal(true)}>
             <BsPlus className="w-5 h-5" />
             Add New Task
+          </button>
+        )}
+
+        {props.contentType === "board" && (
+          <button
+            className={`mobile-add-btn p-3 rounded-full shadow-sm ${
+              theme === "light"
+                ? "bg-task-sidebar-light-dark text-task-light-white hover:bg-opacity-100 bg-opacity-75"
+                : "bg-task-sidebar-dark text-task-light-white hover:border-neutral-200 border-[0.5px] border-neutral-400"
+            }`}
+            onClick={() => setOpenModal(true)}>
+            <BsPlus className="w-6 h-6" />
           </button>
         )}
 
@@ -133,7 +143,7 @@ const DashboardHeader = (props: Props) => {
           />
         )}
 
-        <div>
+        <div className={`hide-dropdown`}>
           <DropdownMenu theme={theme} />
         </div>
       </div>
