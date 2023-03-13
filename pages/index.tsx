@@ -13,11 +13,13 @@ const Home: NextPage = () => {
   const { user, loading, isLoggedIn } = useAuth() as AuthType;
 
   useEffect(() => {
-    if (!loading) {
-      if (user && isLoggedIn) router.push("/dashboard");
-      else router.push("/login");
-    }
-  }, [user, loading, isLoggedIn]);
+    // if (!loading) {
+    //   if (user && isLoggedIn) router.push("/dashboard");
+    //   else router.push("/login");
+    // }
+
+    router.push("/login");
+  }, []);
 
   return;
 };

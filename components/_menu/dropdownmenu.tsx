@@ -16,9 +16,10 @@ import { CgMenuGridO } from "react-icons/cg";
 
 type Props = {
   theme?: string;
+  isMobile?: boolean;
 };
 
-const DropdownMenu = ({ theme }: Props) => {
+const DropdownMenu = ({ theme, isMobile }: Props) => {
   const router = useRouter();
   const { user, signOut, loading, isLoggedIn, dispatch } =
     useAuth() as AuthType;
@@ -32,7 +33,7 @@ const DropdownMenu = ({ theme }: Props) => {
   const items: MenuProps["items"] = [
     {
       key: "1",
-      label: (
+      label: !isMobile && (
         <div>
           {`${user?.firstName} ${user?.lastName}`}
           <div>
@@ -40,8 +41,7 @@ const DropdownMenu = ({ theme }: Props) => {
           </div>
         </div>
       ),
-      // icon: <HiOutlineUserCircle className="mr-2 w-5 h-5" />,
-      icon: (
+      icon: !isMobile && (
         <Avatar
           className="w-10 h-10"
           src={image ? image : user?.profileImage}
@@ -98,7 +98,11 @@ const DropdownMenu = ({ theme }: Props) => {
           className={`${
             theme === "light" ? "text-task-dark" : "text-task-light-white"
           }`}>
-          <CgMenuGridO className="cursor-pointer w-7 h-7" />
+          {isMobile ? (
+            <Avatar src={user?.profileImage} size={40} />
+          ) : (
+            <CgMenuGridO className="cursor-pointer w-7 h-7" />
+          )}
         </button>
       </Dropdown>
     </div>

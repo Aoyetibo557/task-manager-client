@@ -48,7 +48,10 @@ const LoginForm = () => {
     }
 
     try {
-      const response = (await signIn(emailinput, password)) as any;
+      const response = (await signIn(
+        emailinput.toLowerCase(),
+        password
+      )) as any;
       if (response.status === "error") {
         setLoginError(response.message);
         setLoading(false);
@@ -57,6 +60,7 @@ const LoginForm = () => {
         setLoginError("");
         setUser(response.user);
         router.push("/dashboard");
+        setLoading(false);
       }
     } catch (error: any) {
       console.log(error);

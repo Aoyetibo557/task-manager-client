@@ -29,7 +29,7 @@ const Dashboard = () => {
               theme === "light" ? "text-task-dark" : "text-task-light-white"
             }`}>
             <span
-              className={`inline-flex gap-3 items-center  text-4xl font-semibold`}>
+              className={`inline-flex gap-3 items-center text-4xl font-semibold mobile-large-text`}>
               Welcome {user?.tourtaken ? "back" : "aboard"} {user?.firstName} !
               <Image
                 src="/static/images/party.png"
@@ -63,7 +63,7 @@ const Dashboard = () => {
             </span>
           </div>
 
-          <div>
+          <div className={`hide-dropdown`}>
             <DropdownMenu theme={theme} />
           </div>
         </div>

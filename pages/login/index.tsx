@@ -16,7 +16,7 @@ const Login = () => {
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const response = (await findUserByEmail(email)) as any;
+      const response = (await findUserByEmail(email.toLowerCase())) as any;
       const { user } = response;
       if (response.status === "success") {
         setLoading(false);

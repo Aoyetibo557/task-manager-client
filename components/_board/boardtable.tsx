@@ -56,7 +56,7 @@ const BoardTable = ({ boardtasks, loading, searchQuery }: Props) => {
       </div>
     </div>
   ) : (
-    <div className={`flex flex-row gap-10 p-10 overflow-scroll`}>
+    <div className={`flex flex-row gap-10 p-10`}>
       <BoardColumn theme={theme} columntype="todo" tasks={todo} />
       <BoardColumn theme={theme} columntype="doing" tasks={doingtasks} />
       <BoardColumn theme={theme} columntype="done" tasks={donetasks} />
