@@ -227,6 +227,41 @@ body {
     width: 100%;
     margin-bottom: 10px;
   }
+
+  .settings-search-header {
+    display: none;
+  }
+
+  .settingstab-container {
+    margin: 3px;
+  }
+
+  .mobile-account-setting {
+    display: flex;
+    flex-direction: column;
+  }
+  .profile-details-inputs-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .profile-details-input {
+    width: 100%;
+  }
+
+  .subscription-details-container {
+    width: 100%;
+  }
+
+  .receipt-container {
+    width: 100%;
+  }
+
+  .pinned-tasks-container {
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 @media only screen and (max-width: 912px) {

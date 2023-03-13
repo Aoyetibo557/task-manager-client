@@ -71,10 +71,10 @@ export const RecentActivity = ({ theme }: Props) => {
       unsubscribeOne;
       unsubscribeTwo;
 
-      dispatch({
-        type: "TASK_PINACTION",
-        payload: false,
-      });
+      // dispatch({
+      //   type: "TASK_PINACTION",
+      //   payload: false,
+      // });
     };
   }, [isTaskActionDispatched, isTaskPinned]);
 
@@ -108,7 +108,7 @@ export const RecentActivity = ({ theme }: Props) => {
           Pinned Tasks
         </div>
 
-        <div className="flex flex-row gap-4">
+        <div className="flex flex-row gap-4 pinned-tasks-container">
           {pinnedTasks.map((task, idx) => (
             <TaskCard key={idx} task={task} theme={theme} />
           ))}

@@ -14,7 +14,7 @@ type Props = {
 export const AccountSetting = ({ user, theme }: Props) => {
   return (
     <div className="flex flex-col gap-6 pt-5">
-      <div className="inline-flex flex-row gap-6">
+      <div className="inline-flex flex-row gap-6 mobile-account-setting">
         <ProfileDetails user={user} theme={theme} />
 
         <div className="inline-flex flex-col gap-6">
