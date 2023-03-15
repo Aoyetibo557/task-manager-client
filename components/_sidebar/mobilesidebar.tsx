@@ -24,7 +24,14 @@ interface BoardLink {
 }
 
 const MobileSidebar = () => {
-  const { user, loading, isLoggedIn, signOut } = useAuth() as AuthType;
+  const {
+    user,
+    loading,
+    isLoggedIn,
+    signOut,
+    dispatch,
+    isUserActionDispatched,
+  } = useAuth() as AuthType;
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState("");
@@ -100,7 +107,7 @@ const MobileSidebar = () => {
     }
 
     getBoards();
-  }, [isLoggedIn, user, router]);
+  }, [isLoggedIn, user, router, isUserActionDispatched]);
 
   return (
     <div
@@ -117,7 +124,6 @@ const MobileSidebar = () => {
             onClick={() => setShowMenu(!showMenu)}
           />
 
-          {/* <Avatar src={user?.profileImage} size={40} /> */}
           <DropdownMenu theme={theme} isMobile={true} />
         </div>
 

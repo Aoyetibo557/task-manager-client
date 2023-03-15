@@ -12,6 +12,7 @@ import {
   getDownloadURL,
 } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
+import { ActionTypes } from "@/lib/utils/actions";
 
 type Props = {
   user: User | undefined;
@@ -73,7 +74,7 @@ const ProfileDetails = ({ user, theme }: Props) => {
         message.success("Profile updated successfully");
         setLoading(false);
         dispatch({
-          type: "UPDATE_USER",
+          type: ActionTypes.UPDATE_USER,
           payload: true,
         });
         handleSetUser(updatedUser.user);
@@ -81,8 +82,10 @@ const ProfileDetails = ({ user, theme }: Props) => {
     }
   };
 
-  const handleImageUpload = async () => {
+  const handleImageUpload = () => {
     setLoading(true);
+    setImageURL("");
+
     if (!imageUpload) {
       message.error("Please select an image");
       setLoading(false);
@@ -104,18 +107,21 @@ const ProfileDetails = ({ user, theme }: Props) => {
         setProgressPercent(progress);
         message.info(`Uploading ${progress}%`);
         setImageUpload(null);
+        setLoading(false);
       },
       (error) => {
         message.error(error.message);
       },
       () => {
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+        getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
           setImageURL(downloadURL);
-          message.success("Image uploaded successfully");
+          message.success(`Image uploaded successfully`);
+
           if (downloadURL) {
-            const updatedUser = updateUserById(user?.userid, {
+            setLoading(true);
+            const updatedUser = await updateUserById(user?.userid, {
               profileImage: downloadURL,
-            }) as any;
+            });
 
             if (updatedUser.status === "error") {
               message.error(updatedUser.message);
@@ -125,12 +131,12 @@ const ProfileDetails = ({ user, theme }: Props) => {
                 message.success("Profile image added successfully");
                 setLoading(false);
                 dispatch({
-                  type: "UPDATE_USER",
+                  type: ActionTypes.UPDATE_USER,
                   payload: true,
                 });
+
                 handleSetUser(updatedUser.user);
               }
-              setImageURL("");
             }
           }
         });
@@ -147,7 +153,7 @@ const ProfileDetails = ({ user, theme }: Props) => {
       setUsername("");
       setImageURL("");
       dispatch({
-        type: "UPDATE_USER",
+        type: ActionTypes.UPDATE_USER,
         payload: false,
       });
     };
@@ -161,11 +167,15 @@ const ProfileDetails = ({ user, theme }: Props) => {
       }`}>
       <div className={`text-lg font-medium`}>Profile Details</div>
       <div className={`flex flex-row items-center gap-5`}>
-        <Avatar
-          size={{ xs: 120, sm: 38, md: 40, lg: 64, xl: 80, xxl: 100 }}
-          src={imageURL ? imageURL : user?.profileImage}
-          className={` rounded-lg`}
-        />
+        {loading ? (
+          <Spin size="small" />
+        ) : (
+          <Avatar
+            size={{ xs: 120, sm: 38, md: 40, lg: 64, xl: 80, xxl: 100 }}
+            src={user?.profileImage ? user?.profileImage : imageURL}
+            className={` rounded-lg`}
+          />
+        )}
 
         <div className={`flex flex-row items-center `}>
           <input
@@ -191,12 +201,14 @@ const ProfileDetails = ({ user, theme }: Props) => {
             ) : (
               <Button label={"Upload"} size="xs" onClick={handleImageUpload} />
             )}
-            <Button
-              label="Delete"
-              size="xs"
-              bgColor="other"
-              onClick={() => setImageUpload(null)}
-            />
+            {imageUpload && imageURL && (
+              <Button
+                label="Delete"
+                size="xs"
+                bgColor="other"
+                onClick={() => setImageUpload(null)}
+              />
+            )}
           </div>
 
           <div
@@ -204,7 +216,7 @@ const ProfileDetails = ({ user, theme }: Props) => {
           ${theme === "light" ? "text-neutral-700" : "text-neutral-300"}
           `}>
             *Image size should be at least 320px big, and less than 500kb.
-            Allowed files .jpg and .png
+            Allowed files .jpg and .png{" "}
           </div>
         </div>
       </div>

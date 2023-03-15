@@ -111,7 +111,7 @@ const DashboardHeader = (props: Props) => {
             className={`add-btn flex flex-row items-center justify-center gap-1 p-2  w-40 center rounded-full golos-font text-sm font-light ${
               theme === "light"
                 ? "bg-task-sidebar-light-dark text-task-light-white hover:bg-opacity-100 bg-opacity-75"
-                : "bg-task-sidebar-dark text-task-light-white hover:border-neutral-200 border-[0.5px] border-neutral-400"
+                : "bg-task-sidebar-dark text-task-light-white hover:border-neutral-200 border-[1.5px] border-neutral-400"
             }`}
             onClick={() => setOpenModal(true)}>
             <BsPlus className="w-5 h-5" />
@@ -124,7 +124,7 @@ const DashboardHeader = (props: Props) => {
             className={`mobile-add-btn p-3 rounded-full shadow-sm ${
               theme === "light"
                 ? "bg-task-sidebar-light-dark text-task-light-white hover:bg-opacity-100 bg-opacity-75"
-                : "bg-task-sidebar-dark text-task-light-white hover:border-neutral-200 border-[0.5px] border-neutral-400"
+                : "bg-task-sidebar-dark text-task-light-white hover:border-neutral-200 border-[1.5px] border-neutral-400"
             }`}
             onClick={() => setOpenModal(true)}>
             <BsPlus className="w-6 h-6" />
