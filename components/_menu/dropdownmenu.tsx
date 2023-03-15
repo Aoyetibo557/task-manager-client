@@ -5,7 +5,7 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import { useState, useEffect, useContext } from "react";
 import { ThemeContext } from "../Layout/_contexts/themecontext";
 import type { MenuProps } from "antd";
-import { Dropdown, message, Avatar } from "antd";
+import { Dropdown, message, Avatar, Spin } from "antd";
 import Link from "next/link";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoMdHelpCircleOutline } from "react-icons/io";
@@ -21,8 +21,14 @@ type Props = {
 
 const DropdownMenu = ({ theme, isMobile }: Props) => {
   const router = useRouter();
-  const { user, signOut, loading, isLoggedIn, dispatch } =
-    useAuth() as AuthType;
+  const {
+    user,
+    signOut,
+    loading,
+    isLoggedIn,
+    dispatch,
+    isUserActionDispatched,
+  } = useAuth() as AuthType;
   const [image, setImage] = useState<any>(user?.profileImage);
 
   const handleSignOut = () => {

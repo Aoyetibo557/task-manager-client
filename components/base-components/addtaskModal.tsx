@@ -61,7 +61,7 @@ const AddTaskModal = (props: Props) => {
             type="text"
             required
             placeholder="e.g Take coffee break"
-            className={`w-full p-3 rounded-md border-[0.4px] golos-font text-sm font-light 
+            className={`w-full p-3 rounded-md border-[1.5px] golos-font text-sm font-light 
               ${
                 props.theme === "light"
                   ? "bg-task-light-white text-task-sidebar-dark border-neutral-800 focus:outline-neutral-400"
@@ -92,7 +92,7 @@ const AddTaskModal = (props: Props) => {
             rows={7}
             required
             placeholder="e.g It's always good to take a break. This will help you to be more productive"
-            className={`w-full p-3 rounded-md border-[0.4px] golos-font text-sm font-light resize-none
+            className={`w-full p-3 rounded-md border-[1.5px] golos-font text-sm font-light resize-none
               ${
                 props.theme === "light"
                   ? "bg-task-light-white text-task-sidebar-dark border-neutral-800 focus:outline-neutral-400"
@@ -122,7 +122,7 @@ const AddTaskModal = (props: Props) => {
 
           <select
             required
-            className={`w-full p-3 rounded-md border-[0.4px] golos-font text-sm font-light
+            className={`w-full p-3 rounded-md border-[1.5px] golos-font text-sm font-light
               ${
                 props.theme === "light"
                   ? "bg-task-light-white text-task-sidebar-dark border-neutral-800 focus:outline-neutral-400"
@@ -157,7 +157,7 @@ const AddTaskModal = (props: Props) => {
 
           <select
             required
-            className={`w-full p-3 rounded-md border-[0.4px] golos-font text-sm font-light
+            className={`w-full p-3 rounded-md border-[1.5px] golos-font text-sm font-light
               ${
                 props.theme === "light"
                   ? "bg-task-light-white text-task-sidebar-dark border-neutral-800 focus:outline-neutral-400"
