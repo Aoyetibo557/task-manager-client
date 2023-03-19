@@ -76,7 +76,7 @@ const BoardDetail = () => {
       <div className="sticky top-0">
         <DashboardHeader
           boardname={name as string}
-          boardId={id as string}
+          boardId={id as any}
           contentType="board"
           onSearch={handleSearch}
         />
