@@ -15,7 +15,7 @@ import { AuthType } from "@/lib/utils/types";
 import { CgMenuGridO } from "react-icons/cg";
 import { SlOptionsVertical } from "react-icons/sl";
 import { ConfirmationModal } from "../_confirmationmodal/confirmationmodal";
-import { clearBoard } from "@/lib/queries/board";
+import { clearBoard, deleteBoard } from "@/lib/queries/board";
 import { ActionTypes } from "@/lib/utils/actions";
 
 type Props = {
@@ -38,11 +38,11 @@ const BoardMenu = ({ theme, isMobile, boardid }: Props) => {
     isUserActionDispatched,
   } = useAuth() as AuthType;
 
-  const handleClearBoardModal = () => {
+  const clearBoardModal = () => {
     setClearModal(true);
   };
 
-  const handleDeleteBoardModal = () => {
+  const deleteBoardModal = () => {
     setDeleteModal(true);
   };
 
@@ -62,12 +62,29 @@ const BoardMenu = ({ theme, isMobile, boardid }: Props) => {
     }
   };
 
+  const handleDeleteBoard = async (boardid: string) => {
+    const res = (await deleteBoard(boardid)) as any;
+    if (res.status === "success") {
+      message.success("Board Deleted");
+      setDeleteModal(false);
+      dispatch({
+        type: ActionTypes.BOARD_ACTION,
+        payload: true,
+      });
+      router.push("/dashboard");
+    } else {
+      if (res.status === "error") {
+        message.error(res.message);
+      }
+    }
+  };
+
   const items: MenuProps["items"] = [
     {
       key: "1",
       label: !isMobile && (
         <div>
-          <button type="submit" onClick={handleClearBoardModal}>
+          <button type="submit" onClick={clearBoardModal}>
             Clear Board
           </button>
         </div>
@@ -83,7 +100,7 @@ const BoardMenu = ({ theme, isMobile, boardid }: Props) => {
       key: "3",
       label: !isMobile && (
         <div>
-          <button type="submit" onClick={handleDeleteBoardModal}>
+          <button type="submit" onClick={deleteBoardModal}>
             Delete Board
           </button>
         </div>
@@ -126,7 +143,7 @@ const BoardMenu = ({ theme, isMobile, boardid }: Props) => {
           setOpen={setDeleteModal}
           title="Delete Board"
           subtitle="Are you sure you want to delete this board?"
-          onConfirm={() => handleDeleteBoardModal(boardid as any)}
+          onConfirm={() => handleDeleteBoard(boardid as any)}
           primaryBtnLabel="Delete"
           secondaryBtnLabel="Cancel"
         />

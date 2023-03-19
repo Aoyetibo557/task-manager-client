@@ -22,7 +22,8 @@ interface BoardLink {
 }
 
 const Sidebar = () => {
-  const { user, loading, isLoggedIn, signOut } = useAuth() as AuthType;
+  const { user, loading, isLoggedIn, signOut, isBoardActionDispatched } =
+    useAuth() as AuthType;
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState("");
@@ -96,7 +97,7 @@ const Sidebar = () => {
       }
     }
     getBoards();
-  }, [isLoggedIn, user, router]);
+  }, [isLoggedIn, user, router, isBoardActionDispatched]);
 
   return (
     <div

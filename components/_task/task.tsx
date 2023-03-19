@@ -5,9 +5,8 @@ import { truncate } from "@/lib/utils/truncate";
 import { Task, AuthType } from "@/lib/utils/types";
 import { updateTask } from "@/lib/queries/task";
 import { useAuth } from "@/lib/hooks/useAuth";
-import { message } from "antd";
+import { message, Tag } from "antd";
 import { ActionTypes } from "@/lib/utils/actions";
-import Image from "next/image";
 
 type Props = {
   task: Task;
@@ -56,6 +55,19 @@ export const TaskCard = ({ task, theme }: Props) => {
     }
   };
 
+  const getTagColor = (proiority: string) => {
+    switch (proiority) {
+      case "high":
+        return "#f50";
+      case "medium":
+        return "#FF4366";
+      case "low":
+        return "#4D5ACE";
+      default:
+        return "#2db7f5";
+    }
+  };
+
   return (
     <div
       className={`flex flex-col justify-between w-80 p-4 rounded-lg cursor-pointer hover:outline-double hover:outline-4
@@ -72,16 +84,13 @@ export const TaskCard = ({ task, theme }: Props) => {
       `}>
         {truncate(task?.name, 55)}
 
-        <Image
-          src={`/static/images/${
-            task.priority ? task?.priority : "low"
-          }priority.png`}
-          alt="priority"
-          width={20}
-          height={20}
-          title={`${task.priority ? task?.priority : "low"} priority`}
-          className="w-7 h-7"
-        />
+        <div>
+          <Tag
+            title={task?.priority ? `${task?.priority} priority` : "low"}
+            color={getTagColor(task?.priority ? task?.priority : "low")}>
+            {task.priority ? task?.priority : "low"}
+          </Tag>
+        </div>
       </div>
       <div
         className={` font-light text-sm golos-font ${

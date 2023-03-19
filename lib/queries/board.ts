@@ -5,6 +5,7 @@ import { Board, ReturnObject, User } from "../utils/types";
 const BOARD_ROUTE = "/boards/getuserboards";
 const CREATE_BOARD_ROUTE = "/boards/createboard";
 const CLEAR_BOARD_ROUTE = "/boards/cleartasks";
+const DELETE_BOARD_ROUTE = "/boards/deleteboard";
 
 // Get all boards for a user
 async function getUserBoards(userid: User | any) {
@@ -26,4 +27,12 @@ async function clearBoard(boardid: string) {
   return data;
 }
 
-export { getUserBoards, createBoard, clearBoard };
+// delete a board
+async function deleteBoard(boardid: string) {
+  const { data } = await API.delete<ReturnObject | any>(
+    `${DELETE_BOARD_ROUTE}/${boardid}`
+  );
+  return data;
+}
+
+export { getUserBoards, createBoard, clearBoard, deleteBoard };
