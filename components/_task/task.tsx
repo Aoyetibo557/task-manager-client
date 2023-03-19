@@ -86,7 +86,9 @@ export const TaskCard = ({ task, theme }: Props) => {
 
         <div>
           <Tag
-            title={task?.priority ? `${task?.priority} priority` : "low"}
+            title={
+              task?.priority ? `${task?.priority} priority` : "low priority"
+            }
             color={getTagColor(task?.priority ? task?.priority : "low")}>
             {task.priority ? task?.priority : "low"}
           </Tag>
