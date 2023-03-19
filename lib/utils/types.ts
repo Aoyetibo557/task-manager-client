@@ -84,4 +84,5 @@ export interface AuthType {
   isTaskActionDispatched: boolean;
   isTaskPinned: boolean;
   isUserActionDispatched: boolean;
+  isBoardActionDispatched: boolean;
 }

@@ -24,6 +24,7 @@ const BoardDetail = () => {
     isLoggedIn,
     isTaskActionDispatched,
     isTaskPinned,
+    isBoardActionDispatched,
     dispatch,
   } = useAuth() as AuthType;
 
@@ -65,7 +66,15 @@ const BoardDetail = () => {
         payload: false,
       });
     };
-  }, [id, name, isLoggedIn, isTaskActionDispatched, isTaskPinned, dispatch]);
+  }, [
+    id,
+    name,
+    isLoggedIn,
+    isTaskActionDispatched,
+    isTaskPinned,
+    dispatch,
+    isBoardActionDispatched,
+  ]);
 
   return (
     <div

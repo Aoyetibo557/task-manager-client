@@ -15,6 +15,8 @@ import { AuthType } from "@/lib/utils/types";
 import { CgMenuGridO } from "react-icons/cg";
 import { SlOptionsVertical } from "react-icons/sl";
 import { ConfirmationModal } from "../_confirmationmodal/confirmationmodal";
+import { clearBoard } from "@/lib/queries/board";
+import { ActionTypes } from "@/lib/utils/actions";
 
 type Props = {
   theme?: string;
@@ -36,14 +38,28 @@ const BoardMenu = ({ theme, isMobile, boardid }: Props) => {
     isUserActionDispatched,
   } = useAuth() as AuthType;
 
-  const handleClearBoardModal = (boardid: string) => {
-    console.log("clear board");
+  const handleClearBoardModal = () => {
     setClearModal(true);
   };
 
-  const handleDeleteBoardModal = (boardid: string) => {
-    console.log("delete board");
+  const handleDeleteBoardModal = () => {
     setDeleteModal(true);
+  };
+
+  const handleClearBoard = async (boardid: string) => {
+    const res = (await clearBoard(boardid)) as any;
+    if (res.status === "success") {
+      message.success("Board Cleared");
+      setClearModal(false);
+      dispatch({
+        type: ActionTypes.BOARD_ACTION,
+        payload: true,
+      });
+    } else {
+      if (res.status === "error") {
+        message.error(res.message);
+      }
+    }
   };
 
   const items: MenuProps["items"] = [
@@ -51,9 +67,7 @@ const BoardMenu = ({ theme, isMobile, boardid }: Props) => {
       key: "1",
       label: !isMobile && (
         <div>
-          <button
-            type="submit"
-            onClick={() => handleClearBoardModal(boardid as any)}>
+          <button type="submit" onClick={handleClearBoardModal}>
             Clear Board
           </button>
         </div>
@@ -69,9 +83,7 @@ const BoardMenu = ({ theme, isMobile, boardid }: Props) => {
       key: "3",
       label: !isMobile && (
         <div>
-          <button
-            type="submit"
-            onClick={() => handleDeleteBoardModal(boardid as any)}>
+          <button type="submit" onClick={handleDeleteBoardModal}>
             Delete Board
           </button>
         </div>
@@ -102,7 +114,7 @@ const BoardMenu = ({ theme, isMobile, boardid }: Props) => {
           setOpen={setClearModal}
           title="Clear Tasks"
           subtitle="Are you sure you want to clear all tasks on this board?"
-          onConfirm={() => handleClearBoardModal(boardid as any)}
+          onConfirm={() => handleClearBoard(boardid as any)}
           primaryBtnLabel="Clear"
           secondaryBtnLabel="Cancel"
         />

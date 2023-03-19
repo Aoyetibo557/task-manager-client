@@ -29,6 +29,7 @@ type AuthContextType = {
   isTaskActionDispatched: boolean;
   isTaskPinned: boolean;
   isUserActionDispatched: boolean;
+  isBoardActionDispatched: boolean;
 };
 
 type AuthProviderProps = {
@@ -50,6 +51,7 @@ export const AuthContext = createContext<AuthContextType>({
   isTaskActionDispatched: false,
   isTaskPinned: false,
   isUserActionDispatched: false,
+  isBoardActionDispatched: false,
 } as AuthContextType);
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
@@ -60,6 +62,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isTaskActionDispatched, setIsTaskAction] = useState(false);
   const [isTaskPinned, setIsTaskPinned] = useState(false);
   const [isUserActionDispatched, setIsUserAction] = useState(false);
+  const [isBoardActionDispatched, setIsBoardAction] = useState(false);
 
   const handleSetUser = (user: {}) => {
     localStorage.setItem("task-user", JSON.stringify(user));
@@ -154,8 +157,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         break;
       case ActionTypes.TASK_UPDATED:
         setIsTaskAction(action.payload);
+        break;
       case ActionTypes.TASK_PINACTION:
         setIsTaskPinned(action.payload);
+        break;
+      case ActionTypes.BOARD_ACTION:
+        setIsBoardAction(action.payload);
         break;
       default:
         break;
@@ -183,6 +190,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isTaskPinned,
     isTaskActionDispatched,
     isUserActionDispatched,
+    isBoardActionDispatched,
   };
 
   return (
