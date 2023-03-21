@@ -70,11 +70,11 @@ export const TaskCard = ({ task, theme }: Props) => {
 
   return (
     <div
-      className={`flex flex-col justify-between w-80 p-4 rounded-lg cursor-pointer hover:outline-double hover:outline-4
+      className={`flex flex-col justify-between w-80 p-4 rounded-lg cursor-pointer hover:transform hover:scale-105 transition-all duration-300
       ${
         theme === "light"
           ? "bg-task-light-white shadow-slate-300 shadow-sm"
-          : "bg-task-sidebar-light-dark shadow-md hover:outline-task-light-white"
+          : "bg-task-sidebar-light-dark shadow-md "
       }`}
       onClick={() => setIsModalOpen(true)}>
       <div

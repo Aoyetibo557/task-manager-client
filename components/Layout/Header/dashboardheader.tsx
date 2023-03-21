@@ -12,10 +12,12 @@ import { ActionTypes } from "@/lib/utils/actions";
 import { SearchBar } from "@/components/base-components/searchbar/searchbar";
 import DropdownMenu from "@/components/_menu/dropdownmenu";
 import BoardMenu from "@/components/_menu/boardmenu";
+
 type Props = {
   boardname?: string;
   boardId?: string;
   contentType?: "board" | "page";
+  hasboardMenu?: boolean;
   onSearch?: (query: string) => void;
 };
 
@@ -102,7 +104,9 @@ const DashboardHeader = (props: Props) => {
         {props.boardname}
 
         <div>
-          <BoardMenu theme={theme} boardid={props.boardId} />
+          {props.hasboardMenu && (
+            <BoardMenu theme={theme} boardid={props.boardId} />
+          )}
         </div>
       </div>
 

@@ -3,7 +3,7 @@ import Modal from "../Utility/Modal/modal";
 import { BsThreeDotsVertical, BsFillPinFill, BsPin } from "react-icons/bs";
 import { Task, AuthType } from "@/lib/utils/types";
 import type { MenuProps } from "antd";
-import { Dropdown, message, Spin } from "antd";
+import { Dropdown, message, Spin, Tag } from "antd";
 import {
   archiveTask,
   deleteTask,
@@ -13,7 +13,7 @@ import {
 import { useAuth } from "@/lib/hooks/useAuth";
 import { ActionTypes } from "@/lib/utils/actions";
 import { formatDate } from "@/lib/utils/truncate";
-import Image from "next/image";
+import { ConfirmationModal } from "../_confirmationmodal/confirmationmodal";
 
 type Props = {
   className?: string;
@@ -33,6 +33,8 @@ const TaskDetailModal = (props: Props) => {
   const [pinLoading, setPinLoading] = useState(false);
   const { dispatch } = useAuth() as AuthType;
   const [isPinned, setIsPinned] = useState(props.task.pinned);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
 
   const handleUpdateInput = (name: keyof Task, value: string) => {
     setStatus(
@@ -127,24 +129,32 @@ const TaskDetailModal = (props: Props) => {
     }
   };
 
-  const getPriorityImage = (priority: string) => {
-    switch (priority) {
-      case "low":
-        return "/static/images/lowpriority.png";
-      case "medium":
-        return "/static/images/mediumpriority.png";
+  const getTagColor = (proiority: string) => {
+    switch (proiority) {
       case "high":
-        return "/static/images/highpriority.png";
+        return "#f50";
+      case "medium":
+        return "#FF4366";
+      case "low":
+        return "#4D5ACE";
       default:
-        return "/static/images/lowpriority.png";
+        return "#2db7f5";
     }
+  };
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const openArchiveModal = () => {
+    setIsArchiveModalOpen(true);
   };
 
   const items: MenuProps["items"] = [
     {
       key: "1",
       label: (
-        <button type="submit" onClick={handleDelete}>
+        <button type="submit" onClick={openDeleteModal}>
           Delete
         </button>
       ),
@@ -152,7 +162,7 @@ const TaskDetailModal = (props: Props) => {
     {
       key: "2",
       label: (
-        <button type="submit" onClick={handleArchive}>
+        <button type="submit" onClick={openArchiveModal}>
           Archive
         </button>
       ),
@@ -166,16 +176,22 @@ const TaskDetailModal = (props: Props) => {
           className={`flex flex-row p-3 justify-between font-medium text-lg golos-font mb-2 ${
             props.theme === "light" ? "text-task-dark" : "text-task-light-white"
           }`}>
-          <div className="w-3/4 flex flex-row items-center gap-2">
+          <div className="w-3/4 flex flex-row gap-2">
             {props.task.name}
 
-            <Image
-              src={getPriorityImage(props.task.priority)}
-              alt="priority"
-              width={25}
-              height={25}
-              title={props.task.priority ? props.task.priority : "low Priority"}
-            />
+            <div>
+              <Tag
+                title={
+                  props.task?.priority
+                    ? `${props.task?.priority} priority`
+                    : "low priority"
+                }
+                color={getTagColor(
+                  props.task?.priority ? props.task?.priority : "low"
+                )}>
+                {props?.task.priority ? props.task?.priority : "low"}
+              </Tag>
+            </div>
           </div>
 
           {props.task?.pinned || isPinned ? (
@@ -283,6 +299,34 @@ const TaskDetailModal = (props: Props) => {
             {`Board: ${props.task?.boardName}`}
           </div>
         )}
+
+        <div>
+          {isDeleteModalOpen && (
+            <ConfirmationModal
+              open={isDeleteModalOpen}
+              setOpen={setIsDeleteModalOpen}
+              theme={props.theme}
+              title="Delete Task"
+              subtitle="Are you sure you want to delete this task?"
+              onConfirm={handleDelete}
+              primaryBtnLabel="Delete"
+              secondaryBtnLabel="Cancel"
+            />
+          )}
+
+          {isArchiveModalOpen && (
+            <ConfirmationModal
+              open={isArchiveModalOpen}
+              setOpen={setIsArchiveModalOpen}
+              theme={props.theme}
+              title="Archive Task"
+              subtitle="Are you sure you want to archive this task?"
+              onConfirm={handleArchive}
+              primaryBtnLabel="Archive"
+              secondaryBtnLabel="Cancel"
+            />
+          )}
+        </div>
       </div>
     </Modal>
   );

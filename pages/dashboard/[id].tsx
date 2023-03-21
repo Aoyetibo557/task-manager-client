@@ -87,6 +87,7 @@ const BoardDetail = () => {
           boardname={name as string}
           boardId={id as any}
           contentType="board"
+          hasboardMenu={true}
           onSearch={handleSearch}
         />
       </div>

@@ -196,6 +196,7 @@ const Sidebar = () => {
 
             <div>
               {/* this will have all tasks, tasks by board and others */}
+              <SidebarLink title="All" url="/dashboard/archived" />
             </div>
           </div>
         </div>
