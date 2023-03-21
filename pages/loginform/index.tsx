@@ -10,6 +10,7 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import { Spin } from "antd";
 import { AuthType } from "@/lib/utils/types";
 import { NextPage } from "next/types";
+import Link from "next/link";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -118,6 +119,13 @@ const LoginForm = () => {
                 </div>
               )}
             </div>
+          </div>
+          <div>
+            <Link
+              href="/passwordreset"
+              className="golos-font text-sm text-task-blue hover:underline font-normal inline-flex place-content-end">
+              Forgot Password?
+            </Link>
           </div>
           <div className="w-full">
             {loading ? (
