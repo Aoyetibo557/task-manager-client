@@ -104,6 +104,8 @@ const DropdownMenu = ({ theme, isMobile }: Props) => {
     <div id="menu">
       <Dropdown menu={{ items }} trigger={["click"]} placement="bottomRight">
         <button
+          title={`${user?.firstName} ${user?.lastName}`}
+          araia-label={`${user?.firstName} ${user?.lastName}`}
           type="submit"
           className={`${
             theme === "light" ? "text-task-dark" : "text-task-light-white"
@@ -115,7 +117,6 @@ const DropdownMenu = ({ theme, isMobile }: Props) => {
               className="w-12 h-12 border-2 border-blue-400"
               src={image ? image : user?.profileImage}
               alt="user"
-              title={`${user?.firstName} ${user?.lastName}`}
             />
           )}
         </button>

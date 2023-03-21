@@ -120,13 +120,13 @@ const LoginForm = () => {
               )}
             </div>
           </div>
-          <div>
+          {/* <div>
             <Link
               href="/passwordreset"
               className="golos-font text-sm text-task-blue hover:underline font-normal inline-flex place-content-end">
               Forgot Password?
             </Link>
-          </div>
+          </div> */}
           <div className="w-full">
             {loading ? (
               <Spin size="large" />

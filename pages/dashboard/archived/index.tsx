@@ -15,7 +15,7 @@ function ArchivedPage() {
         theme === "light" ? "bg-task-light" : "bg-task-sidebar-dark"
       } `}>
       <div className="sticky top-0">
-        <DashboardHeader contentType="page" hasBoardMenue={false} />
+        <DashboardHeader contentType="page" hasboardMenu={false} />
       </div>
       <div>
         <div className="flex flex-col items-center gap-4 mt-10">

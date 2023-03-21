@@ -15,7 +15,7 @@ const ArchivedTasks = () => {
   const router = useRouter();
 
   const handleAllArchivedTasks = async () => {
-    const data = await getUserArchivedTasks(user?.userid);
+    const data = (await getUserArchivedTasks(user?.userid)) as any;
 
     if (data.status === "success") {
       setArchivedTasks(data.tasks);

@@ -305,7 +305,6 @@ const TaskDetailModal = (props: Props) => {
             <ConfirmationModal
               open={isDeleteModalOpen}
               setOpen={setIsDeleteModalOpen}
-              theme={props.theme}
               title="Delete Task"
               subtitle="Are you sure you want to delete this task?"
               onConfirm={handleDelete}
@@ -318,7 +317,6 @@ const TaskDetailModal = (props: Props) => {
             <ConfirmationModal
               open={isArchiveModalOpen}
               setOpen={setIsArchiveModalOpen}
-              theme={props.theme}
               title="Archive Task"
               subtitle="Are you sure you want to archive this task?"
               onConfirm={handleArchive}
