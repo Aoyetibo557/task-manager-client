@@ -11,11 +11,13 @@ import { message } from "antd";
 import { ActionTypes } from "@/lib/utils/actions";
 import { SearchBar } from "@/components/base-components/searchbar/searchbar";
 import DropdownMenu from "@/components/_menu/dropdownmenu";
+import BoardMenu from "@/components/_menu/boardmenu";
 
 type Props = {
   boardname?: string;
   boardId?: string;
   contentType?: "board" | "page";
+  hasboardMenu?: boolean;
   onSearch?: (query: string) => void;
 };
 
@@ -96,10 +98,16 @@ const DashboardHeader = (props: Props) => {
       }
     `}>
       <div
-        className={`golos-font font-medium text-lg
+        className={`flex flex-row items-center gap-3 golos-font font-medium text-lg
         ${theme === "light" ? "text-task-dark" : "text-task-light-white"}
       `}>
         {props.boardname}
+
+        <div>
+          {props.hasboardMenu && (
+            <BoardMenu theme={theme} boardid={props.boardId} />
+          )}
+        </div>
       </div>
 
       <div className={`flex flex-row gap-4 dashboard-header-div`}>

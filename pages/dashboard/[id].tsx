@@ -24,6 +24,7 @@ const BoardDetail = () => {
     isLoggedIn,
     isTaskActionDispatched,
     isTaskPinned,
+    isBoardActionDispatched,
     dispatch,
   } = useAuth() as AuthType;
 
@@ -65,7 +66,15 @@ const BoardDetail = () => {
         payload: false,
       });
     };
-  }, [id, name, isLoggedIn, isTaskActionDispatched, isTaskPinned, dispatch]);
+  }, [
+    id,
+    name,
+    isLoggedIn,
+    isTaskActionDispatched,
+    isTaskPinned,
+    dispatch,
+    isBoardActionDispatched,
+  ]);
 
   return (
     <div
@@ -76,8 +85,9 @@ const BoardDetail = () => {
       <div className="sticky top-0">
         <DashboardHeader
           boardname={name as string}
-          boardId={id as string}
+          boardId={id as any}
           contentType="board"
+          hasboardMenu={true}
           onSearch={handleSearch}
         />
       </div>

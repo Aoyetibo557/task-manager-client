@@ -8,7 +8,8 @@ const UPDATE_TASK_ROUTE = "/tasks/updatetask";
 const DELETE_TASK_ROUTE = "/tasks/deletetask";
 const UPDATE_TASK_STATUS = "/tasks/updatetaskstatus";
 const ARCHIVE_TASK_ROUTE = "/tasks/archivetask";
-const GET_ARCHIVED_TASKS_ROUTE = "/tasks/getarchivedtasks";
+const GET_BOARD_ARCHIVED_TASKS_ROUTE = "/tasks/getboardarchivedtasks";
+const GET_USER_ARCHIVED_TASKS_ROUTE = "/tasks/getuserarchivedtasks";
 const GET_RECENT_TASKS_ROUTE = "/tasks/getrecenttasks";
 const PIN_TASK_ROUTE = "/tasks/pintask";
 const UNPIN_TASK_ROUTE = "/tasks/unpintask";
@@ -57,9 +58,17 @@ async function archiveTask(taskid: string | any) {
 }
 
 // get all archived tasks for a board
-async function getArchivedTasks(boardid: string) {
+async function getBoardArchivedTasks(boardid: string) {
   const { data } = await API.get<Task[]>(
-    `${GET_ARCHIVED_TASKS_ROUTE}/${boardid}`
+    `${GET_BOARD_ARCHIVED_TASKS_ROUTE}/${boardid}`
+  );
+  return data;
+}
+
+// get all archived tasks for a user
+async function getUserArchivedTasks(userid: string) {
+  const { data } = await API.get<Task[]>(
+    `${GET_USER_ARCHIVED_TASKS_ROUTE}/${userid}`
   );
   return data;
 }
@@ -101,7 +110,8 @@ export {
   deleteTask,
   updateTaskStatus,
   archiveTask,
-  getArchivedTasks,
+  getBoardArchivedTasks,
+  getUserArchivedTasks,
   getRecentTasks,
   pinTask,
   unpinTask,

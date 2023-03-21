@@ -10,26 +10,26 @@ const FooterNavbar = () => {
   return (
     <div className="flex flex-row space-x-2 footer_navbar">
       <MenuItem
-        url="/terms"
+        url="/loginform"
         title="Terms of Use"
         theme={theme}
         isActive={path.includes("terms")}
       />
 
       <MenuItem
-        url="/privacy"
+        url="/loginform"
         title="Privacy"
         theme={theme}
         isActive={path.includes("privacy")}
       />
       <MenuItem
-        url="/contact"
+        url="/loginform"
         title="Contact"
         theme={theme}
         isActive={path.includes("contact")}
       />
       <MenuItem
-        url="/cookie"
+        url="/loginform"
         title="Cookie Preferences"
         theme={theme}
         isActive={path.includes("cookie")}

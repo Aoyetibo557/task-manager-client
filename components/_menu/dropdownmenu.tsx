@@ -12,7 +12,6 @@ import { IoMdHelpCircleOutline } from "react-icons/io";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { MdLogout } from "react-icons/md";
 import { AuthType } from "@/lib/utils/types";
-import { CgMenuGridO } from "react-icons/cg";
 
 type Props = {
   theme?: string;
@@ -36,8 +35,9 @@ const DropdownMenu = ({ theme, isMobile }: Props) => {
     router.push("/loginform");
   };
 
-  const items: MenuProps["items"] = [
-    {
+  /**
+   * 
+   * {
       key: "1",
       label: !isMobile && (
         <div>
@@ -60,8 +60,11 @@ const DropdownMenu = ({ theme, isMobile }: Props) => {
         key: "2",
         type: "divider",
       } as any),
+   */
+
+  const items: MenuProps["items"] = [
     {
-      key: "3",
+      key: "1",
       label: (
         <Link
           className="flex-flex-row items-center"
@@ -74,7 +77,7 @@ const DropdownMenu = ({ theme, isMobile }: Props) => {
       icon: <IoSettingsOutline className="mr-2 w-5 h-5" />,
     },
     {
-      key: "4",
+      key: "2",
       label: (
         <Link href="/help" type="submit" onClick={() => {}}>
           Help & Feedback
@@ -83,7 +86,7 @@ const DropdownMenu = ({ theme, isMobile }: Props) => {
       icon: <IoMdHelpCircleOutline className="mr-2 w-5 h-5" />,
     },
     {
-      key: "5",
+      key: "3",
       type: "divider",
     },
     {
@@ -101,6 +104,8 @@ const DropdownMenu = ({ theme, isMobile }: Props) => {
     <div id="menu">
       <Dropdown menu={{ items }} trigger={["click"]} placement="bottomRight">
         <button
+          title={`${user?.firstName} ${user?.lastName}`}
+          araia-label={`${user?.firstName} ${user?.lastName}`}
           type="submit"
           className={`${
             theme === "light" ? "text-task-dark" : "text-task-light-white"
@@ -108,7 +113,11 @@ const DropdownMenu = ({ theme, isMobile }: Props) => {
           {isMobile ? (
             <Avatar src={user?.profileImage} size={40} />
           ) : (
-            <CgMenuGridO className="cursor-pointer w-7 h-7" />
+            <Avatar
+              className="w-12 h-12 border-2 border-blue-400"
+              src={image ? image : user?.profileImage}
+              alt="user"
+            />
           )}
         </button>
       </Dropdown>

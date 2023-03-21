@@ -22,7 +22,8 @@ interface BoardLink {
 }
 
 const Sidebar = () => {
-  const { user, loading, isLoggedIn, signOut } = useAuth() as AuthType;
+  const { user, loading, isLoggedIn, signOut, isBoardActionDispatched } =
+    useAuth() as AuthType;
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState("");
@@ -96,7 +97,7 @@ const Sidebar = () => {
       }
     }
     getBoards();
-  }, [isLoggedIn, user, router]);
+  }, [isLoggedIn, user, router, isBoardActionDispatched]);
 
   return (
     <div
@@ -195,6 +196,11 @@ const Sidebar = () => {
 
             <div>
               {/* this will have all tasks, tasks by board and others */}
+              <SidebarLink
+                title="All"
+                isActive={path === "/dashboard/archived" ? true : false}
+                url="/dashboard/archived"
+              />
             </div>
           </div>
         </div>
