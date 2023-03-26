@@ -15,7 +15,6 @@ import { v4 as uuidv4 } from "uuid";
 import { ActionTypes } from "@/lib/utils/actions";
 
 type Props = {
-  user: User | undefined;
   theme?: string;
 };
 
