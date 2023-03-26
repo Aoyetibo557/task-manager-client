@@ -22,7 +22,7 @@ const ArchivedTasks = () => {
       message.success(data.message);
     } else {
       if (data.status === "error") {
-        // message.error(data.message);
+        message.error(data.message);
         console.log(data.message);
       }
     }
@@ -31,9 +31,6 @@ const ArchivedTasks = () => {
   useEffect(() => {
     if (isLoggedIn) {
       handleAllArchivedTasks();
-    } else {
-      setArchivedTasks([]);
-      router.push("/loginform");
     }
   }, [user, isTaskActionDispatched]);
 
