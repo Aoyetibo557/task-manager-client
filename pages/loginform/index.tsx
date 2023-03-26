@@ -107,6 +107,7 @@ const LoginForm = () => {
             <input
               className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
               placeholder="Password"
+              type="password"
               name="password"
               value={password}
               required
@@ -127,12 +128,25 @@ const LoginForm = () => {
               Forgot Password?
             </Link>
           </div> */}
-          <div className="w-full">
+
+          <div className="flex flex-row w-full">
             {loading ? (
               <Spin size="large" />
             ) : (
-              <Button label={"Login"} onClick={handleLogin} />
+              <Button
+                label={"Login"}
+                onClick={handleLogin}
+                className="w-full bg-transparent"
+              />
             )}
+          </div>
+
+          <div>
+            <Link
+              href="/signup"
+              className="golos-font text-sm text-task-blue hover:underline font-normal inline-flex place-content-end">
+              Create an account?
+            </Link>
           </div>
         </form>
       </div>

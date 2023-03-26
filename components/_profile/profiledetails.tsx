@@ -19,7 +19,10 @@ type Props = {
   theme?: string;
 };
 
-const ProfileDetails = ({ user, theme }: Props) => {
+const ProfileDetails = ({ theme }: Props) => {
+  const { user, dispatch, isUserActionDispatched, handleSetUser } =
+    useAuth() as AuthType;
+
   const [profileImage, setProfileImage] = useState("");
   const [username, setUsername] = useState(user?.username);
   const [bio, setBio] = useState(user?.bio);
@@ -27,8 +30,6 @@ const ProfileDetails = ({ user, theme }: Props) => {
   const [imageURL, setImageURL] = useState<string | any>("");
   const [progressPercent, setProgressPercent] = useState<number>(0);
   const [loading, setLoading] = useState(false);
-  const { dispatch, isUserActionDispatched, handleSetUser } =
-    useAuth() as AuthType;
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -105,7 +106,7 @@ const ProfileDetails = ({ user, theme }: Props) => {
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
         setProgressPercent(progress);
-        message.info(`Uploading ${progress}%`);
+        // message.info(`Uploading ${progress}%`);
         setImageUpload(null);
         setLoading(false);
       },
@@ -114,6 +115,8 @@ const ProfileDetails = ({ user, theme }: Props) => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
+          message.info(`Uploading Image...`);
+
           setImageURL(downloadURL);
           message.success(`Image uploaded successfully`);
 

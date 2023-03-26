@@ -100,6 +100,7 @@ const Signup = () => {
       }
     } catch (error: any) {
       console.log(error);
+      setSignupError(error.message);
     }
   };
 
@@ -117,7 +118,7 @@ const Signup = () => {
           {signupError && (
             <div className="text-red-500 text-sm golos-font">{signupError}</div>
           )}
-          <form className="flex flex-col gap-3">
+          <form method="POST" className="flex flex-col gap-3">
             <div className="flex flex-row gap-3">
               <input
                 className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
@@ -149,6 +150,7 @@ const Signup = () => {
               <input
                 className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
                 placeholder="Password"
+                type="password"
                 name="password"
                 value={password}
                 onChange={handleInput}
@@ -157,6 +159,7 @@ const Signup = () => {
               <input
                 className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
                 placeholder="Confirm Password"
+                type="password"
                 name="confirmPassword"
                 value={confirmPassword}
                 required
