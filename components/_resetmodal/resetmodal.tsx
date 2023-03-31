@@ -17,7 +17,6 @@ type Props = {
   loading?: boolean;
   open: boolean;
   setOpen: Dispatch<React.SetStateAction<boolean>>;
-  onConfirm: () => void;
   icon?: JSX.Element;
 };
 
@@ -108,7 +107,7 @@ const ResetModal = (props: Props) => {
           </div>
           <div className="flex flex-col gap-4 mt-6">
             <label
-              htmlfor="newpassword"
+              htmlFor="newpassword"
               className="text-sm font-medium golos-font">
               New password
             </label>
@@ -127,7 +126,7 @@ const ResetModal = (props: Props) => {
           </div>
           <div className="flex flex-col gap-4 mt-6">
             <label
-              htmlfor="confrimpassword"
+              htmlFor="confrimpassword"
               className="text-sm font-medium golos-font">
               Confrim password
             </label>
