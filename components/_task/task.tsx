@@ -31,7 +31,7 @@ export const TaskCard = ({ task, theme }: Props) => {
   const handleUpdateTask = async () => {
     const taskValues = {
       status: updateValues.status || task?.status,
-      priority: updateValues.priority,
+      priority: updateValues.priority || task?.priority,
     };
 
     try {

@@ -38,6 +38,13 @@ const ArchivedTasks = () => {
     <div>
       <div>
         <ArchiveGrid tasks={archivedTasks} theme={theme} />
+        {archivedTasks.length === 0 && (
+          <div className="flex flex-col items-center justify-center h-96">
+            <div className="text-2xl font-semibold text-neutral-400">
+              No archived tasks
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

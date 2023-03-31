@@ -1,11 +1,18 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Button } from "../base-components/button/button";
+import { useAuth } from "@/lib/hooks/useAuth";
+import ResetModal from "@/components/_resetmodal/resetmodal";
+
+import { AuthType } from "@/lib/utils/types";
 
 type Props = {
   theme?: string;
 };
 
 export const PasswordReset = ({ theme }: Props) => {
+  const [resetModal, setResetModal] = useState(false);
+  const { user, dispatch } = useAuth() as AuthType;
+
   return (
     <div
       className={`p-4 h-full flex flex-col gap-4 rounded-md golos-font ${
@@ -31,8 +38,22 @@ export const PasswordReset = ({ theme }: Props) => {
       </div>
 
       <div>
-        <Button label="Change Password" size="sm" bgColor="secondary" />
+        <Button
+          label="Change Password"
+          size="sm"
+          bgColor="secondary"
+          onClick={() => setResetModal(true)}
+        />
       </div>
+
+      {resetModal && (
+        <ResetModal
+          title="Change Password"
+          subtitle="Password must containe at least 8 characters, 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character."
+          open={resetModal}
+          setOpen={setResetModal}
+        />
+      )}
     </div>
   );
 };

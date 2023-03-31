@@ -20,8 +20,12 @@ export const GuideCheckList = ({ theme, user }: Props) => {
   const [isTourTaken, setIsTourTaken] = useState(user?.tourtaken);
   const [completedSteps, setCompletedSteps] = useState(false);
 
-  const { isUserActionDispatched, handleSetUser, dispatch } =
-    useAuth() as AuthType;
+  const {
+    isUserActionDispatched,
+    isBoardActionDispatched,
+    handleSetUser,
+    dispatch,
+  } = useAuth() as AuthType;
 
   const handleIsProfileComplete = () => {
     if (
@@ -83,7 +87,7 @@ export const GuideCheckList = ({ theme, user }: Props) => {
     return () => {
       dispatch({ type: "UPDATE_USER", payload: false });
     };
-  }, [user, isUserActionDispatched]);
+  }, [user, isUserActionDispatched, isBoardActionDispatched]);
 
   return (
     <div className={`flex flex-col gap-3`}>
