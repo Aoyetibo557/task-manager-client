@@ -13,6 +13,7 @@ import { Toggle } from "../base-components/toggle/toggle";
 import { IoExitOutline } from "react-icons/io5";
 import Link from "next/link";
 import { AuthType, Board } from "@/lib/utils/types";
+import { ActionTypes } from "@/lib/utils/actions";
 
 interface BoardLink {
   title: string;
@@ -22,8 +23,14 @@ interface BoardLink {
 }
 
 const Sidebar = () => {
-  const { user, loading, isLoggedIn, signOut, isBoardActionDispatched } =
-    useAuth() as AuthType;
+  const {
+    user,
+    dispatch,
+    loading,
+    isLoggedIn,
+    signOut,
+    isBoardActionDispatched,
+  } = useAuth() as AuthType;
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState("");
@@ -61,6 +68,10 @@ const Sidebar = () => {
     console.log("Data:", data);
     if (data.status === "success") {
       getBoards();
+      dispatch({
+        type: ActionTypes.BOARD_ACTION,
+        payload: true,
+      });
       message.success(data.message);
       setOpenModal(false);
     } else {
@@ -92,12 +103,16 @@ const Sidebar = () => {
       if (!user || isLoggedIn === false) {
         router.push("/loginform");
         setError("You are not logged in");
-      } else if (user.userid.length > 0) {
+      } else if (user.userid?.length > 0) {
         getBoards();
       }
     }
     getBoards();
-  }, [isLoggedIn, user, router, isBoardActionDispatched]);
+
+    if (isBoardActionDispatched) {
+      getBoards();
+    }
+  }, [isLoggedIn, user, router]);
 
   return (
     <div

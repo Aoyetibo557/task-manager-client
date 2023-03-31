@@ -4,6 +4,7 @@ import { User, ReturnObject } from "../utils/types";
 
 const USER_DETAILS_ROUTE = "/auth/finduserbyid";
 const UPDATE_USER_BY_ID = "/auth/updateuserbyid";
+const RESET_PASSWORD = "/auth/resetpassword";
 
 // Update a user by id
 async function updateUserById(userid: User | any, rec: any) {
@@ -17,4 +18,12 @@ async function getUserDetails(userid: string) {
   return data;
 }
 
-export { getUserDetails, updateUserById };
+// Reset password
+async function resetPassword(newpassword: any, userId: string) {
+  const { data } = await API.put(`${RESET_PASSWORD}/${userId}`, {
+    password: newpassword,
+  });
+  return data;
+}
+
+export { getUserDetails, updateUserById, resetPassword };

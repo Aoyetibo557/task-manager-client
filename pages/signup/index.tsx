@@ -9,6 +9,7 @@ import {
 import { useAuth } from "@/lib/hooks/useAuth";
 import { Spin, message } from "antd";
 import { AuthType } from "@/lib/utils/types";
+import Link from "next/link";
 
 const Signup = () => {
   const router = useRouter();
@@ -30,6 +31,7 @@ const Signup = () => {
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+
     const { name, value } = e.target;
     if (name === "firstName") {
       setFirstName(value);
@@ -118,7 +120,7 @@ const Signup = () => {
           {signupError && (
             <div className="text-red-500 text-sm golos-font">{signupError}</div>
           )}
-          <form method="POST" className="flex flex-col gap-3">
+          <form className="flex flex-col gap-3">
             <div className="flex flex-row gap-3">
               <input
                 className="golos-font text-base p-3 w-full border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
@@ -180,7 +182,7 @@ const Signup = () => {
                   required
                   onChange={handleInput}
                 />
-                <div className="font-light text-normal golos-font">
+                <div className="font-light text-sm golos-font">
                   I have read and agree to the Terms of Service and Privacy
                   Policy
                 </div>
@@ -192,6 +194,17 @@ const Signup = () => {
                 ) : (
                   <Button label="Continue" onClick={handleSignup} />
                 )}
+              </div>
+
+              <div>
+                <div className="font-light text-sm golos-font">
+                  Already have an account?{" "}
+                  <Link
+                    href="/loginform"
+                    className="text-task-blue hover:underline">
+                    Login
+                  </Link>
+                </div>
               </div>
             </div>
           </form>

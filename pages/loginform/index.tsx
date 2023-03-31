@@ -27,6 +27,7 @@ const LoginForm = () => {
 
   const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+
     const { name, value } = e.target;
     if (name === "email") {
       setEmail(value);
@@ -86,7 +87,12 @@ const LoginForm = () => {
           )}
         </div>
 
-        <form className="flex flex-col gap-4 w-2/5 loginform">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLogin();
+          }}
+          className="flex flex-col gap-4 w-2/5 loginform">
           <div className="flex flex-col gap-3">
             <input
               className="golos-font text-base p-3 border-[1.5px] border-gray-200 focus:outline focus:outline-[1px] focus:outline-task-blue rounded-xl"
@@ -131,7 +137,7 @@ const LoginForm = () => {
 
           <div className="flex flex-row w-full">
             {loading ? (
-              <Spin size="large" />
+              <Spin size="large" className="w-full bg-transparent" />
             ) : (
               <Button
                 label={"Login"}
