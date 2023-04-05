@@ -28,32 +28,41 @@ export const SidebarLink = ({
   };
   return (
     <div
-      className={`flex flex-row items-center space-x-2 py-1 cursor-pointer ${
-        isActive ? "bg-task-sidebar-active" : "hover:bg-task-sidebar-hover"
-      }`}
+      className={`flex flex-row items-center space-x-2 cursor-pointer p-1  ${
+        isActive
+          ? "bg-blue-500 text-task-light-white rounded-lg"
+          : "hover:bg-task-sidebar-hover"
+      }
+      ${
+        theme === "light"
+          ? "hover:bg-blue-500 hover:text-task-light-white rounded-lg"
+          : "text-task-light-white hover:bg-blue-500 rounded-lg"
+      }
+      `}
       onClick={handleOnclick}>
       <div
         className={`flex flex-row items-center justify-center w-8 h-8 rounded-full 
            ${isMobileLink && "text-task-light-white"}
-          ${
-            !isMobileLink && theme === "light"
-              ? "text-task-sidebar-light-dark"
-              : "text-white"
-          }
+          
         `}>
         {icon}
       </div>
       <div
         className={`text-sm golos-font font-light
           ${isMobileLink && "text-task-light-white"}
-          ${
-            !isMobileLink && theme === "light"
-              ? "text-task-sidebar-light-dark"
-              : "text-white"
-          }
+          
+         
         `}>
         {title}
       </div>
     </div>
   );
 };
+
+/**
+ * ${
+            !isMobileLink && theme === "light"
+              ? "text-task-sidebar-light-dark"
+              : "text-white"
+          } 
+ */

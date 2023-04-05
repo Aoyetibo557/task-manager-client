@@ -17,9 +17,11 @@ export const TaskCard = ({ task, theme }: Props) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [status, setStatus] = useState("");
   const [priority, setPriority] = useState("");
+  const [description, setDescription] = useState("");
   const [updateValues, setUpdateValues] = useState({
     status: "",
     priority: "",
+    description: "",
   });
 
   const { dispatch, isTaskActionDispatched } = useAuth() as AuthType;
@@ -32,6 +34,7 @@ export const TaskCard = ({ task, theme }: Props) => {
     const taskValues = {
       status: updateValues.status || task?.status,
       priority: updateValues.priority || task?.priority,
+      description: updateValues.description || task?.description,
     };
 
     try {

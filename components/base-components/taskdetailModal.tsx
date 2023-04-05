@@ -1,6 +1,11 @@
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import Modal from "../Utility/Modal/modal";
-import { BsThreeDotsVertical, BsFillPinFill, BsPin } from "react-icons/bs";
+import {
+  BsThreeDotsVertical,
+  BsFillPinFill,
+  BsPin,
+  BsPencil,
+} from "react-icons/bs";
 import { Task, AuthType } from "@/lib/utils/types";
 import type { MenuProps } from "antd";
 import { Dropdown, message, Spin, Tag } from "antd";
@@ -35,6 +40,8 @@ const TaskDetailModal = (props: Props) => {
   const [isPinned, setIsPinned] = useState(props.task.pinned);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
+  const [editDescription, setEditDescription] = useState(false);
+  const [description, setDescription] = useState(props.task.description);
 
   const handleUpdateInput = (name: keyof Task, value: string) => {
     setStatus(
@@ -42,6 +49,11 @@ const TaskDetailModal = (props: Props) => {
     );
     setPriority(
       name === "priority" ? (value as Task["priority"]) : props.task.priority
+    );
+    setDescription(
+      name === "description"
+        ? (value as Task["description"])
+        : props.task.description
     );
 
     props.updateTask && props.updateTask(name, value);
@@ -52,6 +64,7 @@ const TaskDetailModal = (props: Props) => {
 
     // props.updateTask && props.updateTask("status", "");
     // props.updateTask && props.updateTask("priority", "");
+    // props.updateTask && props.updateTask("description", "");
   };
 
   const handleArchive = async () => {
@@ -218,10 +231,28 @@ const TaskDetailModal = (props: Props) => {
       theme={props.theme}>
       <div className="flex flex-col p-3 justify-center gap-6 mt-4">
         <div
-          className={`flex flex-row items-center justify-between font-medium text-sm golos-font mb-2 ${
+          className={`flex flex-row justify-between font-medium text-sm golos-font mb-2 ${
             props.theme === "light" ? "text-neutral-600" : "text-neutral-400"
           }`}>
-          {props.task.description}
+          {editDescription ? (
+            <textarea
+              name="description"
+              className={`w-full p-3 rounded-md border-[0.4px] golos-font text-sm font-light resize-none h-32
+                ${
+                  props.theme === "light"
+                    ? "bg-task-light-white text-task-sidebar-dark border-neutral-800 focus:outline-neutral-400"
+                    : "bg-task-sidebar-dark text-task-light-white border-neutral-500 outline-[0.2px] focus:outline-neutral-800"
+                }`}
+              value={description}
+              onChange={(e) => handleUpdateInput("description", e.target.value)}
+            />
+          ) : (
+            <div className="w-full">{props.task?.description}</div>
+          )}
+          <BsPencil
+            className="w-5 h-5 ml-1 cursor-pointer"
+            onClick={() => setEditDescription(!editDescription)}
+          />
         </div>
 
         {/* this will have a select, that would allow the status be updated */}
@@ -261,7 +292,9 @@ const TaskDetailModal = (props: Props) => {
           </select>
         </div>
 
-        {(props.task.status !== status || props.task.priority !== priority) && (
+        {(props.task.status !== status ||
+          props.task.priority !== priority ||
+          props.task.description !== description) && (
           <div>
             <button
               className={`w-full p-3 rounded-full golos-font text-sm font-semibold

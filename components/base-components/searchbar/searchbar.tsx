@@ -21,11 +21,11 @@ export const SearchBar = (props: Props) => {
         type="text"
         onChange={handleSearch}
         placeholder="e.g update the profie page avatar..."
-        className={`w-96 p-3 h-full px-2 rounded-lg golos-font text-sm font-light border-[1.5px] searchbar-input 
+        className={`w-96 p-3 h-full px-2 rounded-md golos-font text-sm font-light border-[1.5px] searchbar-input border-blue-400 focus:border-blue-600 focus:outline-none
         ${
           props.theme === "light"
-            ? "text-task-dark border-task-light-dark focus:outline focus:outline-neutral-500"
-            : "text-task-light-white bg-task-sidebar-light-dark border-task-light-white focus:outline focus:outline-neutral-100"
+            ? "text-task-dark "
+            : "text-task-light-white bg-task-sidebar-light-dark "
         }
         
       `}

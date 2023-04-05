@@ -2,7 +2,18 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useRouter } from "next/router";
 import { ThemeContext } from "../Layout/_contexts/themecontext";
-import { BsSun, BsCloudMoon, BsPlus } from "react-icons/bs";
+import {
+  BsSun,
+  BsCloudMoon,
+  BsPlus,
+  BsPin,
+  BsTrash,
+  BsClipboard,
+  BsChevronUp,
+  BsChevronDown,
+} from "react-icons/bs";
+import { RiArchiveDrawerLine } from "react-icons/ri";
+import { FiClipboard } from "react-icons/fi";
 import Image from "next/image";
 import CreateBoardModal from "../base-components/createboardModal";
 import { RxDashboard } from "react-icons/rx";
@@ -11,6 +22,7 @@ import { SidebarLink } from "../_sidebar/sidebarlink";
 import { message } from "antd";
 import { Toggle } from "../base-components/toggle/toggle";
 import { IoExitOutline } from "react-icons/io5";
+import { BiHome } from "react-icons/bi";
 import Link from "next/link";
 import { AuthType, Board } from "@/lib/utils/types";
 import { ActionTypes } from "@/lib/utils/actions";
@@ -36,6 +48,7 @@ const Sidebar = () => {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const [toggle, setToggle] = useState(false);
+  const [showBoards, setShowBoards] = useState(false);
 
   const [userBoards, setUserBoards] = useState<BoardLink[]>([]);
   const [activeBoard, setActiveBoard] = useState<BoardLink>({
@@ -116,77 +129,126 @@ const Sidebar = () => {
 
   return (
     <div
-      className={` h-screen w-80 p-4 flex flex-col justify-between sidebar
-      ${
+      className={` h-screen w-80 p-5 flex flex-col justify-between sidebar ${
         theme === "light"
           ? "bg-task-light-white border-r-[0.6px] border-neutral-300"
           : "bg-task-sidebar-light-dark border-r-[0.6px] border-neutral-500"
-      }
-    `}>
-      <div className="flex flex-col gap-10">
+      }`}>
+      <div className="flex flex-col  gap-10">
         <div
-          className={`flex flex-row items-center gap-3 font-bold text-2xl golos-font
-          ${theme === "light" ? "text-task-dark" : "text-task-light-white"}
-        `}>
-          <Image
-            src="/static/images/logo.png"
-            width={30}
-            height={30}
-            alt="Tassker Logo"
+          className={`flex flex-row items-center justify-center gap-3 font-bold text-2xl golos-font
+          ${theme === "light" ? "text-task-dark" : "text-task-light-white"} `}>
+          <Link href="/dashboard">
+            <Image
+              src="/static/images/logo.png"
+              width={30}
+              height={30}
+              alt="Tassker Logo"
+            />
+          </Link>
+        </div>
+
+        {/* short line like a divider */}
+        <div className={` ml-14 w-28 h-[0.5px] bg-blue-500`}></div>
+
+        <div className={`flex flex-col gap-3`}>
+          <SidebarLink
+            title="Home"
+            url="/dashboard"
+            isActive={path === "/dashboard" ? true : false}
+            icon={<BiHome className="w-5 h-5" />}
           />
-          <Link href="/dashboard">Tassker</Link>
+
+          <SidebarLink
+            title="Pinned Tasks"
+            url="/pinned"
+            isActive={path === "/pinned" ? true : false}
+            icon={<BsPin className="w-5 h-5" />}
+          />
+          <SidebarLink
+            title="Archived Tasks"
+            url="/dashboard/archived"
+            isActive={path === "/dashboard/archived" ? true : false}
+            icon={<RiArchiveDrawerLine className="w-5 h-5" />}
+          />
+
+          <button
+            type="button"
+            className={`flex flex-row items-center pl-3 pt-2 space-x-2 ${
+              theme === "light" ? "text-task-dark " : "text-task-light-white"
+            }`}
+            onClick={() => setShowBoards(!showBoards)}>
+            <FiClipboard className="w-5 h-5" />
+            <span className="ml-2 font-light text-sm golos-font">
+              Boards ({boardCount || 0})
+            </span>
+            <span>
+              {showBoards ? (
+                <BsChevronUp className="w-4 h-4" />
+              ) : (
+                <BsChevronDown className="w-4 h-4" />
+              )}
+            </span>
+          </button>
+          <div className={`ml-3 ${showBoards ? "block" : "hidden"} `}>
+            {showBoards && (
+              <div>
+                {(boardCount === 0 || userBoards?.length === 0) && (
+                  <div
+                    className={` font-light text-sm golos-font ${
+                      theme === "light"
+                        ? "text-task-dark"
+                        : "text-task-light-white"
+                    }`}>
+                    You have no boards yet {error}
+                  </div>
+                )}
+
+                {userBoards?.map((board: any, idx: any) => (
+                  <SidebarLink
+                    key={idx}
+                    title={board.name}
+                    url={`/dashboard/${board.id}/?name=${board.name}`}
+                    isActive={
+                      path ===
+                      `/dashboard/${board.id}/?name=${board.name.replace(
+                        /\+/g,
+                        " "
+                      )}`
+                        ? true
+                        : false
+                    }
+                    icon={<RxDashboard className="w-5 h-5" />}
+                  />
+                ))}
+                <div>
+                  <button
+                    id="create-board"
+                    className={`font-light text-sm golos-font w-full flex flex-row items-center gap-2 p-2 rounded-lg ${
+                      theme === "light"
+                        ? "text-task-dark hover:bg-blue-500 hover:text-task-light-white"
+                        : "text-task-light-white hover:bg-blue-500"
+                    }`}
+                    onClick={() => setOpenModal(true)}>
+                    <RxDashboard className="w-5 h-5" />
+                    <BsPlus className={`w-5 h-5 `} />
+                    Create New Board
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+          <SidebarLink
+            title="Trash"
+            url="/dashboard/trash"
+            isActive={path === "/dashboard/trash" ? true : false}
+            icon={<BsTrash className="w-5 h-5" />}
+          />
         </div>
 
         <div className="flex flex-col gap-4">
-          <div
-            className={`font-light text-sm golos-font tracking-widest
-          ${theme === "light" ? "text-task-dark" : "text-task-light-white"}
-        `}>
-            ALL BOARDS ({boardCount || 0})
-          </div>
-
           <div>
-            {/* if there are no boards */}
-            {(boardCount === 0 || userBoards?.length === 0) && (
-              <div
-                className={`
-              font-light text-sm golos-font
-              ${theme === "light" ? "text-task-dark" : "text-task-light-white"}
-              `}>
-                You have no boards yet {error}
-              </div>
-            )}
-            {userBoards?.map((board: any, idx: any) => (
-              <SidebarLink
-                key={idx}
-                title={board.name}
-                url={`/dashboard/${board.id}/?name=${board.name}`}
-                isActive={
-                  path === `/dashboard/${board.id}/?name=${board.name}`
-                    ? true
-                    : false
-                }
-                icon={<RxDashboard className="w-5 h-5" />}
-              />
-            ))}
-
-            <div>
-              <button
-                id="create-board"
-                className={`font-light text-sm golos-font flex flex-row items-center gap-2 p-2
-              ${
-                theme === "light"
-                  ? "text-task-dark hover:text-task-blue hover:bg-task-sidebar-light-dark hover:bg-opacity-10"
-                  : "text-task-light-white hover:text-blue-400 hover:bg-task-sidebar-light-dark hover:bg-opacity-10"
-              }
-              `}
-                onClick={() => setOpenModal(true)}>
-                <RxDashboard className="w-5 h-5" />
-                <BsPlus className={`w-5 h-5 `} />
-                Create New Board
-              </button>
-            </div>
-
             {openModal && (
               <CreateBoardModal
                 title="Create New Board"
@@ -199,24 +261,6 @@ const Sidebar = () => {
                 onClick={handleCreateBoard}
               />
             )}
-          </div>
-
-          <div>
-            <div
-              className={`font-light text-sm golos-font tracking-widest ${
-                theme === "light" ? "text-task-dark" : "text-task-light-white"
-              }`}>
-              ARCHIVED
-            </div>
-
-            <div>
-              {/* this will have all tasks, tasks by board and others */}
-              <SidebarLink
-                title="All"
-                isActive={path === "/dashboard/archived" ? true : false}
-                url="/dashboard/archived"
-              />
-            </div>
           </div>
         </div>
       </div>
