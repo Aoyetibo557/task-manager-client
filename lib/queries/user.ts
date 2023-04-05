@@ -5,6 +5,7 @@ import { User, ReturnObject } from "../utils/types";
 const USER_DETAILS_ROUTE = "/auth/finduserbyid";
 const UPDATE_USER_BY_ID = "/auth/updateuserbyid";
 const RESET_PASSWORD = "/auth/resetpassword";
+const FIND_USER_BY_EMAIL_ROUTE = "/auth/finduser";
 
 // Update a user by id
 async function updateUserById(userid: User | any, rec: any) {
@@ -26,4 +27,10 @@ async function resetPassword(newpassword: any, userId: string) {
   return data;
 }
 
-export { getUserDetails, updateUserById, resetPassword };
+// Find user by email
+async function findUserByEmail(email: string) {
+  const { data } = await API.get(`${FIND_USER_BY_EMAIL_ROUTE}/${email}`);
+  return data;
+}
+
+export { getUserDetails, updateUserById, resetPassword, findUserByEmail };
