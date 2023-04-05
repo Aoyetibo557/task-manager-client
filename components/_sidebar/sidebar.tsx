@@ -11,21 +11,25 @@ import {
   BsClipboard,
   BsChevronUp,
   BsChevronDown,
+  BsBell,
 } from "react-icons/bs";
 import { RiArchiveDrawerLine } from "react-icons/ri";
 import { FiClipboard } from "react-icons/fi";
+import { IoExitOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoIosHelpCircleOutline } from "react-icons/io";
+import { RxDashboard } from "react-icons/rx";
+import { BiHome } from "react-icons/bi";
+
 import Image from "next/image";
 import CreateBoardModal from "../base-components/createboardModal";
-import { RxDashboard } from "react-icons/rx";
 import { getUserBoards, createBoard } from "@/lib/queries/board";
 import { SidebarLink } from "../_sidebar/sidebarlink";
 import { message } from "antd";
 import { Toggle } from "../base-components/toggle/toggle";
-import { IoExitOutline } from "react-icons/io5";
-import { BiHome } from "react-icons/bi";
 import Link from "next/link";
 import { AuthType, Board } from "@/lib/utils/types";
 import { ActionTypes } from "@/lib/utils/actions";
+import { ProfileCard } from "../base-components/profilecard/profilecard";
 
 interface BoardLink {
   title: string;
@@ -129,12 +133,12 @@ const Sidebar = () => {
 
   return (
     <div
-      className={` h-screen w-80 p-5 flex flex-col justify-between sidebar ${
+      className={` h-screen w-80 p-3 flex flex-col sidebar ${
         theme === "light"
           ? "bg-task-light-white border-r-[0.6px] border-neutral-300"
           : "bg-task-sidebar-light-dark border-r-[0.6px] border-neutral-500"
       }`}>
-      <div className="flex flex-col  gap-10">
+      <div className="h-24">
         <div
           className={`flex flex-row items-center justify-center gap-3 font-bold text-2xl golos-font
           ${theme === "light" ? "text-task-dark" : "text-task-light-white"} `}>
@@ -149,9 +153,10 @@ const Sidebar = () => {
         </div>
 
         {/* short line like a divider */}
-        <div className={` ml-14 w-28 h-[0.5px] bg-blue-500`}></div>
-
-        <div className={`flex flex-col gap-3`}>
+        <div className={` mt-6 ml-14 w-28 h-[0.5px] bg-blue-500`}></div>
+      </div>
+      <div className="flex flex-col h-screen justify-between ">
+        <div className={`flex flex-col gap-2`}>
           <SidebarLink
             title="Home"
             url="/dashboard"
@@ -263,17 +268,49 @@ const Sidebar = () => {
             )}
           </div>
         </div>
-      </div>
 
-      <div>
-        <Toggle
-          checked={toggle}
-          theme={theme}
-          onChange={handleToggle}
-          iconOff={<BsCloudMoon />}
-          iconOn={<BsSun />}
-          label="Task Mode"
-        />
+        <div className={`flex flex-col gap-2`}>
+          <SidebarLink
+            title="Help Center"
+            url="/help"
+            isActive={path === "/help" ? true : false}
+            icon={<IoIosHelpCircleOutline className="w-5 h-5" />}
+          />
+
+          <SidebarLink
+            title="Notifications"
+            url="/notifications"
+            isActive={path === "/notifications" ? true : false}
+            icon={<BsBell className="w-5 h-5" />}
+          />
+
+          <SidebarLink
+            title="Settings"
+            url={`/setting/${user?.userid}`}
+            isActive={path === `/setting/${user?.userid}` ? true : false}
+            icon={<IoSettingsOutline className="w-5 h-5" />}
+          />
+
+          <div>
+            <Toggle
+              checked={toggle}
+              theme={theme}
+              onChange={handleToggle}
+              iconOff={<BsCloudMoon />}
+              iconOn={<BsSun />}
+              label="Task Mode"
+            />
+          </div>
+
+          <ProfileCard
+            name={`${user?.firstName} ${user?.lastName}`}
+            username={user?.username}
+            image={user.profileImage}
+            imagesize="md"
+            theme={theme}
+            isAdmin={user?.isAdmin}
+          />
+        </div>
       </div>
     </div>
   );
