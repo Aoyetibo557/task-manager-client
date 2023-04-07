@@ -15,6 +15,7 @@ const PIN_TASK_ROUTE = "/tasks/pintask";
 const UNPIN_TASK_ROUTE = "/tasks/unpintask";
 const GET_PINNED_TASKS_ROUTE = "/tasks/getpinnedtasks";
 const GET_USER_TASKS_ROUTE = "/tasks/getusertasks";
+const GET_FILTERED_TASKS = "/tasks/gettasks";
 
 // create a new task
 async function createTask(task: Task | any) {
@@ -103,6 +104,19 @@ async function getUserTasks(userid: string | any) {
   return data;
 }
 
+// get filtered tasks
+async function getFilteredTasks(
+  userid: string,
+  filterType: string,
+  filter: any
+) {
+  console.log(filter, filterType);
+  const { data } = await API.get(`${GET_FILTERED_TASKS}/${userid}`, {
+    params: { filterType, filter },
+  });
+  return data;
+}
+
 export {
   createTask,
   getBoardTasks,
@@ -117,4 +131,5 @@ export {
   unpinTask,
   getPinnedTasks,
   getUserTasks,
+  getFilteredTasks,
 };

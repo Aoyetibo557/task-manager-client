@@ -18,11 +18,7 @@ export const Toggle = (props: Props) => {
     <div
       id="toggle-theme"
       className={`flex flex-row items-center justify-center p-3 gap-6 w-4/5
-      ${
-        props.theme === "light"
-          ? "text-task-dark bg-task-white"
-          : "text-task-light-white bg-task-sidebar-dark"
-      }
+      ${props.theme === "light" ? "text-task-dark " : "text-task-light-white "}
     `}>
       <div>{props.iconOn && <span className="">{props.iconOn}</span>}</div>
       <Switch

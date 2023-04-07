@@ -34,6 +34,7 @@ export interface User {
   username?: string | undefined;
   returnObject?: ReturnObject | undefined;
   subscription?: SubscriptionPlan | undefined;
+  isAdmin?: boolean | undefined;
 }
 
 export interface Board {

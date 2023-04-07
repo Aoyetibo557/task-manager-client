@@ -11,21 +11,25 @@ import {
   BsClipboard,
   BsChevronUp,
   BsChevronDown,
+  BsBell,
 } from "react-icons/bs";
 import { RiArchiveDrawerLine } from "react-icons/ri";
 import { FiClipboard } from "react-icons/fi";
+import { IoExitOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoIosHelpCircleOutline } from "react-icons/io";
+import { RxDashboard } from "react-icons/rx";
+import { BiHome } from "react-icons/bi";
+
 import Image from "next/image";
 import CreateBoardModal from "../base-components/createboardModal";
-import { RxDashboard } from "react-icons/rx";
 import { getUserBoards, createBoard } from "@/lib/queries/board";
 import { SidebarLink } from "../_sidebar/sidebarlink";
 import { message } from "antd";
 import { Toggle } from "../base-components/toggle/toggle";
-import { IoExitOutline } from "react-icons/io5";
-import { BiHome } from "react-icons/bi";
 import Link from "next/link";
 import { AuthType, Board } from "@/lib/utils/types";
 import { ActionTypes } from "@/lib/utils/actions";
+import { ProfileCard } from "../base-components/profilecard/profilecard";
 
 interface BoardLink {
   title: string;
@@ -42,6 +46,7 @@ const Sidebar = () => {
     isLoggedIn,
     signOut,
     isBoardActionDispatched,
+    isTaskActionDispatched,
   } = useAuth() as AuthType;
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [openModal, setOpenModal] = useState(false);
@@ -125,16 +130,16 @@ const Sidebar = () => {
     if (isBoardActionDispatched) {
       getBoards();
     }
-  }, [isLoggedIn, user, router]);
+  }, [isLoggedIn, user, router, isTaskActionDispatched]);
 
   return (
     <div
-      className={` h-screen w-80 p-5 flex flex-col justify-between sidebar ${
+      className={` h-screen w-80 p-3 flex flex-col sidebar ${
         theme === "light"
           ? "bg-task-light-white border-r-[0.6px] border-neutral-300"
           : "bg-task-sidebar-light-dark border-r-[0.6px] border-neutral-500"
       }`}>
-      <div className="flex flex-col  gap-10">
+      <div className="h-24">
         <div
           className={`flex flex-row items-center justify-center gap-3 font-bold text-2xl golos-font
           ${theme === "light" ? "text-task-dark" : "text-task-light-white"} `}>
@@ -149,11 +154,12 @@ const Sidebar = () => {
         </div>
 
         {/* short line like a divider */}
-        <div className={` ml-14 w-28 h-[0.5px] bg-blue-500`}></div>
-
-        <div className={`flex flex-col gap-3`}>
+        <div className={` mt-6 ml-14 w-28 h-[0.5px] bg-blue-500`}></div>
+      </div>
+      <div className="flex flex-col h-screen justify-between ">
+        <div className={`flex flex-col gap-2`}>
           <SidebarLink
-            title="Home"
+            title="Overview"
             url="/dashboard"
             isActive={path === "/dashboard" ? true : false}
             icon={<BiHome className="w-5 h-5" />}
@@ -179,7 +185,7 @@ const Sidebar = () => {
             }`}
             onClick={() => setShowBoards(!showBoards)}>
             <FiClipboard className="w-5 h-5" />
-            <span className="ml-2 font-light text-sm golos-font">
+            <span className="ml-2 font-light text-[13px] golos-font">
               Boards ({boardCount || 0})
             </span>
             <span>
@@ -207,7 +213,21 @@ const Sidebar = () => {
                 {userBoards?.map((board: any, idx: any) => (
                   <SidebarLink
                     key={idx}
-                    title={board.name}
+                    title={
+                      <div className="flex w-48 flex-row justify-between">
+                        <span>
+                          {board.name.length > 18
+                            ? board.name.slice(0, 20) + "..."
+                            : board.name}
+                        </span>
+
+                        <span
+                          title={"Total Number of Tasks created on this board"}
+                          className={`text-xs font-medium p-[4px] rounded-sm bg-blue-500 text-task-white`}>
+                          {board.taskCount}
+                        </span>
+                      </div>
+                    }
                     url={`/dashboard/${board.id}/?name=${board.name}`}
                     isActive={
                       path ===
@@ -224,13 +244,12 @@ const Sidebar = () => {
                 <div>
                   <button
                     id="create-board"
-                    className={`font-light text-sm golos-font w-full flex flex-row items-center gap-2 p-2 rounded-lg ${
+                    className={`font-light text-[13px] golos-font w-full flex flex-row items-center gap-1 p-2 rounded-lg ${
                       theme === "light"
                         ? "text-task-dark hover:bg-blue-500 hover:text-task-light-white"
                         : "text-task-light-white hover:bg-blue-500"
                     }`}
                     onClick={() => setOpenModal(true)}>
-                    <RxDashboard className="w-5 h-5" />
                     <BsPlus className={`w-5 h-5 `} />
                     Create New Board
                   </button>
@@ -263,17 +282,49 @@ const Sidebar = () => {
             )}
           </div>
         </div>
-      </div>
 
-      <div>
-        <Toggle
-          checked={toggle}
-          theme={theme}
-          onChange={handleToggle}
-          iconOff={<BsCloudMoon />}
-          iconOn={<BsSun />}
-          label="Task Mode"
-        />
+        <div className={`flex flex-col gap-2`}>
+          <SidebarLink
+            title="Help Center"
+            url="/help"
+            isActive={path === "/help" ? true : false}
+            icon={<IoIosHelpCircleOutline className="w-5 h-5" />}
+          />
+
+          <SidebarLink
+            title="Notifications"
+            url="/notifications"
+            isActive={path === "/notifications" ? true : false}
+            icon={<BsBell className="w-5 h-5" />}
+          />
+
+          <SidebarLink
+            title="Settings"
+            url={`/setting/${user?.userid}`}
+            isActive={path === `/setting/${user?.userid}` ? true : false}
+            icon={<IoSettingsOutline className="w-5 h-5" />}
+          />
+
+          <div>
+            <Toggle
+              checked={toggle}
+              theme={theme}
+              onChange={handleToggle}
+              iconOff={<BsCloudMoon />}
+              iconOn={<BsSun />}
+              label="Task Mode"
+            />
+          </div>
+
+          <ProfileCard
+            name={`${user?.firstName} ${user?.lastName}`}
+            username={user?.username}
+            image={user?.profileImage || ""}
+            imagesize="md"
+            theme={theme}
+            isAdmin={user?.isAdmin}
+          />
+        </div>
       </div>
     </div>
   );
