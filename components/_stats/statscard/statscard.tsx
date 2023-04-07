@@ -20,9 +20,9 @@ export const StatsCard = ({
   const getSize = () => {
     switch (cardsize) {
       case "small":
-        return "w-1/4";
+        return "w-20 md:w-16 lg:w-20 xl:w-24 2xl:w-32";
       case "large":
-        return "w-1/2";
+        return "w-28 lg:w-32 xl:w-44 2xl:w-72";
 
       default:
         return "w-1/4";
@@ -31,7 +31,7 @@ export const StatsCard = ({
 
   const tooltipPropmpt = () => {
     return (
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 ">
         <div className="text-sm font-normal golos-font">{description}</div>
       </div>
     );
@@ -40,7 +40,7 @@ export const StatsCard = ({
   return (
     <>
       <div
-        className={` ${getSize()} h-20 p-3 m-2 flex flex-col justify-center rounded-md golos-font
+        className={` ${getSize()} h-full p-3 flex flex-col rounded-md golos-font
         ${theme === "light" ? "text-task-sidebar-dark" : "text-task-white"}
       `}>
         <div

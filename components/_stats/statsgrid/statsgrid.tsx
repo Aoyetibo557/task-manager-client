@@ -9,7 +9,7 @@ type Props = {
 export const StatsGrid = ({ stats, theme }: Props) => {
   return (
     <>
-      <div className={`grid grid-cols-4 items-center gap-4 justify-between`}>
+      <div className={`flex flex-wrap p-1 items-center gap-6`}>
         <StatsCard
           title={"Active Boards"}
           value={stats.totalBoards}
