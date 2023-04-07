@@ -319,7 +319,7 @@ const Sidebar = () => {
           <ProfileCard
             name={`${user?.firstName} ${user?.lastName}`}
             username={user?.username}
-            image={user.profileImage}
+            image={user?.profileImage || ""}
             imagesize="md"
             theme={theme}
             isAdmin={user?.isAdmin}

@@ -8,7 +8,7 @@ type Props = {
   username?: string;
   theme: string;
   tagtext?: string;
-  isAdmin: boolean;
+  isAdmin: boolean | undefined;
 };
 
 /**
