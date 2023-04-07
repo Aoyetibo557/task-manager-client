@@ -46,6 +46,7 @@ const Sidebar = () => {
     isLoggedIn,
     signOut,
     isBoardActionDispatched,
+    isTaskActionDispatched,
   } = useAuth() as AuthType;
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [openModal, setOpenModal] = useState(false);
@@ -129,7 +130,7 @@ const Sidebar = () => {
     if (isBoardActionDispatched) {
       getBoards();
     }
-  }, [isLoggedIn, user, router]);
+  }, [isLoggedIn, user, router, isTaskActionDispatched]);
 
   return (
     <div
@@ -218,7 +219,6 @@ const Sidebar = () => {
                           {board.name.length > 18
                             ? board.name.slice(0, 20) + "..."
                             : board.name}
-                          {/* {board.name} */}
                         </span>
 
                         <span
