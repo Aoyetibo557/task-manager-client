@@ -87,3 +87,26 @@ export interface AuthType {
   isUserActionDispatched: boolean;
   isBoardActionDispatched: boolean;
 }
+
+export interface StatsCardType {
+  title: string;
+  value: number;
+  icon?: string;
+  color?: string;
+  isCurrency?: boolean;
+  isPercentage?: boolean;
+  isCount?: boolean;
+  isTime?: boolean;
+  isDate?: boolean;
+}
+
+export interface StatsType {
+  totalTasks: number;
+  totalBoards: number;
+  totalTasksDueToday: number;
+  totalIncompleteTasks: number;
+  totalCompletedTasks: number;
+  totalTasksInProgress: number;
+  totalTasksOverdue?: number;
+  totalPinnedTasks?: number;
+}

@@ -6,6 +6,7 @@ const USER_DETAILS_ROUTE = "/auth/finduserbyid";
 const UPDATE_USER_BY_ID = "/auth/updateuserbyid";
 const RESET_PASSWORD = "/auth/resetpassword";
 const FIND_USER_BY_EMAIL_ROUTE = "/auth/finduser";
+const GET_USER_STATS_ROUTE = "/auth/userstats";
 
 // Update a user by id
 async function updateUserById(userid: User | any, rec: any) {
@@ -33,4 +34,16 @@ async function findUserByEmail(email: string) {
   return data;
 }
 
-export { getUserDetails, updateUserById, resetPassword, findUserByEmail };
+// Get user stats
+async function getUserStats(userid: string) {
+  const { data } = await API.get(`${GET_USER_STATS_ROUTE}/${userid}`);
+  return data;
+}
+
+export {
+  getUserDetails,
+  updateUserById,
+  resetPassword,
+  findUserByEmail,
+  getUserStats,
+};
