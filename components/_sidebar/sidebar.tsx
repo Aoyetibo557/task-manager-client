@@ -12,6 +12,7 @@ import {
   BsChevronUp,
   BsChevronDown,
   BsBell,
+  BsArchive,
 } from "react-icons/bs";
 import { RiArchiveDrawerLine } from "react-icons/ri";
 import { FiClipboard } from "react-icons/fi";
@@ -127,7 +128,7 @@ const Sidebar = () => {
     }
     getBoards();
 
-    if (isBoardActionDispatched) {
+    if (isBoardActionDispatched || isTaskActionDispatched) {
       getBoards();
     }
   }, [isLoggedIn, user, router, isTaskActionDispatched]);
@@ -175,7 +176,7 @@ const Sidebar = () => {
             title="Archived Tasks"
             url="/dashboard/archived"
             isActive={path === "/dashboard/archived" ? true : false}
-            icon={<RiArchiveDrawerLine className="w-5 h-5" />}
+            icon={<BsArchive className="w-5 h-5" />}
           />
 
           <button

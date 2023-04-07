@@ -5,6 +5,8 @@ import {
   BsFillPinFill,
   BsPin,
   BsPencil,
+  BsTrash,
+  BsArchive,
 } from "react-icons/bs";
 import { Task, AuthType } from "@/lib/utils/types";
 import type { MenuProps } from "antd";
@@ -36,7 +38,7 @@ const TaskDetailModal = (props: Props) => {
   const [status, setStatus] = useState(props.task.status);
   const [priority, setPriority] = useState(props.task.priority);
   const [pinLoading, setPinLoading] = useState(false);
-  const { dispatch } = useAuth() as AuthType;
+  const { dispatch, isTaskPinned } = useAuth() as AuthType;
   const [isPinned, setIsPinned] = useState(props.task.pinned);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
@@ -167,7 +169,11 @@ const TaskDetailModal = (props: Props) => {
     {
       key: "1",
       label: (
-        <button type="submit" onClick={openDeleteModal}>
+        <button
+          type="submit"
+          onClick={openDeleteModal}
+          className={`flex flex-row items-center`}>
+          <BsTrash className="mr-2 w-3 h-3" />
           Delete
         </button>
       ),
@@ -175,12 +181,23 @@ const TaskDetailModal = (props: Props) => {
     {
       key: "2",
       label: (
-        <button type="submit" onClick={openArchiveModal}>
+        <button
+          type="submit"
+          onClick={openArchiveModal}
+          className={`flex flex-row items-center`}>
+          <BsArchive className="mr-2 w-3 h-3" />
           Archive
         </button>
       ),
     },
   ];
+
+  useEffect(() => {
+    dispatch({
+      type: ActionTypes.TASK_PINACTION || ActionTypes.TASK_UPDATED,
+      payload: false,
+    });
+  }, [isTaskPinned]);
 
   return (
     <Modal

@@ -48,7 +48,7 @@ export const RecentActivity = ({ theme }: Props) => {
     }
   };
 
-  const tooltiPropmpt = () => {
+  const tooltipPropmpt = () => {
     return (
       <div className="flex flex-col gap-2">
         <div className="text-sm font-normal golos-font">
@@ -86,7 +86,7 @@ export const RecentActivity = ({ theme }: Props) => {
             theme === "light" ? "text-neutral-700" : "text-neutral-400"
           }`}>
           Recent Activity ({tasks.length})
-          <Tooltip title={tooltiPropmpt()}>
+          <Tooltip title={tooltipPropmpt()}>
             <BsInfoCircle className="w-4 h-4" />
           </Tooltip>
         </div>
