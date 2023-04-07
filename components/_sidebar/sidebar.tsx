@@ -158,7 +158,7 @@ const Sidebar = () => {
       <div className="flex flex-col h-screen justify-between ">
         <div className={`flex flex-col gap-2`}>
           <SidebarLink
-            title="Home"
+            title="Overview"
             url="/dashboard"
             isActive={path === "/dashboard" ? true : false}
             icon={<BiHome className="w-5 h-5" />}
@@ -184,7 +184,7 @@ const Sidebar = () => {
             }`}
             onClick={() => setShowBoards(!showBoards)}>
             <FiClipboard className="w-5 h-5" />
-            <span className="ml-2 font-light text-sm golos-font">
+            <span className="ml-2 font-light text-[13px] golos-font">
               Boards ({boardCount || 0})
             </span>
             <span>
@@ -212,7 +212,22 @@ const Sidebar = () => {
                 {userBoards?.map((board: any, idx: any) => (
                   <SidebarLink
                     key={idx}
-                    title={board.name}
+                    title={
+                      <div className="flex w-48 flex-row justify-between">
+                        <span>
+                          {board.name.length > 18
+                            ? board.name.slice(0, 20) + "..."
+                            : board.name}
+                          {/* {board.name} */}
+                        </span>
+
+                        <span
+                          title={"Total Number of Tasks created on this board"}
+                          className={`text-xs font-medium p-[4px] rounded-sm bg-blue-500 text-task-white`}>
+                          {board.taskCount}
+                        </span>
+                      </div>
+                    }
                     url={`/dashboard/${board.id}/?name=${board.name}`}
                     isActive={
                       path ===
@@ -229,13 +244,12 @@ const Sidebar = () => {
                 <div>
                   <button
                     id="create-board"
-                    className={`font-light text-sm golos-font w-full flex flex-row items-center gap-2 p-2 rounded-lg ${
+                    className={`font-light text-[13px] golos-font w-full flex flex-row items-center gap-1 p-2 rounded-lg ${
                       theme === "light"
                         ? "text-task-dark hover:bg-blue-500 hover:text-task-light-white"
                         : "text-task-light-white hover:bg-blue-500"
                     }`}
                     onClick={() => setOpenModal(true)}>
-                    <RxDashboard className="w-5 h-5" />
                     <BsPlus className={`w-5 h-5 `} />
                     Create New Board
                   </button>

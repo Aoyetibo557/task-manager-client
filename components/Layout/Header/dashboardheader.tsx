@@ -18,6 +18,7 @@ type Props = {
   boardId?: string;
   contentType?: "board" | "page";
   hasboardMenu?: boolean;
+  hasSearchBar?: boolean;
   onSearch?: (query: string) => void;
 };
 
@@ -112,7 +113,9 @@ const DashboardHeader = (props: Props) => {
 
       <div className={`flex flex-row gap-4 dashboard-header-div`}>
         <div>
-          <SearchBar theme={theme} onSearch={handleSearch} />
+          {props.hasSearchBar && (
+            <SearchBar theme={theme} onSearch={handleSearch} />
+          )}
         </div>
         {props.contentType === "board" && (
           <button
