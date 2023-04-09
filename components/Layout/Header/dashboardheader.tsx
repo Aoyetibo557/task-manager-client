@@ -37,6 +37,7 @@ const DashboardHeader = (props: Props) => {
   const [searchQuery, setSearchQuery] = useState("");
   const { theme } = useContext(ThemeContext);
   const [error, setError] = useState("");
+  const [openModal, setOpenModal] = useState(false);
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
@@ -60,7 +61,7 @@ const DashboardHeader = (props: Props) => {
         <Banner
           imageName="/banner.jpg"
           subBannerName={`Boards/${props.boardname}`}
-          bannerName={props.boardname}
+          bannerName={props.boardname as any}
           theme={theme}
         />
       </div>

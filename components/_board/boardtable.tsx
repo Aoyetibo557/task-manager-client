@@ -77,13 +77,13 @@ const BoardTable = ({ boardtasks, loading, searchQuery, boardId }: Props) => {
               if (filter.value === "newest") {
                 return (
                   task?.timestamp &&
-                  dayjs.unix(task.timestamp).isAfter(dayBefore)
+                  dayjs.unix(task?.timestamp as any).isAfter(dayBefore)
                 );
               }
               if (filter.value === "oldest") {
                 return (
                   task?.timestamp &&
-                  dayjs.unix(task.timestamp).isBefore(dayBefore)
+                  dayjs.unix(task?.timestamp as any).isBefore(dayBefore)
                 );
               }
 

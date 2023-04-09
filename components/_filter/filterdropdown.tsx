@@ -10,7 +10,7 @@ import { FilterButton } from "./filterbutton";
 
 type FilterDropdownProps = {
   boardId?: string;
-  options: string[];
+  options: { label: string; value: string }[];
   label: string;
   theme: string | undefined;
   onFilter?: (type: string, value: string) => void;

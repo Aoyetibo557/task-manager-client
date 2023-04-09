@@ -3,7 +3,6 @@ import { RxDotFilled as Dot } from "react-icons/rx";
 import { BsPlusCircle } from "react-icons/bs";
 import { HiOutlinePlus } from "react-icons/hi";
 import { TaskCard } from "../_task/task";
-import { Task } from "@/lib/utils/types";
 import { createTask } from "@/lib/queries/task";
 import AddTaskModal from "@/components/base-components/addtaskModal";
 import { useAuth } from "@/lib/hooks/useAuth";
@@ -59,7 +58,6 @@ const BoardColumn = ({
       }
     } catch (error: any) {
       message.error(`Something went wrong, ${error.message}`);
-      setError(error.message);
     }
   };
 

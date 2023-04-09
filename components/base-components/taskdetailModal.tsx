@@ -149,7 +149,7 @@ const TaskDetailModal = (props: Props) => {
 
   const handleStarTask = async () => {
     const res = await setStarTask(
-      props.task?.taskId,
+      props.task?.taskId as any,
       props.task?.isStarred === true ? false : true
     );
 
@@ -163,7 +163,6 @@ const TaskDetailModal = (props: Props) => {
     } else {
       if (res.status === "error") {
         message.error(res.message);
-        setIsStarred(false);
       }
     }
   };
