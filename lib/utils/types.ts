@@ -11,6 +11,7 @@ export interface Task {
   timestamp: string | number | undefined;
   parentTaskId?: string | null | undefined;
   pinned?: boolean | undefined;
+  isStarred?: boolean | undefined;
   returnObject?: ReturnObject | undefined;
   message?: string | undefined;
 }

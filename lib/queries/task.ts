@@ -16,6 +16,7 @@ const UNPIN_TASK_ROUTE = "/tasks/unpintask";
 const GET_PINNED_TASKS_ROUTE = "/tasks/getpinnedtasks";
 const GET_USER_TASKS_ROUTE = "/tasks/getusertasks";
 const GET_FILTERED_TASKS = "/tasks/gettasks";
+const HANDLE_STAR_TASK_ROUTE = "/tasks/startask";
 
 // create a new task
 async function createTask(task: Task | any) {
@@ -117,6 +118,15 @@ async function getFilteredTasks(
   return data;
 }
 
+// handle star task
+async function setStarTask(taskid: string, isStarred: boolean) {
+  const { data } = await API.put<ReturnObject>(
+    `${HANDLE_STAR_TASK_ROUTE}/${taskid}`,
+    { isStarred }
+  );
+  return data;
+}
+
 export {
   createTask,
   getBoardTasks,
@@ -132,4 +142,5 @@ export {
   getPinnedTasks,
   getUserTasks,
   getFilteredTasks,
+  setStarTask,
 };

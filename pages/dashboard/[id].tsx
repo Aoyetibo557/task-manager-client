@@ -88,11 +88,13 @@ const BoardDetail = () => {
           boardId={id as any}
           contentType="board"
           hasboardMenu={true}
+          hasSearchBar={true}
           onSearch={handleSearch}
         />
       </div>
       <div className="">
         <BoardTable
+          boardId={id as string}
           boardtasks={tasks as Task[]}
           loading={loading}
           searchQuery={searchQuery}

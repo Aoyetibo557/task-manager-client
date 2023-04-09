@@ -14,8 +14,14 @@ import { StatsOverview } from "@/components/_stats/statsoverview";
 
 const Dashboard = () => {
   const router = useRouter();
-  const { user, isTaskActionDispatched } = useAuth() as AuthType;
+  const { user, isTaskActionDispatched, isLoggedIn } = useAuth() as AuthType;
   const { theme } = useContext(ThemeContext);
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/loginform");
+    }
+  }, [user]);
 
   return (
     <div
