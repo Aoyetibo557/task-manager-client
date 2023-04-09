@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import TaskDetailModal from "../base-components/taskdetailModal";
-import { truncate } from "@/lib/utils/truncate";
+import { truncate, formatRelativeTime } from "@/lib/utils/util";
 import { Task, AuthType } from "@/lib/utils/types";
 import { updateTask } from "@/lib/queries/task";
 import { useAuth } from "@/lib/hooks/useAuth";
-import { message, Tag } from "antd";
+import { message, Tag, Avatar } from "antd";
 import { ActionTypes } from "@/lib/utils/actions";
+import { BsStar, BsFillStarFill } from "react-icons/bs";
 
 type Props = {
   task: Task;
@@ -24,7 +25,7 @@ export const TaskCard = ({ task, theme }: Props) => {
     description: "",
   });
 
-  const { dispatch, isTaskActionDispatched } = useAuth() as AuthType;
+  const { user, dispatch, isTaskActionDispatched } = useAuth() as AuthType;
 
   const updateTaskInput = (name: keyof Task, value: string) => {
     setUpdateValues((prev) => ({ ...prev, [name]: value }));
@@ -73,38 +74,53 @@ export const TaskCard = ({ task, theme }: Props) => {
 
   return (
     <div
-      className={`flex flex-col justify-between w-80 p-4 rounded-lg cursor-pointer hover:transform hover:scale-105 transition-all duration-300
+      className={`flex flex-col justify-between gap-2 w-80 p-4 rounded-lg cursor-pointer hover:transform hover:scale-105 transition-all duration-300
       ${
         theme === "light"
           ? "bg-task-light-white shadow-slate-300 shadow-sm"
           : "bg-task-sidebar-light-dark shadow-md "
       }`}
       onClick={() => setIsModalOpen(true)}>
-      <div
-        className={` font-medium text-base golos-font flex flex-row justify-between  ${
-          theme === "light" ? "text-task-dark" : "text-task-light-white"
-        }
-      `}>
-        {truncate(task?.name, 55)}
-
-        <div>
-          <Tag
-            title={
-              task?.priority ? `${task?.priority} priority` : "low priority"
-            }
-            color={getTagColor(task?.priority ? task?.priority : "low")}>
-            {task.priority ? task?.priority : "low"}
-          </Tag>
+      <div className="flex flex-row gap-3">
+        <div
+          className={`font-light text-xs golos-font ${
+            theme === "light" ? "text-neutral-500" : "text-neutral-400"
+          }`}>
+          {formatRelativeTime(task?.timestamp)}
         </div>
+      </div>
+      <div
+        className={` font-normal text-base golos-font flex flex-row justify-between  ${
+          theme === "light" ? "text-task-dark" : "text-task-light-white"
+        }`}>
+        {truncate(task?.name, 25)}
+      </div>
+      <div>
+        <Tag
+          title={task?.priority ? `${task?.priority} priority` : "low priority"}
+          color={getTagColor(task?.priority ? task?.priority : "low")}
+          className="font-medium rounded-sm">
+          {task.priority ? task?.priority : "low"}
+        </Tag>
       </div>
       <div
         className={` font-light text-sm golos-font ${
           theme === "light" ? "text-neutral-700" : "text-neutral-400"
-        }
-      `}>
+        }`}>
         {task?.subtasks && task?.subtasks?.length > 0
           ? `${task?.subtasks && task?.subtasks?.length} subtasks`
           : `${(task?.subtasks && task?.subtasks?.length) || 0} subtask`}
+      </div>
+      <div>
+        {task?.isStarred ? (
+          <BsFillStarFill
+            className={`w-5 h-5 cursor-pointer fill-yellow-400 ${
+              theme === "light" ? "text-task-dark" : "text-task-light-white"
+            } `}
+          />
+        ) : (
+          <BsStar className="w-5 h-5 cursor-pointer" />
+        )}
       </div>
 
       {isModalOpen && (

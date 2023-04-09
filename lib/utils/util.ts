@@ -1,4 +1,7 @@
 import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 export const truncate = (str: string, length: number): string => {
   if (str.length <= length) {
@@ -11,4 +14,12 @@ export const truncate = (str: string, length: number): string => {
 // format dayjs unix timestamp to a readable date
 export const formatDate = (timestamp: any): string => {
   return dayjs.unix(parseInt(timestamp)).format("MMMM D, YYYY hh:mm:ssa");
+};
+
+/**
+ * I want to create a relative time function that will return a string like "2 days ago", "3 hours ago", etc.
+ *
+ */
+export const formatRelativeTime = (timestamp: any): string => {
+  return dayjs().to(dayjs.unix(parseInt(timestamp)));
 };

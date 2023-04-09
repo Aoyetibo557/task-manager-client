@@ -1,4 +1,4 @@
-import { formatDate } from "@/lib/utils/truncate";
+import { formatDate } from "@/lib/utils/util";
 
 type Props = {
   theme?: string;

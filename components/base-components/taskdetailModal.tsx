@@ -7,6 +7,8 @@ import {
   BsPencil,
   BsTrash,
   BsArchive,
+  BsStar,
+  BsFillStarFill,
 } from "react-icons/bs";
 import { Task, AuthType } from "@/lib/utils/types";
 import type { MenuProps } from "antd";
@@ -16,10 +18,11 @@ import {
   deleteTask,
   pinTask,
   unpinTask,
+  setStarTask,
 } from "@/lib/queries/task";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { ActionTypes } from "@/lib/utils/actions";
-import { formatDate } from "@/lib/utils/truncate";
+import { formatDate } from "@/lib/utils/util";
 import { ConfirmationModal } from "../_confirmationmodal/confirmationmodal";
 
 type Props = {
@@ -144,6 +147,26 @@ const TaskDetailModal = (props: Props) => {
     }
   };
 
+  const handleStarTask = async () => {
+    const res = await setStarTask(
+      props.task?.taskId as any,
+      props.task?.isStarred === true ? false : true
+    );
+
+    if (res.status === "success") {
+      message.success(res.message);
+      props.setOpen(true);
+      dispatch({
+        type: ActionTypes.TASK_UPDATED,
+        payload: true,
+      });
+    } else {
+      if (res.status === "error") {
+        message.error(res.message);
+      }
+    }
+  };
+
   const getTagColor = (proiority: string) => {
     switch (proiority) {
       case "high":
@@ -232,6 +255,23 @@ const TaskDetailModal = (props: Props) => {
           ) : (
             <BsPin className="w-5 h-5 cursor-pointer" onClick={handlePin} />
           )}
+          <div>
+            {props.task?.isStarred ? (
+              <BsFillStarFill
+                className={`w-5 h-5 cursor-pointer fill-yellow-400 ${
+                  props.theme === "light"
+                    ? "text-task-dark"
+                    : "text-task-light-white"
+                } `}
+                onClick={handleStarTask}
+              />
+            ) : (
+              <BsStar
+                className="w-5 h-5 cursor-pointer"
+                onClick={handleStarTask}
+              />
+            )}
+          </div>
 
           <div>
             <Dropdown

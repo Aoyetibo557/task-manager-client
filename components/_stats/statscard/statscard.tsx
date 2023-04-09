@@ -40,11 +40,15 @@ export const StatsCard = ({
   return (
     <>
       <div
-        className={` ${getSize()} h-full p-3 flex flex-col rounded-md golos-font
-        ${theme === "light" ? "text-task-sidebar-dark" : "text-task-white"}
+        className={` ${getSize()} h-full p-3 flex flex-col rounded-md golos-font 
+        ${
+          theme === "light"
+            ? "text-task-sidebar-dark border-neutral-400 border-[0.8px]"
+            : "text-task-white bg-task-sidebar-light-dark"
+        }
       `}>
         <div
-          className={`flex flex-row gap-3 items-center golos-font font-normal text-base text-neutral-500`}>
+          className={`flex flex-row gap-3 items-center justify-between golos-font font-normal text-base text-neutral-500`}>
           {title}
           {description && (
             <Tooltip title={tooltipPropmpt()}>

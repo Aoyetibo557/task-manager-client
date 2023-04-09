@@ -72,6 +72,10 @@ const Sidebar = () => {
     setInput(e);
   };
 
+  const handleSignOut = () => {
+    signOut();
+    router.push("/loginform");
+  };
   const handleClick = () => {
     console.log("clicked", input);
   };
@@ -304,6 +308,14 @@ const Sidebar = () => {
             url={`/setting/${user?.userid}`}
             isActive={path === `/setting/${user?.userid}` ? true : false}
             icon={<IoSettingsOutline className="w-5 h-5" />}
+          />
+
+          <SidebarLink
+            title="Logout"
+            url="/loginform"
+            isActive={path === "/loginform" ? true : false}
+            icon={<IoExitOutline className="w-5 h-5" />}
+            onClick={handleSignOut}
           />
 
           <div>
