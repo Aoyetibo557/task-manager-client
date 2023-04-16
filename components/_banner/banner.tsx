@@ -1,17 +1,18 @@
 import React from "react";
+import { Breadcrumb } from "antd";
 
 interface BannerProps {
   imageName: string;
   bannerName: string;
-  subBannerName?: string;
+  breadcrumblist?: string[] | { href: string; title: string }[];
   theme: string | undefined;
 }
 
 const Banner: React.FC<BannerProps> = ({
   imageName,
   bannerName,
-  subBannerName,
   theme,
+  breadcrumblist,
 }) => {
   return (
     <div
@@ -23,12 +24,12 @@ const Banner: React.FC<BannerProps> = ({
         <div
           className={`text-sm font-light mb-2 ${
             theme === "light" ? "text-sidebar-dark" : "text-task-light-white"
-          }`}>
-          {subBannerName}
-        </div>
+          }`}></div>
         <div
           className={`text-2xl font-light ${
-            theme === "light" ? "text-sidebar-dark" : "text-task-light-white"
+            theme === "light"
+              ? "text-task-sidebar-dark"
+              : "text-task-light-white"
           }`}>
           {bannerName}
         </div>

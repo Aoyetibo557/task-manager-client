@@ -265,8 +265,8 @@ const Sidebar = () => {
 
           <SidebarLink
             title="Trash"
-            url="/dashboard/trash"
-            isActive={path === "/dashboard/trash" ? true : false}
+            url="/trash"
+            isActive={path === "/trash" ? true : false}
             icon={<BsTrash className="w-5 h-5" />}
           />
         </div>
@@ -296,12 +296,15 @@ const Sidebar = () => {
             icon={<IoIosHelpCircleOutline className="w-5 h-5" />}
           />
 
-          <SidebarLink
-            title="Notifications"
-            url="/notifications"
-            isActive={path === "/notifications" ? true : false}
-            icon={<BsBell className="w-5 h-5" />}
-          />
+          {/* Update this when page is ready! */}
+          {user.isAdmin && (
+            <SidebarLink
+              title="Notifications"
+              url="/notifications"
+              isActive={path === "/notifications" ? true : false}
+              icon={<BsBell className="w-5 h-5" />}
+            />
+          )}
 
           <SidebarLink
             title="Settings"

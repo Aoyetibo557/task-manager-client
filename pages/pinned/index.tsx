@@ -39,8 +39,19 @@ const PinnedPage = () => {
       <div className="sticky top-0">
         <DashboardHeader
           contentType="page"
+          boardname="Pinned Tasks"
           hasSearchBar={false}
           hasboardMenu={false}
+          breadcrumblist={[
+            {
+              href: "/dashboard",
+              title: "Dashboard",
+            },
+            {
+              href: "/dashboard/pinned",
+              title: "Pinned Tasks",
+            },
+          ]}
         />
       </div>
 

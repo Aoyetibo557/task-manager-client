@@ -119,7 +119,11 @@ export const TaskCard = ({ task, theme }: Props) => {
             } `}
           />
         ) : (
-          <BsStar className="w-5 h-5 cursor-pointer" />
+          <BsStar
+            className={`w-4 h-4 cursor-pointer 
+            ${theme === "light" ? "text-neutral-900" : "text-white"}
+          `}
+          />
         )}
       </div>
 

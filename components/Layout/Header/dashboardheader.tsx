@@ -21,6 +21,7 @@ type Props = {
   contentType?: "board" | "page";
   hasboardMenu?: boolean;
   hasSearchBar?: boolean;
+  breadcrumblist?: string[] | { href: string; title: string }[];
   onSearch?: (query: string) => void;
 };
 
@@ -60,7 +61,7 @@ const DashboardHeader = (props: Props) => {
       <div>
         <Banner
           imageName="/banner.jpg"
-          subBannerName={`Boards/${props.boardname}`}
+          breadcrumblist={props.breadcrumblist}
           bannerName={props.boardname as any}
           theme={theme}
         />

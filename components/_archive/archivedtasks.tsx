@@ -34,17 +34,14 @@ const ArchivedTasks = () => {
     }
   }, [user, isTaskActionDispatched]);
 
-  return (
+  return archivedTasks.length > 0 ? (
     <div>
-      <div>
-        <ArchiveGrid tasks={archivedTasks} theme={theme} />
-        {archivedTasks.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-96">
-            <div className="text-2xl font-semibold text-neutral-400">
-              No archived tasks
-            </div>
-          </div>
-        )}
+      <ArchiveGrid tasks={archivedTasks} theme={theme} />
+    </div>
+  ) : (
+    <div className="flex flex-col items-center justify-center h-96">
+      <div className="text-2xl font-normal golos-font text-neutral-400">
+        No archived tasks
       </div>
     </div>
   );

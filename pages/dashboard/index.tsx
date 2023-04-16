@@ -36,14 +36,14 @@ const Dashboard = () => {
               theme === "light" ? "text-task-dark" : "text-task-light-white"
             }`}>
             <span
-              className={`inline-flex gap-3 items-center text-4xl font-light mobile-large-text`}>
+              className={`inline-flex gap-2 items-center text-4xl font-light mobile-large-text`}>
               Welcome {user?.tourtaken ? "back" : "aboard"},
               <span className={`font-semibold`}>{user?.firstName}</span>
               <Image
                 src="/static/images/party.png"
                 alt="Party Popper"
-                width={50}
-                height={50}
+                width={45}
+                height={45}
               />{" "}
             </span>
             <span
