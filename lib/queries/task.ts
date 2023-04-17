@@ -17,6 +17,7 @@ const GET_PINNED_TASKS_ROUTE = "/tasks/getpinnedtasks";
 const GET_USER_TASKS_ROUTE = "/tasks/getusertasks";
 const GET_FILTERED_TASKS = "/tasks/gettasks";
 const HANDLE_STAR_TASK_ROUTE = "/tasks/startask";
+const GET_DELETED_TASKS_ROUTE = "/tasks/getdeletedtasks";
 
 // create a new task
 async function createTask(task: Task | any) {
@@ -127,6 +128,15 @@ async function setStarTask(taskid: string, isStarred: boolean) {
   return data;
 }
 
+// get deleted tasks for a user: (userid)
+async function getDeletedTasks(userid: string | any) {
+  const { data } = await API.get<ReturnObject>(
+    `${GET_DELETED_TASKS_ROUTE}/${userid}`
+  );
+
+  return data;
+}
+
 export {
   createTask,
   getBoardTasks,
@@ -143,4 +153,5 @@ export {
   getUserTasks,
   getFilteredTasks,
   setStarTask,
+  getDeletedTasks,
 };

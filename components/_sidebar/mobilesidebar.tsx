@@ -15,7 +15,8 @@ import Link from "next/link";
 import { AuthType, Board } from "@/lib/utils/types";
 import { HiMenuAlt1 } from "react-icons/hi";
 import DropdownMenu from "../_menu/dropdownmenu";
-
+import { SidebarModal } from "../_sidebar/sidebarmodal";
+import { AiOutlineCloseCircle } from "react-icons/ai";
 interface BoardLink {
   title: string;
   url: string;
@@ -111,7 +112,7 @@ const MobileSidebar = () => {
 
   return (
     <div
-      className={`w-full fixed mobile_sidebar ${
+      className={`w-full mobile_sidebar ${
         theme === "dark" ? "bg-task-sidebar-dark" : "bg-white"
       }`}>
       <div
@@ -119,113 +120,16 @@ const MobileSidebar = () => {
         ${showMenu && "h-full mobile_sidebar_div"}
         ${theme === "dark" ? "bg-task-sidebar-light-dark" : "bg-task-dark"}`}>
         <div className={`flex flex-row items-center justify-between`}>
-          <HiMenuAlt1
-            className={`w-7 h-7 text-white`}
-            onClick={() => setShowMenu(!showMenu)}
-          />
-
           <DropdownMenu theme={theme} isMobile={true} />
+          {!showMenu && (
+            <HiMenuAlt1
+              className={`w-7 h-7 text-white`}
+              onClick={() => setShowMenu(!showMenu)}
+            />
+          )}
         </div>
-
-        {showMenu && (
-          <div className={`mt-10`}>
-            <div
-              className={`font-light text-sm golos-font tracking-widest text-task-light-white `}>
-              ALL BOARDS ({boardCount || 0})
-            </div>
-
-            <div>
-              {/* if there are no boards */}
-              {(boardCount === 0 || userBoards?.length === 0) && (
-                <div
-                  className={`
-              font-light text-sm golos-font
-              ${theme === "dark" ? "text-task-dark" : "text-task-light-white"}
-              `}>
-                  You have no boards yet {error}
-                </div>
-              )}
-              <SidebarLink
-                title="Dashboard"
-                url="/dashboard"
-                isActive={path === "/dashboard" ? true : false}
-                isMobileLink={true}
-                icon={<RxDashboard className="w-5 h-5" />}
-                onClick={() => setShowMenu(false)}
-              />
-
-              {userBoards?.map((board: any, idx: any) => (
-                <SidebarLink
-                  key={idx}
-                  title={board.name}
-                  url={`/dashboard/${board.id}/?name=${board.name}`}
-                  isActive={
-                    path === `/dashboard/${board.id}/?name=${board.name}`
-                      ? true
-                      : false
-                  }
-                  isMobileLink={true}
-                  icon={<RxDashboard className="w-5 h-5" />}
-                  onClick={() => setShowMenu(false)}
-                />
-              ))}
-
-              <div>
-                <button
-                  id="create-board"
-                  className={`font-light text-sm golos-font flex flex-row items-center gap-2 p-2 text-task-light-white
-              ${
-                theme === "dark"
-                  ? "text-task-dark hover:text-task-blue hover:bg-task-sidebar-light-dark hover:bg-opacity-10"
-                  : "text-task-light-white hover:text-blue-400 hover:bg-task-sidebar-light-dark hover:bg-opacity-10"
-              }
-              `}
-                  onClick={() => setOpenModal(true)}>
-                  <RxDashboard className="w-5 h-5" />
-                  <BsPlus className={`w-5 h-5 `} />
-                  Create New Board
-                </button>
-              </div>
-
-              {openModal && (
-                <CreateBoardModal
-                  title="Create New Board"
-                  open={openModal}
-                  setOpen={setOpenModal}
-                  theme={theme}
-                  btnLabel="Create Board"
-                  inputVal={input}
-                  setInputVal={(e: any) => handleInput(e)}
-                  onClick={handleCreateBoard}
-                />
-              )}
-            </div>
-            {/* <div>
-              <div>
-                <div
-                  className={`font-light text-sm golos-font tracking-widest ${
-                    theme === "dark"
-                      ? "text-task-dark"
-                      : "text-task-light-white"
-                  }`}>
-                  ARCHIVED
-                </div>
-              </div>
-            </div> */}
-
-            <div className="mt-10">
-              <Toggle
-                checked={toggle}
-                theme={theme}
-                onChange={handleToggle}
-                iconOff={<BsCloudMoon />}
-                iconOn={<BsSun />}
-                label="Task Mode"
-              />
-            </div>
-          </div>
-        )}
       </div>
+      {showMenu && <SidebarModal open={showMenu} setOpen={setShowMenu} />}
     </div>
   );
 };

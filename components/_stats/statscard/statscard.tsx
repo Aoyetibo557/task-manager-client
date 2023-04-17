@@ -48,7 +48,7 @@ export const StatsCard = ({
         }
       `}>
         <div
-          className={`flex flex-row gap-3 items-center justify-between golos-font font-normal text-base text-neutral-500`}>
+          className={`flex flex-row gap-3 justify-between golos-font font-normal text-base text-neutral-500`}>
           {title}
           {description && (
             <Tooltip title={tooltipPropmpt()}>

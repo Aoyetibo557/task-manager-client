@@ -1,13 +1,18 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import DashboardLayout from "@/components/Layout/dashboardlayout";
 import { useRouter } from "next/router";
 import DashboardHeader from "@/components/Layout/Header/dashboardheader";
 import { ThemeContext } from "@/components/Layout/_contexts/themecontext";
-import ArchivedTasks from "@/components/_archive/archivedtasks";
+import { Task } from "@/lib/utils/types";
+import { useAuth } from "@/lib/hooks/useAuth";
+import { AuthType } from "@/lib/utils/types";
+import { message } from "antd";
+import TrashGrid from "@/components/_trash/trashgrid";
 
-function ArchivedPage() {
-  const router = useRouter();
+const TrashPage = () => {
   const { theme } = useContext(ThemeContext);
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const { user, dispatch } = useAuth() as AuthType;
 
   return (
     <div
@@ -16,8 +21,9 @@ function ArchivedPage() {
       } `}>
       <div className="sticky top-0">
         <DashboardHeader
-          boardname={"Archived Tasks"}
           contentType="page"
+          boardname="Deleted Tasks"
+          hasSearchBar={false}
           hasboardMenu={false}
           breadcrumblist={[
             {
@@ -25,21 +31,22 @@ function ArchivedPage() {
               title: "Dashboard",
             },
             {
-              href: "/dashboard/archived",
-              title: "Archived Tasks",
+              href: "/dashboard/pinned",
+              title: "Pinned Tasks",
             },
           ]}
         />
       </div>
-      <div>
-        <ArchivedTasks />
+
+      <div className={`p-4`}>
+        <TrashGrid />
       </div>
     </div>
   );
-}
+};
 
-ArchivedPage.getLayout = function getLayout(page: React.ReactNode) {
+TrashPage.getLayout = function getLayout(page: React.ReactNode) {
   return <DashboardLayout>{page}</DashboardLayout>;
 };
 
-export default ArchivedPage;
+export default TrashPage;
