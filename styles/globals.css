@@ -262,6 +262,32 @@ body {
     display: flex;
     flex-direction: column;
   }
+
+  /* landing page */
+  .landingpage-container {
+    width: 100%;
+    gap: 0;
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+  }
+
+  .landingpage-textcontainer {
+    width: 100%;
+    margin-top: 30px;
+  }
+
+  .logo-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 40px;
+    /* overflow-x: scroll; */
+  }
+
+  .landingheader-menu {
+    display: flex;
+    gap: 10px;
+  }
 }
 
 @media only screen and (max-width: 912px) {

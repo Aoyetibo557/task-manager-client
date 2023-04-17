@@ -12,7 +12,7 @@ const TrashGrid = () => {
   const { theme } = useContext(ThemeContext);
 
   const handleGetDeletedTasks = async () => {
-    const res = await getDeletedTasks(user?.userid);
+    const res = (await getDeletedTasks(user?.userid)) as any;
 
     if (res.status === "success") {
       setTasks(res.tasks);
