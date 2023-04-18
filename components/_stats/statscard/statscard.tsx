@@ -22,7 +22,7 @@ export const StatsCard = ({
       case "small":
         return "w-20 md:w-16 lg:w-20 xl:w-24 2xl:w-32";
       case "large":
-        return "w-28 lg:w-32 xl:w-44 2xl:w-72";
+        return "w-full lg:w-32 xl:w-44 2xl:w-72";
 
       default:
         return "w-1/4";
@@ -40,7 +40,7 @@ export const StatsCard = ({
   return (
     <>
       <div
-        className={` ${getSize()} h-full p-3 flex flex-col rounded-md golos-font 
+        className={` ${getSize()} w- h-full p-3 flex flex-col rounded-md golos-font 
         ${
           theme === "light"
             ? "text-task-sidebar-dark border-neutral-400 border-[0.8px]"
