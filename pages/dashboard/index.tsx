@@ -10,11 +10,18 @@ import AppTour from "@/components/_tour/apptour";
 import GettingStarted from "@/components/_dashboard/gettingstarted";
 import DropdownMenu from "@/components/_menu/dropdownmenu";
 import { AuthType } from "@/lib/utils/types";
+import { StatsOverview } from "@/components/_stats/statsoverview";
 
 const Dashboard = () => {
   const router = useRouter();
-  const { user, isTaskActionDispatched } = useAuth() as AuthType;
+  const { user, isTaskActionDispatched, isLoggedIn } = useAuth() as AuthType;
   const { theme } = useContext(ThemeContext);
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/loginform");
+    }
+  }, [user]);
 
   return (
     <div
@@ -29,13 +36,14 @@ const Dashboard = () => {
               theme === "light" ? "text-task-dark" : "text-task-light-white"
             }`}>
             <span
-              className={`inline-flex gap-3 items-center text-4xl font-semibold mobile-large-text`}>
-              Welcome {user?.tourtaken ? "back" : "aboard"} {user?.firstName} !
+              className={`inline-flex gap-2 items-center text-4xl font-light mobile-large-text`}>
+              Welcome {user?.tourtaken ? "back" : "aboard"},
+              <span className={`font-semibold`}>{user?.firstName}</span>
               <Image
                 src="/static/images/party.png"
                 alt="Party Popper"
-                width={50}
-                height={50}
+                width={45}
+                height={45}
               />{" "}
             </span>
             <span
@@ -44,8 +52,9 @@ const Dashboard = () => {
               }`}>
               {user?.tourtaken ? (
                 <span>
-                  {`Let's get to work! You can always take the tour again by
-                  clicking the help icon on the top right corner.`}
+                  {/* {`Let's get to work! You can always take the tour again by
+                  clicking the help icon on the top right corner.`} */}
+                  {`Let's get to work! Here's a quick overview of your stats.`}
                 </span>
               ) : (
                 <span>
@@ -74,6 +83,10 @@ const Dashboard = () => {
               theme === "light" ? "border-neutral-200" : "border-neutral-600"
             }`}
           />
+        </div>
+
+        <div>
+          <StatsOverview />
         </div>
 
         <div>

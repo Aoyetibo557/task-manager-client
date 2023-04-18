@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/base-components/button/button";
 import { User } from "@/lib/utils/types";
-import { formatDate } from "@/lib/utils/truncate";
+import { formatDate } from "@/lib/utils/util";
 import { SubscriptionDetails } from "@/components/_setting/subscription/subscriptiondetails";
 import { ReceiptHistory } from "@/components/_setting/subscription/receipthistory";
 

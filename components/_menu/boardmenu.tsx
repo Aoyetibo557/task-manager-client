@@ -17,6 +17,7 @@ import { SlOptionsVertical } from "react-icons/sl";
 import { ConfirmationModal } from "../_confirmationmodal/confirmationmodal";
 import { clearBoard, deleteBoard } from "@/lib/queries/board";
 import { ActionTypes } from "@/lib/utils/actions";
+import InviteModal from "../_invitemodal/invitemodal";
 
 type Props = {
   theme?: string;
@@ -27,6 +28,7 @@ type Props = {
 const BoardMenu = ({ theme, isMobile, boardid }: Props) => {
   const [clearModal, setClearModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
+  const [inviteModal, setInviteModal] = useState(false);
 
   const router = useRouter();
   const {
@@ -107,6 +109,17 @@ const BoardMenu = ({ theme, isMobile, boardid }: Props) => {
       ),
       icon: "",
     },
+    {
+      key: "4",
+      label: !isMobile && (
+        <div>
+          <button type="submit" onClick={() => setInviteModal(true)}>
+            Invite Team Members
+          </button>
+        </div>
+      ),
+      icon: "",
+    },
   ];
 
   return (
@@ -146,6 +159,16 @@ const BoardMenu = ({ theme, isMobile, boardid }: Props) => {
           onConfirm={() => handleDeleteBoard(boardid as any)}
           primaryBtnLabel="Delete"
           secondaryBtnLabel="Cancel"
+        />
+      )}
+
+      {inviteModal && (
+        <InviteModal
+          open={inviteModal}
+          setOpen={setInviteModal}
+          title="Invite people"
+          subtitle="Invite team members to this board"
+          boardId={boardid as any}
         />
       )}
     </div>

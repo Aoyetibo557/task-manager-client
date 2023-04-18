@@ -11,6 +11,7 @@ export interface Task {
   timestamp: string | number | undefined;
   parentTaskId?: string | null | undefined;
   pinned?: boolean | undefined;
+  isStarred?: boolean | undefined;
   returnObject?: ReturnObject | undefined;
   message?: string | undefined;
 }
@@ -34,6 +35,7 @@ export interface User {
   username?: string | undefined;
   returnObject?: ReturnObject | undefined;
   subscription?: SubscriptionPlan | undefined;
+  isAdmin?: boolean | undefined;
 }
 
 export interface Board {
@@ -85,4 +87,27 @@ export interface AuthType {
   isTaskPinned: boolean;
   isUserActionDispatched: boolean;
   isBoardActionDispatched: boolean;
+}
+
+export interface StatsCardType {
+  title: string;
+  value: number;
+  icon?: string;
+  color?: string;
+  isCurrency?: boolean;
+  isPercentage?: boolean;
+  isCount?: boolean;
+  isTime?: boolean;
+  isDate?: boolean;
+}
+
+export interface StatsType {
+  totalTasks: number;
+  totalBoards: number;
+  totalTasksDueToday: number;
+  totalIncompleteTasks: number;
+  totalCompletedTasks: number;
+  totalTasksInProgress: number;
+  totalTasksOverdue?: number;
+  totalPinnedTasks?: number;
 }

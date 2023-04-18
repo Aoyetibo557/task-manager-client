@@ -6,6 +6,8 @@ const BOARD_ROUTE = "/boards/getuserboards";
 const CREATE_BOARD_ROUTE = "/boards/createboard";
 const CLEAR_BOARD_ROUTE = "/boards/cleartasks";
 const DELETE_BOARD_ROUTE = "/boards/deleteboard";
+const SEND_INVITE_ROUTE = "/boards/sendinvite";
+const BOARD_tASK_COUNT_ROUTE = "/boards/getboardtaskcount";
 
 // Get all boards for a user
 async function getUserBoards(userid: User | any) {
@@ -35,4 +37,32 @@ async function deleteBoard(boardid: string) {
   return data;
 }
 
-export { getUserBoards, createBoard, clearBoard, deleteBoard };
+// send an invite to users to join a board
+async function sendInvite(
+  boardid: string,
+  emails: string[],
+  senderemail: string
+) {
+  const { data } = await API.post<ReturnObject | any>(
+    `${SEND_INVITE_ROUTE}/${boardid}`,
+    { emails, senderemail }
+  );
+  return data;
+}
+
+// get the number of tasks for a board
+async function getBoardTaskCount(boardid: string) {
+  const { data } = await API.get<ReturnObject | any>(
+    `${BOARD_tASK_COUNT_ROUTE}/${boardid}`
+  );
+  return data;
+}
+
+export {
+  getUserBoards,
+  createBoard,
+  clearBoard,
+  deleteBoard,
+  sendInvite,
+  getBoardTaskCount,
+};
