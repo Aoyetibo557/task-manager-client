@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import { ThemeContext } from "../Layout/_contexts/themecontext";
+import Link from "next/link";
 
 type Props = {
   title: string | JSX.Element;
@@ -23,11 +24,11 @@ export const SidebarLink = ({
   const { theme } = useContext(ThemeContext);
   const path = router.pathname.toLowerCase();
   const handleOnclick = () => {
-    router.push(url);
     onClick && onClick();
   };
   return (
-    <div
+    <Link
+      href={url}
       className={`w-full flex flex-row items-center space-x-2 cursor-pointer p-1  ${
         isActive
           ? "bg-blue-500 text-task-light-white rounded-lg"
@@ -48,20 +49,9 @@ export const SidebarLink = ({
       </div>
       <div
         className={`text-[13px] golos-font font-light
-          ${isMobileLink && "text-task-light-white"}
-          
-         
-        `}>
+          ${isMobileLink && "text-task-light-white"}`}>
         {title}
       </div>
-    </div>
+    </Link>
   );
 };
-
-/**
- * ${
-            !isMobileLink && theme === "light"
-              ? "text-task-sidebar-light-dark"
-              : "text-white"
-          } 
- */
