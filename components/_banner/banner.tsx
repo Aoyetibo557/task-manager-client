@@ -21,10 +21,23 @@ const Banner: React.FC<BannerProps> = ({
         backgroundImage: `url(${imageName})`,
       }}>
       <div className="absolute top-1/2 transform lg:-translate-x-2/2 -translate-y-2/2 w-80 ">
-        <div
-          className={`text-sm font-light mb-2 ${
-            theme === "light" ? "text-sidebar-dark" : "text-task-light-white"
-          }`}></div>
+        <div className={`text-sm font-light mb-2 ml-8 w-full `}>
+          <Breadcrumb>
+            {breadcrumblist?.map((item, index) => {
+              return (
+                <Breadcrumb.Item
+                  key={index}
+                  className={`${
+                    theme === "light"
+                      ? "text-task-sidebar-dark"
+                      : "text-task-light-white"
+                  }`}>
+                  {typeof item === "string" ? item : item.title}
+                </Breadcrumb.Item>
+              );
+            })}
+          </Breadcrumb>
+        </div>
         <div
           className={`text-2xl text-center font-light ${
             theme === "light"

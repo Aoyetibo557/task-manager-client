@@ -118,7 +118,7 @@ const BoardTable = ({ boardtasks, loading, searchQuery, boardId }: Props) => {
   //
 
   return boardtasks.length === 0 ? (
-    <div className="flex flex-col w-full h-full p-5 ">
+    <div className="flex flex-col h-full w-full p-5 ">
       <div
         className={` flex flex-col h-96 justify-center items-center
         ${theme === "light" ? "text-task-dark" : "text-task-light-white"}
@@ -137,7 +137,7 @@ const BoardTable = ({ boardtasks, loading, searchQuery, boardId }: Props) => {
       </div>
     </div>
   ) : (
-    <div className={`p-4`}>
+    <div className={`h-screen p-4`}>
       <div className=" flex flex-row justify-end gap-3">
         <FilterList boardId={boardId} getFilterValue={getFilterValue} />
       </div>

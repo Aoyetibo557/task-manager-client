@@ -155,7 +155,7 @@ export const SidebarLinks = ({
 
   return (
     <>
-      <div className={`flex flex-col ${isMobileView ? "gap-0" : "gap-24"}`}>
+      <div className={`flex flex-col ${isMobileView ? "gap-0" : "gap-20"}`}>
         <div className={`flex flex-col gap-2`}>
           <SidebarLink
             title="Overview"
