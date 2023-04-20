@@ -16,7 +16,7 @@ const Banner: React.FC<BannerProps> = ({
 }) => {
   return (
     <div
-      className="bg-cover bg-center h-24 sm:h-4 md:h-48 lg:h-36 relative"
+      className="bg-cover bg-center h-24 sm:h-4 md:h-48 lg:h-36 relative banner"
       style={{
         backgroundImage: `url(${imageName})`,
       }}>
@@ -26,7 +26,7 @@ const Banner: React.FC<BannerProps> = ({
             theme === "light" ? "text-sidebar-dark" : "text-task-light-white"
           }`}></div>
         <div
-          className={`text-2xl font-light ${
+          className={`text-2xl text-center font-light ${
             theme === "light"
               ? "text-task-sidebar-dark"
               : "text-task-light-white"
