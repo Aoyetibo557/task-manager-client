@@ -92,8 +92,8 @@ const BoardDetail = () => {
           onSearch={handleSearch}
           breadcrumblist={[
             { href: "/dashboard", title: "Dashboard" },
-            { href: ``, title: "Boards" },
-            { href: `/dashboard/${id}?name=${name}`, title: name },
+            { href: "", title: "Boards" },
+            { href: `/dashboard/${id}?name=${name}`, title: name || "" },
           ]}
         />
       </div>

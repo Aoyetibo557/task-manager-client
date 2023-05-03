@@ -4,7 +4,11 @@ import { Breadcrumb } from "antd";
 interface BannerProps {
   imageName: string;
   bannerName: string;
-  breadcrumblist?: string[] | { href: string; title: string }[];
+  breadcrumblist?:
+    | string[]
+    | { href: string; title: string }[]
+    | undefined
+    | any;
   theme: string | undefined;
 }
 
@@ -23,7 +27,11 @@ const Banner: React.FC<BannerProps> = ({
       <div className="absolute top-1/2 transform lg:-translate-x-2/2 -translate-y-2/2 w-80 ">
         <div className={`text-sm font-light mb-2 ml-8 w-full `}>
           <Breadcrumb>
-            {breadcrumblist?.map((item, index) => {
+            {breadcrumblist?.map((item: any, index: number | any) => {
+              const isStringOrStringArray =
+                typeof item === "string" ||
+                (Array.isArray(item) &&
+                  item.every((i) => typeof i === "string"));
               return (
                 <Breadcrumb.Item
                   key={index}
@@ -32,7 +40,7 @@ const Banner: React.FC<BannerProps> = ({
                       ? "text-task-sidebar-dark"
                       : "text-task-light-white"
                   }`}>
-                  {typeof item === "string" ? item : item.title}
+                  {isStringOrStringArray ? item : item.title}
                 </Breadcrumb.Item>
               );
             })}
