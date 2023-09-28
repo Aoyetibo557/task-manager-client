@@ -2,7 +2,11 @@ import React, { useContext, useEffect } from "react";
 import { AuthContext } from "../../components/Layout/_contexts/authcontext";
 import { useRouter } from "next/router";
 
-const LoggedInWrapper: React.FC = ({ children }) => {
+type Props = {
+  children: React.ReactNode;
+};
+
+const LoggedInWrapper: React.FC = ({ children }: Props) => {
   const { isLoggedIn, loading } = useContext(AuthContext);
   const router = useRouter();
 
