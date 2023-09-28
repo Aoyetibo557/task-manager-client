@@ -162,13 +162,13 @@ const ProfileDetails = ({ theme }: Props) => {
   }, [user, isUserActionDispatched]);
   return (
     <div
-      className={`p-4 flex flex-col gap-4 rounded-md golos-font ${
+      className={`p-4 md:w-3/5 flex flex-col gap-4 rounded-md golos-font ${
         theme === "light"
           ? "bg-task-light-white text-task-dark"
           : "bg-task-sidebar-light-dark text-task-light-white"
       }`}>
       <div className={`text-lg font-medium`}>Profile Details</div>
-      <div className={`flex flex-row items-center gap-5`}>
+      <div className={`flex flex-wrap flex-row items-center gap-5`}>
         {loading ? (
           <Spin size="small" />
         ) : (
@@ -224,7 +224,7 @@ const ProfileDetails = ({ theme }: Props) => {
       </div>
 
       <div
-        className={`flex flex-row items-center gap-5 profile-details-inputs-container`}>
+        className={`flex flex-wrap flex-row items-center gap-5 profile-details-inputs-container`}>
         <div className={`flex flex-col`}>
           <label
             htmlFor="username"

@@ -138,16 +138,7 @@ export const SidebarLinks = ({
 
   // use the getUserBoards hook to get the boards from the database
   useEffect(() => {
-    if (!loading) {
-      if (!user || isLoggedIn === false) {
-        router.push("/loginform");
-        setError("You are not logged in");
-      } else if (user.userid?.length > 0) {
-        getBoards();
-      }
-    }
     getBoards();
-
     if (isBoardActionDispatched || isTaskActionDispatched) {
       getBoards();
     }

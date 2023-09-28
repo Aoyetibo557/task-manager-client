@@ -17,7 +17,7 @@ export const formatDate = (timestamp: any): string => {
 };
 
 /**
- * I want to create a relative time function that will return a string like "2 days ago", "3 hours ago", etc.
+ *  relative time function that will return a string like "2 days ago", "3 hours ago", etc.
  *
  */
 export const formatRelativeTime = (timestamp: any): string => {

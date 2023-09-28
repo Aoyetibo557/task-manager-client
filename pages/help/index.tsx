@@ -24,9 +24,6 @@ const Help = () => {
       className={`w-full h-screen overflow-auto
     ${theme === "light" ? "bg-task-light" : "bg-task-sidebar-dark"}
     `}>
-      <div className="help-page-search">
-        <DashboardHeader />
-      </div>
       <div>
         <HelpBoard />
       </div>

@@ -143,6 +143,8 @@ const LoginForm = () => {
                 label={"Login"}
                 onClick={handleLogin}
                 className="w-full bg-transparent"
+                bgColor="secondary"
+                btnType="button"
               />
             )}
           </div>

@@ -14,7 +14,7 @@ type Props = {
 export const AccountSetting = ({ user, theme }: Props) => {
   return (
     <div className="flex flex-col gap-6 pt-5">
-      <div className="inline-flex flex-row gap-6 mobile-account-setting">
+      <div className="inline-flex flex-wrap flex-row gap-6 mobile-account-setting">
         <ProfileDetails theme={theme} />
 
         <div className="inline-flex flex-col gap-6">
@@ -31,7 +31,7 @@ export const AccountSetting = ({ user, theme }: Props) => {
           className={`text-sm golos-font font-normal mt-5
           ${theme === "light" ? "text-neutral-500" : "text-neutral-400"}
           `}>
-          This account was created on {formatDate(user?.timestamp)}
+          This account was created on {formatDate(user?.timestamp || 0)}
         </div>
       </div>
     </div>
