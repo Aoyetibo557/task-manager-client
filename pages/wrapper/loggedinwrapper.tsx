@@ -4,9 +4,10 @@ import { useRouter } from "next/router";
 
 type Props = {
   children: React.ReactNode;
+  theme?: string;
 };
 
-const LoggedInWrapper: React.FC = ({ children }: Props) => {
+const LoggedInWrapper = ({ children }: Props) => {
   const { isLoggedIn, loading } = useContext(AuthContext);
   const router = useRouter();
 
