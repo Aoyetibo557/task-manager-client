@@ -51,18 +51,14 @@ const BoardDetail = () => {
   useEffect(() => {
     setLoading(true);
     const unsubscribe = handleGetBoardTasks();
-    if (isTaskActionDispatched || isTaskPinned) {
-      handleGetBoardTasks();
-    }
+    // if (isTaskActionDispatched || isTaskPinned) {
+    //   handleGetBoardTasks();
+    // }
 
     return () => {
       unsubscribe;
       dispatch({
         type: "TASK_CREATED",
-        payload: false,
-      });
-      dispatch({
-        type: "TASK_PINACTION",
         payload: false,
       });
     };
@@ -71,7 +67,6 @@ const BoardDetail = () => {
     name,
     isLoggedIn,
     isTaskActionDispatched,
-    isTaskPinned,
     dispatch,
     isBoardActionDispatched,
   ]);
@@ -93,7 +88,7 @@ const BoardDetail = () => {
           breadcrumblist={[
             { href: "/dashboard", title: "Dashboard" },
             { href: "", title: "Boards" },
-            { href: `/dashboard/${id}?name=${name}`, title: name},
+            { href: `/dashboard/${id}?name=${name}`, title: name },
           ]}
         />
       </div>

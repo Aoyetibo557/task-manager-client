@@ -16,6 +16,7 @@ export interface Task {
   message?: string | undefined;
   labels?: string[] | undefined;
   duedate?: number | undefined;
+  assignes?: string[] | undefined;
 }
 
 export interface User {

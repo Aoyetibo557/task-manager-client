@@ -21,7 +21,7 @@ type Props = {
   contentType?: "board" | "page";
   hasboardMenu?: boolean;
   hasSearchBar?: boolean;
-  breadcrumblist?: string[] | { href: string; title: string }[];
+  breadcrumblist?: string[] | any;
   onSearch?: (query: string) => void;
 };
 

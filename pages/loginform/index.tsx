@@ -2,6 +2,7 @@ import PageLayout from "@/components/Layout/layout";
 import { Button } from "@/components/base-components/button/button";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import { handleLocationPermission, detectDeviceType } from "@/lib/scripts/_e";
 import {
   useEmailValidate,
   usePasswordValidate,
@@ -18,6 +19,7 @@ const LoginForm = () => {
   const [emailinput, setEmail] = useState<string | any>("");
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState<string | null>(null);
+
   const { signIn, setUser } = useAuth() as AuthType;
 
   const { errorMessage: emailErrorMessage, validate: validateEmail } =
