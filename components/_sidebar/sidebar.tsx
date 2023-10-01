@@ -15,15 +15,6 @@ const Sidebar = () => {
 
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    if (!loading) {
-      if (!user || isLoggedIn === false) {
-        router.push("/loginform");
-        setError("You are not logged in");
-      }
-    }
-  }, [isLoggedIn, user]);
-
   return (
     <div
       className={` w-80 p-3 flex flex-col hide-sidebar ${

@@ -13,7 +13,7 @@ const HelpBoard = () => {
     <div className="">
       <div className="flex flex-col items-center gap-4 mt-10">
         <span
-          className={`golos-font font-light text-sm
+          className={`golos-font font-light text-7xl
         ${theme === "light" ? "text-task-dark" : "text-neutral-300"}
         `}>
           FAQs
@@ -25,7 +25,7 @@ const HelpBoard = () => {
           Ask us anything
         </span>
         <span
-          className={`golos-font font-light text-sm
+          className={`golos-font font-light text-base
         ${theme === "light" ? "text-task-dark" : "text-neutral-300"}
         `}>
           {`Have any questions? We're here to assist you.`}

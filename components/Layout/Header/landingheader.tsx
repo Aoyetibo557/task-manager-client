@@ -22,7 +22,7 @@ const LandingHeader = () => {
           Login
         </Link>
         <Link
-          href="/loginform"
+          href="/signup"
           title="Register"
           aria-label="Create an Account"
           className={`border-[1.5px] border-blue-800 p-1 w-28 text-center rounded-lg golos-font text-base font-normal hover:bg-blue-500 hover:text-white hover:border-none`}>

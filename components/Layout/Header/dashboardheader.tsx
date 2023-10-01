@@ -21,7 +21,7 @@ type Props = {
   contentType?: "board" | "page";
   hasboardMenu?: boolean;
   hasSearchBar?: boolean;
-  breadcrumblist?: string[] | { href: string; title: string }[];
+  breadcrumblist?: string[] | any;
   onSearch?: (query: string) => void;
 };
 
@@ -66,38 +66,13 @@ const DashboardHeader = (props: Props) => {
           theme={theme}
         />
       </div>
-      {/* <div
-        className={`flex flex-row items-center gap-3 golos-font font-medium text-lg
-        ${theme === "light" ? "text-task-dark" : "text-task-light-white"}
-      `}>
-        <Image src={"/static/images/banner.jpg"} width={40} height={40} />
-        {props.boardname}
 
-        <div>
-          {props.hasboardMenu && (
-            <BoardMenu theme={theme} boardid={props.boardId} />
-          )}
-        </div>
-      </div> */}
-
-      <div className={`flex flex-row gap-4 dashboard-header-div`}>
+      <div className={`flex flex-row gap-4`}>
         <div>
           {props.hasSearchBar && (
             <SearchBar theme={theme} onSearch={handleSearch} />
           )}
         </div>
-
-        {props.contentType === "board" && (
-          <button
-            className={`mobile-add-btn p-3 rounded-full shadow-sm ${
-              theme === "light"
-                ? "bg-task-sidebar-light-dark text-task-light-white hover:bg-opacity-100 bg-opacity-75"
-                : "bg-task-sidebar-dark text-task-light-white hover:border-neutral-200 border-[1.5px] border-neutral-400"
-            }`}
-            onClick={() => setOpenModal(true)}>
-            <BsPlus className="w-6 h-6" />
-          </button>
-        )}
       </div>
     </div>
   );

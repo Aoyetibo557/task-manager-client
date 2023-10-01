@@ -2,28 +2,45 @@ import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import Modal from "../Utility/Modal/modal";
 import {
   BsThreeDotsVertical,
+  BsThreeDots,
   BsFillPinFill,
   BsPin,
+  BsPlus,
   BsPencil,
   BsTrash,
   BsArchive,
-  BsStar,
-  BsFillStarFill,
+  BsPlusCircle,
 } from "react-icons/bs";
+import { AiOutlineClose } from "react-icons/ai";
+import { TbEdit } from "react-icons/tb";
+import { MdArrowForwardIos } from "react-icons/md";
 import { Task, AuthType } from "@/lib/utils/types";
 import type { MenuProps } from "antd";
 import { Dropdown, message, Spin, Tag } from "antd";
+import { Button } from "../base-components/button/button";
 import {
   archiveTask,
   deleteTask,
   pinTask,
   unpinTask,
-  setStarTask,
+  starTask,
+  unStarTask,
+  addLabelToTask,
+  removeLabelFromTask,
+  setDueDate,
 } from "@/lib/queries/task";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { ActionTypes } from "@/lib/utils/actions";
-import { formatDate } from "@/lib/utils/util";
+import { formatDate, formatRelativeTime } from "@/lib/utils/util";
 import { ConfirmationModal } from "../_confirmationmodal/confirmationmodal";
+import { TaskdetailTabs } from "../base-components/taskdetailtabs";
+import TaskStatusModal from "../_task/_tasksdetailcomps/taskstatus";
+import { TaskPriorityModal } from "../_task/_tasksdetailcomps/taskpriority";
+import { TaskActions } from "@/components/_task/_tasksdetailcomps/taskactioncenter";
+import { TaskDetailsDescription } from "@/components/_task/_tasksdetailcomps/taskdetaildescription";
+import type { DatePickerProps } from "antd";
+import { DatePicker } from "antd";
+import dayjs from "dayjs";
 
 type Props = {
   className?: string;
@@ -43,10 +60,29 @@ const TaskDetailModal = (props: Props) => {
   const [pinLoading, setPinLoading] = useState(false);
   const { dispatch, isTaskPinned } = useAuth() as AuthType;
   const [isPinned, setIsPinned] = useState(props.task.pinned);
+  const [isStarred, setIsStarred] = useState(props.task.isStarred);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isArchiveModalOpen, setIsArchiveModalOpen] = useState(false);
-  const [editDescription, setEditDescription] = useState(false);
   const [description, setDescription] = useState(props.task.description);
+  const [addingLabel, setAddingLabel] = useState(false);
+  const [label, setLabel] = useState("");
+  const [deleteBtns, setShowDeleteBtns] = useState(false);
+  const [dueDate, setStateDueDate] = useState(0);
+  const [initLabels, setInitLabels] = useState(props.task.labels || []);
+
+  const initialStatus = props.task.status;
+  const initialPriority = props.task.priority;
+  const initialDescription = props.task.description;
+
+  const resetState = () => {
+    setStatus(initialStatus);
+    setPriority(initialPriority);
+    setDescription(initialDescription);
+    setAddingLabel(false);
+    setLabel("");
+    setShowDeleteBtns(false);
+    setStateDueDate(0);
+  };
 
   const handleUpdateInput = (name: keyof Task, value: string) => {
     setStatus(
@@ -66,10 +102,6 @@ const TaskDetailModal = (props: Props) => {
 
   const handleClick = () => {
     props.onClick();
-
-    // props.updateTask && props.updateTask("status", "");
-    // props.updateTask && props.updateTask("priority", "");
-    // props.updateTask && props.updateTask("description", "");
   };
 
   const handleArchive = async () => {
@@ -108,52 +140,144 @@ const TaskDetailModal = (props: Props) => {
 
   const handlePin = async () => {
     setPinLoading(true);
-    const res = await pinTask(props.task.taskId);
+    try {
+      const res = await pinTask(props.task.taskId);
 
-    if (res.status === "success") {
-      message.success(res.message);
-      props.setOpen(true);
-      setIsPinned(true);
-      dispatch({
-        type: ActionTypes.TASK_PINACTION,
-        payload: true,
-      });
-    } else {
-      if (res.status === "error") {
-        message.error(res.message);
-        setPinLoading(false);
+      if (res.status === "success") {
+        message.success(res.message);
+        props.setOpen(true);
+        setIsPinned(true);
+      } else {
+        if (res.status === "error") {
+          message.error(res.message);
+          setPinLoading(false);
+        }
       }
+    } catch (err) {
+      message.error("Something went wrong. Try again later!");
+      setPinLoading(false);
     }
   };
 
   const handleUnpin = async () => {
     setPinLoading(true);
-    const res = await unpinTask(props.task?.taskId);
+    try {
+      const res = await unpinTask(props.task?.taskId);
 
-    if (res.status === "success") {
-      message.success(res.message);
-      props.setOpen(true);
-      setIsPinned(false);
-      dispatch({
-        type: ActionTypes.TASK_PINACTION,
-        payload: true,
-      });
-      setPinLoading(false);
-    } else {
-      if (res.status === "error") {
-        message.error(res.message);
+      if (res.status === "success") {
+        message.success(res.message);
+        props.setOpen(true);
+        setIsPinned(false);
         setPinLoading(false);
+      } else {
+        if (res.status === "error") {
+          message.error(res.message);
+          setPinLoading(false);
+        }
       }
+    } catch (err) {
+      message.error("Something went wrong. Try again later!");
+      setPinLoading(false);
     }
   };
 
   const handleStarTask = async () => {
-    const res = await setStarTask(
-      props.task?.taskId as any,
-      props.task?.isStarred === true ? false : true
-    );
+    try {
+      const res = await starTask(props.task?.taskId as any);
+
+      if (res.status === "success") {
+        message.success(res.message);
+        setIsStarred(true);
+        props.setOpen(true);
+        // dispatch({
+        //   type: ActionTypes.TASK_UPDATED,
+        //   payload: true,
+        // });
+      } else {
+        if (res.status === "error") {
+          message.error(res.message);
+        }
+      }
+    } catch (err) {
+      message.error("Something went wrong. Try again later!");
+    }
+  };
+
+  const handleUnStarTask = async () => {
+    try {
+      const res = await unStarTask(props.task?.taskId as any);
+
+      if (res.status === "success") {
+        message.success(res.message);
+        props.setOpen(true);
+        setIsStarred(false);
+        // dispatch({
+        //   type: ActionTypes.TASK_UPDATED,
+        //   payload: true,
+        // });
+      } else {
+        if (res.status === "error") {
+          message.error(res.message);
+        }
+      }
+    } catch (err) {
+      message.error("Something went wrong. Try again later!");
+    }
+  };
+
+  const handleAddLabel = async () => {
+    setAddingLabel(true);
+
+    try {
+      if (!label) {
+        message.error("Please enter a label");
+        setAddingLabel(true);
+        return;
+      }
+
+      const res = await addLabelToTask(props.task?.taskId, label as any);
+
+      if (res.status === "success") {
+        message.success(res.message);
+        setInitLabels([...initLabels, label]);
+        props.setOpen(true);
+        // dispatch({
+        //   type: ActionTypes.TASK_UPDATED,
+        //   payload: true,
+        // });
+        setAddingLabel(false);
+      } else {
+        if (res.status === "error") {
+          message.error(res.message);
+          setAddingLabel(false);
+        }
+      }
+    } catch (err) {
+      message.error("Something went wrong. Try again later!");
+    }
+  };
+
+  const handleRemoveLabel = async (label: string) => {
+    const res = await removeLabelFromTask(props.task?.taskId, label as any);
 
     if (res.status === "success") {
+      message.success(res.message);
+      props.setOpen(true);
+      setInitLabels(initLabels.filter((l) => l !== label));
+      // dispatch({
+      //   type: ActionTypes.TASK_UPDATED,
+      //   payload: true,
+      // });
+    } else {
+      if (res.status === "error") {
+        message.error(res.message);
+      }
+    }
+  };
+
+  const handleDueDate = async () => {
+    const res = await setDueDate(props.task?.taskId, dueDate);
+    if (res?.status === "success") {
       message.success(res.message);
       props.setOpen(true);
       dispatch({
@@ -161,23 +285,21 @@ const TaskDetailModal = (props: Props) => {
         payload: true,
       });
     } else {
-      if (res.status === "error") {
+      if (res?.status === "error") {
         message.error(res.message);
       }
     }
   };
 
-  const getTagColor = (proiority: string) => {
-    switch (proiority) {
-      case "high":
-        return "#f50";
-      case "medium":
-        return "#FF4366";
-      case "low":
-        return "#4D5ACE";
-      default:
-        return "#2db7f5";
-    }
+  const onChange: DatePickerProps["onChange"] = (date, dateString) => {
+    const unixDate = dayjs(date).unix();
+    setStateDueDate(unixDate);
+  };
+
+  const getRandomColor = () => {
+    const colors = ["yellow", "red", "gray", "green", "blue", "purple"];
+    const random = Math.floor(Math.random() * colors.length);
+    return colors[random];
   };
 
   const openDeleteModal = () => {
@@ -226,144 +348,219 @@ const TaskDetailModal = (props: Props) => {
     <Modal
       title={
         <div
-          className={`flex flex-row p-3 justify-between font-medium text-lg golos-font mb-2 ${
+          className={` p-3 font-medium text-lg golos-font mb-2 ${
             props.theme === "light" ? "text-task-dark" : "text-task-light-white"
           }`}>
-          <div className="w-3/4 flex flex-row gap-2">
-            {props.task.name}
-
-            <div>
-              <Tag
-                title={
-                  props.task?.priority
-                    ? `${props.task?.priority} priority`
-                    : "low priority"
-                }
-                color={getTagColor(
-                  props.task?.priority ? props.task?.priority : "low"
-                )}>
-                {props?.task.priority ? props.task?.priority : "low"}
-              </Tag>
+          <div className={`flex flex-row justify-between`}>
+            <div className={`text-sm font-extralight opacity-50`}>
+              In list <span className={`underline`}> {props.task?.status}</span>
             </div>
-          </div>
-
-          {props.task?.pinned || isPinned ? (
-            <BsFillPinFill
-              className="w-5 h-5 cursor-pointer"
-              onClick={handleUnpin}
-            />
-          ) : (
-            <BsPin className="w-5 h-5 cursor-pointer" onClick={handlePin} />
-          )}
-          <div>
-            {props.task?.isStarred ? (
-              <BsFillStarFill
-                className={`w-5 h-5 cursor-pointer fill-yellow-400 ${
-                  props.theme === "light"
-                    ? "text-task-dark"
-                    : "text-task-light-white"
-                } `}
-                onClick={handleStarTask}
+            <div className={`flex flex-row gap-5`}>
+              <div>
+                <Dropdown
+                  menu={{ items }}
+                  trigger={["click"]}
+                  placement="bottomRight">
+                  <BsThreeDots className="cursor-pointer" />
+                </Dropdown>
+              </div>
+              <AiOutlineClose
+                className={`w-5 h-5 opacity-50 hover:opacity-75 hover:scale-110 cursor-pointer`}
+                onClick={() => props.setOpen(false)}
               />
-            ) : (
-              <BsStar
-                className="w-5 h-5 cursor-pointer"
-                onClick={handleStarTask}
-              />
-            )}
-          </div>
-
-          <div>
-            <Dropdown
-              menu={{ items }}
-              trigger={["click"]}
-              placement="bottomRight">
-              <BsThreeDotsVertical className="cursor-pointer" />
-            </Dropdown>
+            </div>
           </div>
         </div>
       }
       open={props.open}
       setOpen={props.setOpen}
       theme={props.theme}>
-      <div className="flex flex-col p-3 justify-center gap-6 mt-4">
-        <div
-          className={`flex flex-row justify-between font-medium text-sm golos-font mb-2 ${
-            props.theme === "light" ? "text-neutral-600" : "text-neutral-400"
-          }`}>
-          {editDescription ? (
-            <textarea
-              name="description"
-              className={`w-full p-3 rounded-md border-[0.4px] golos-font text-sm font-light resize-none h-32
-                ${
-                  props.theme === "light"
-                    ? "bg-task-light-white text-task-sidebar-dark border-neutral-800 focus:outline-neutral-400"
-                    : "bg-task-sidebar-dark text-task-light-white border-neutral-500 outline-[0.2px] focus:outline-neutral-800"
-                }`}
-              value={description}
-              onChange={(e) => handleUpdateInput("description", e.target.value)}
+      <div className="flex flex-col p-3 justify-center gap-6">
+        <div>
+          <div className={`flex items-center gap-7`}>
+            <div
+              className={`text-3xl font-medium golos-font ${
+                props.theme === "light"
+                  ? "text-task-dark"
+                  : "text-task-light-white"
+              }`}>
+              {props.task.name}
+            </div>
+
+            <TaskActions
+              isPinned={props.task?.pinned || isPinned}
+              handleUnpin={handleUnpin}
+              handlePin={handlePin}
+              handleStarTask={handleStarTask}
+              handleUnStarTask={handleUnStarTask}
+              isStarred={props.task?.isStarred || isStarred}
+              className={`w-5 h-5 cursor-pointer fill-yellow-400 ${
+                props.theme === "light"
+                  ? "text-task-dark"
+                  : "text-task-light-white"
+              } `}
             />
-          ) : (
-            <div className="w-full">{props.task?.description}</div>
-          )}
-          <BsPencil
-            className="w-5 h-5 ml-1 cursor-pointer"
-            onClick={() => setEditDescription(!editDescription)}
+          </div>
+
+          <div
+            className={` mt-4 flex flex-col gap-3
+            ${
+              props.theme === "light"
+                ? "text-task-dark"
+                : "text-task-light-white"
+            }
+          `}>
+            <div className={`flex flex-row gap-10 golos-font text-[15px]`}>
+              <span className={`text-neutral-500`}>Status</span>
+              <TaskStatusModal
+                status={status}
+                onUpdateStatus={handleUpdateInput as any}
+              />
+            </div>
+
+            <div className={`flex flex-row gap-7 golos-font text-[15px]`}>
+              <span className={`text-neutral-500`}>Asignee</span>
+              <span>
+                {props.task?.assignes?.length === 0
+                  ? "None"
+                  : "upcoming feature"}{" "}
+              </span>
+              <BsPlusCircle
+                className={`w-5 h-5 opacity-40 hover:opacity-100 cursor-pointer`}
+              />
+            </div>
+
+            <div className={`flex flex-row gap-7 golos-font text-[15px]`}>
+              <span className={`text-neutral-500`}>Due date</span>
+              <span>
+                {!props.task?.duedate ? (
+                  <div className={`flex flex-row items-center gap-3 `}>
+                    <DatePicker onChange={onChange} />
+                    <MdArrowForwardIos
+                      className={`w-5 h-5 cursor-pointer hover:scale-110 opacity-50 hover:opacity-75`}
+                      onClick={handleDueDate}
+                    />
+                  </div>
+                ) : (
+                  <div>{formatDate(props.task?.duedate)}</div>
+                )}
+              </span>
+            </div>
+
+            <div className={`flex flex-row gap-11 golos-font text-[15px]`}>
+              <span className={`text-neutral-500`}>Labels</span>
+              {addingLabel ? (
+                <div className={`flex flex-row items-center gap-3`}>
+                  <input
+                    type="text"
+                    value={label}
+                    onChange={(e) => setLabel(e.target.value)}
+                    placeholder={`Add label`}
+                    className={`bg-transparent golos-font text-[13px] border-[1px] border-neutral-300 rounded-md p-1 w-[200px] focus:outline-neutral-500 focus:outline-[0.1px] focus:border-neutral-500`}
+                  />
+                  <button
+                    title={`Add`}
+                    arial-label={`Add`}
+                    className={`w-14 flex flex-row items-center justify-center rounded-full p-1 text-xs border-[1px] border-neutral-300 hover:border-neutral-500 hover:scale-100`}
+                    onClick={handleAddLabel}>
+                    Add
+                  </button>
+                  <AiOutlineClose
+                    title={`Cancel`}
+                    aria-label={`Cancel`}
+                    className={`w-5 h-5 b-[1px] rounded-full p-1 text-xs border-[1px] border-neutral-300 hover:border-neutral-500 hover:scale-100 cursor-pointer`}
+                    onClick={() => setAddingLabel(false)}
+                  />
+                </div>
+              ) : (
+                <div className={`flex flex-row items-start gap-1`}>
+                  <span className={`flex flex-row flex-wrap gap-2`}>
+                    {initLabels?.length ?? 0 > 0
+                      ? initLabels?.map((label, idx) => (
+                          <span
+                            key={idx}
+                            title={`Label ${label}`}
+                            aria-label={`Label ${label}`}
+                            className={` flex flex-row items-center justify-center gap-1 font-normal rounded-full w-20 p-1 text-[13px] text-${getRandomColor()}-800 ${
+                              deleteBtns && `border-[1.5px] border-red-400`
+                            }
+                          ${
+                            props.theme === "light"
+                              ? `bg-gray-200 `
+                              : "bg-gray-600  text-task-light-white border-task-light-white "
+                          }
+                            `}>
+                            {label}
+                            {deleteBtns && (
+                              <AiOutlineClose
+                                title={`Remove label`}
+                                aria-label={`Remove label`}
+                                className={`w-3 h-3 ml-1 cursor-pointer hover:scale-125 hover:font-semibold hover:text-red-400`}
+                                onClick={() => handleRemoveLabel(label)}
+                              />
+                            )}
+                          </span>
+                        ))
+                      : ""}
+                  </span>
+                  <button
+                    className={`w-24 flex flex-row items-center justify-center rounded-full p-1 text-xs border-[1px] border-neutral-300 hover:border-neutral-500 hover:scale-100`}
+                    onClick={() => setAddingLabel(true)}>
+                    Add label
+                    <BsPlus className={`w-5 h-5 opacity-40 cursor-pointer`} />
+                  </button>
+                  <TbEdit
+                    className={`w-5 h-5 opacity-50 hover:opacity-75 cursor-pointer`}
+                    onClick={() => setShowDeleteBtns(!deleteBtns)}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className={`flex flex-row gap-7 golos-font text-[15px]`}>
+              <span className={`text-neutral-500`}>Priority</span>
+              <TaskPriorityModal
+                priority={priority}
+                onUpdate={handleUpdateInput as any}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div>
+          {/* description  */}
+          <TaskDetailsDescription
+            description={description}
+            onUpdate={handleUpdateInput as any}
+            theme={props.theme}
           />
         </div>
 
-        {/* this will have a select, that would allow the status be updated */}
         <div>
-          <select
-            required
-            className={`w-full p-3 rounded-md border-[0.4px] golos-font text-sm font-light
-              ${
-                props.theme === "light"
-                  ? "bg-task-light-white text-task-sidebar-dark border-neutral-800 focus:outline-neutral-400"
-                  : "bg-task-sidebar-dark text-task-light-white border-neutral-500 outline-[0.2px] focus:outline-neutral-800"
-              }
-            `}
-            value={status}
-            onChange={(e) => handleUpdateInput("status", e.target.value)}>
-            <option value="todo">ToDo</option>
-            <option value="doing">Doing</option>
-            <option value="done">Done</option>
-          </select>
-        </div>
-        {/* this will have a select for priority update */}
-        <div>
-          <select
-            required
-            className={`w-full p-3 rounded-md border-[0.4px] golos-font text-sm font-light
-              ${
-                props.theme === "light"
-                  ? "bg-task-light-white text-task-sidebar-dark border-neutral-800 focus:outline-neutral-400"
-                  : "bg-task-sidebar-dark text-task-light-white border-neutral-500 outline-[0.2px] focus:outline-neutral-800"
-              }
-            `}
-            value={priority}
-            onChange={(e) => handleUpdateInput("priority", e.target.value)}>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-          </select>
+          {/* bottom tabs */}
+          <div>
+            <TaskdetailTabs task={props.task} />
+          </div>
         </div>
 
         {(props.task.status !== status ||
           props.task.priority !== priority ||
           props.task.description !== description) && (
-          <div>
-            <button
-              className={`w-full p-3 rounded-full golos-font text-sm font-semibold
-              ${
-                props.theme === "light"
-                  ? "bg-blue-400 text-task-light-white"
-                  : "bg-blue-400 text-task-light-white"
-              }
-          `}
-              onClick={handleClick}>
-              Update Task
-            </button>
+          <div className={`flex flex-row justify-end gap-8`}>
+            <Button
+              label="cancel"
+              bgColor="other"
+              size="sm"
+              btnType="button"
+              onClick={resetState}
+            />
+            <Button
+              label="save changes"
+              bgColor="secondary"
+              size="sm"
+              btnType="button"
+              onClick={handleClick}
+            />
           </div>
         )}
 

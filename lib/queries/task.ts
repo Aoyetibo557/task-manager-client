@@ -17,7 +17,11 @@ const GET_PINNED_TASKS_ROUTE = "/tasks/getpinnedtasks";
 const GET_USER_TASKS_ROUTE = "/tasks/getusertasks";
 const GET_FILTERED_TASKS = "/tasks/gettasks";
 const HANDLE_STAR_TASK_ROUTE = "/tasks/startask";
+const HANDLE_UNSTAR_TASK_ROUTE = "/tasks/unstartask";
 const GET_DELETED_TASKS_ROUTE = "/tasks/getdeletedtasks";
+const ADD_LABEL_TO_TASK_ROUTE = "/tasks/addlabeltotask";
+const REMOVE_LABEL_FROM_TASK_ROUTE = "/tasks/removelabelfromtask";
+const SET_DUE_DATE_ROUTE = "/tasks/setduedate";
 
 // create a new task
 async function createTask(task: Task | any) {
@@ -120,10 +124,17 @@ async function getFilteredTasks(
 }
 
 // handle star task
-async function setStarTask(taskid: string, isStarred: boolean) {
+async function starTask(taskid: string) {
   const { data } = await API.put<ReturnObject>(
-    `${HANDLE_STAR_TASK_ROUTE}/${taskid}`,
-    { isStarred }
+    `${HANDLE_STAR_TASK_ROUTE}/${taskid}`
+  );
+  return data;
+}
+
+// handle unstar task
+async function unStarTask(taskid: string) {
+  const { data } = await API.put<ReturnObject>(
+    `${HANDLE_UNSTAR_TASK_ROUTE}/${taskid}`
   );
   return data;
 }
@@ -132,6 +143,37 @@ async function setStarTask(taskid: string, isStarred: boolean) {
 async function getDeletedTasks(userid: string | any) {
   const { data } = await API.get<ReturnObject>(
     `${GET_DELETED_TASKS_ROUTE}/${userid}`
+  );
+
+  return data;
+}
+
+// add label to task
+async function addLabelToTask(taskid: string | undefined, label: string) {
+  const { data } = await API.put<ReturnObject>(
+    `${ADD_LABEL_TO_TASK_ROUTE}/${taskid}`,
+    { label }
+  );
+
+  return data;
+}
+
+// remove label from task
+async function removeLabelFromTask(taskid: string | undefined, label: string) {
+  const { data } = await API.put<ReturnObject>(
+    `${REMOVE_LABEL_FROM_TASK_ROUTE}/${taskid}`,
+    { label }
+  );
+
+  return data;
+}
+
+// set due date
+async function setDueDate(taskid: string | undefined, dueDate: number) {
+  console.log("This is dueDate: ", dueDate);
+  const { data } = await API.put<ReturnObject>(
+    `${SET_DUE_DATE_ROUTE}/${taskid}`,
+    { dueDate }
   );
 
   return data;
@@ -152,6 +194,10 @@ export {
   getPinnedTasks,
   getUserTasks,
   getFilteredTasks,
-  setStarTask,
+  starTask,
+  unStarTask,
   getDeletedTasks,
+  addLabelToTask,
+  removeLabelFromTask,
+  setDueDate,
 };

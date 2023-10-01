@@ -44,6 +44,7 @@ export const TaskCard = ({ task, theme }: Props) => {
       if (res.status === "success") {
         message.success(res.message);
         setIsModalOpen(false);
+
         dispatch({
           type: ActionTypes.TASK_UPDATED,
           payload: true,
@@ -100,7 +101,7 @@ export const TaskCard = ({ task, theme }: Props) => {
           title={task?.priority ? `${task?.priority} priority` : "low priority"}
           color={getTagColor(task?.priority ? task?.priority : "low")}
           className="font-medium rounded-sm">
-          {task.priority ? task?.priority : "low"}
+          {task?.priority ? task?.priority : "low"}
         </Tag>
       </div>
       <div

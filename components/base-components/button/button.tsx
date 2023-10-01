@@ -7,6 +7,7 @@ type props = {
   className?: string;
   theme?: string;
   size?: "xs" | "sm" | "md" | "lg";
+  btnType?: "button" | "icon";
 };
 
 export const Button = ({
@@ -16,6 +17,7 @@ export const Button = ({
   theme,
   className,
   size,
+  btnType,
 }: props) => {
   const getBgColor = () => {
     switch (bgColor) {
@@ -51,7 +53,10 @@ export const Button = ({
 
   return (
     <button
-      className={`flex items-center justify-center golos-font p-2 rounded-sm text-white font-medium ${getBgColor()} ${getSize()} ${theme} ${className}}`}
+      className={`flex items-center justify-center golos-font p-2 rounded-sm text-white font-medium ${
+        btnType === "icon" ? "bg-none" : getBgColor()
+      } ${getSize()} ${theme} ${className}   
+     }`}
       onClick={onClick}>
       {label}
     </button>

@@ -51,7 +51,11 @@ type Props = {
   isMobileView?: boolean;
 };
 
-export const SidebarLinks = ({ open, setOpen, isMobileView }: Props) => {
+export const SidebarLinks = ({
+  open = false,
+  setOpen = null,
+  isMobileView = false,
+}: Props) => {
   const {
     user,
     dispatch,
@@ -74,6 +78,9 @@ export const SidebarLinks = ({ open, setOpen, isMobileView }: Props) => {
     url: "",
     isActive: false,
   });
+  const handleClick = () => {
+    if (setOpen) setOpen(!open);
+  };
 
   const [boardCount, setBoardCount] = useState(0);
 
@@ -131,16 +138,7 @@ export const SidebarLinks = ({ open, setOpen, isMobileView }: Props) => {
 
   // use the getUserBoards hook to get the boards from the database
   useEffect(() => {
-    if (!loading) {
-      if (!user || isLoggedIn === false) {
-        router.push("/loginform");
-        setError("You are not logged in");
-      } else if (user.userid?.length > 0) {
-        getBoards();
-      }
-    }
     getBoards();
-
     if (isBoardActionDispatched || isTaskActionDispatched) {
       getBoards();
     }
@@ -148,14 +146,14 @@ export const SidebarLinks = ({ open, setOpen, isMobileView }: Props) => {
 
   return (
     <>
-      <div className={`flex flex-col ${isMobileView ? "gap-0" : "gap-24"}`}>
+      <div className={`flex flex-col ${isMobileView ? "gap-0" : "gap-20"}`}>
         <div className={`flex flex-col gap-2`}>
           <SidebarLink
             title="Overview"
             url="/dashboard"
             isActive={path === "/dashboard" ? true : false}
             icon={<BiHome className="w-5 h-5" />}
-            onClick={() => setOpen(false)}
+            onClick={handleClick}
           />
 
           <SidebarLink
@@ -163,14 +161,14 @@ export const SidebarLinks = ({ open, setOpen, isMobileView }: Props) => {
             url="/pinned"
             isActive={path === "/pinned" ? true : false}
             icon={<BsPin className="w-5 h-5" />}
-            onClick={() => setOpen(false)}
+            onClick={handleClick}
           />
           <SidebarLink
             title="Archived Tasks"
             url="/dashboard/archived"
             isActive={path === "/dashboard/archived" ? true : false}
             icon={<BsArchive className="w-5 h-5" />}
-            onClick={() => setOpen(false)}
+            onClick={handleClick}
           />
 
           <button
@@ -234,7 +232,7 @@ export const SidebarLinks = ({ open, setOpen, isMobileView }: Props) => {
                         : false
                     }
                     icon={<RxDashboard className="w-5 h-5" />}
-                    onClick={() => setOpen(false)}
+                    onClick={handleClick}
                   />
                 ))}
                 <div>
@@ -259,7 +257,7 @@ export const SidebarLinks = ({ open, setOpen, isMobileView }: Props) => {
             url="/trash"
             isActive={path === "/trash" ? true : false}
             icon={<BsTrash className="w-5 h-5" />}
-            onClick={() => setOpen(false)}
+            onClick={handleClick}
           />
         </div>
 
@@ -295,7 +293,7 @@ export const SidebarLinks = ({ open, setOpen, isMobileView }: Props) => {
               url="/notifications"
               isActive={path === "/notifications" ? true : false}
               icon={<BsBell className="w-5 h-5" />}
-              onClick={() => setOpen(false)}
+              onClick={handleClick}
             />
           )}
 
@@ -304,7 +302,7 @@ export const SidebarLinks = ({ open, setOpen, isMobileView }: Props) => {
             url={`/setting/${user?.userid}`}
             isActive={path === `/setting/${user?.userid}` ? true : false}
             icon={<IoSettingsOutline className="w-5 h-5" />}
-            onClick={() => setOpen(false)}
+            onClick={handleClick}
           />
 
           <SidebarLink
