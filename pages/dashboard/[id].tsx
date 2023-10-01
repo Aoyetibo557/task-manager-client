@@ -78,7 +78,7 @@ const BoardDetail = () => {
 
   return (
     <div
-      className={`w-full h-screen overflow-auto ${
+      className={`w-full h-full overflow-auto ${
         theme === "light" ? "bg-task-light" : "bg-task-sidebar-dark"
       }
     `}>
@@ -90,6 +90,11 @@ const BoardDetail = () => {
           hasboardMenu={true}
           hasSearchBar={true}
           onSearch={handleSearch}
+          breadcrumblist={[
+            { href: "/dashboard", title: "Dashboard" },
+            { href: "", title: "Boards" },
+            { href: `/dashboard/${id}?name=${name}`, title: name},
+          ]}
         />
       </div>
       <div className="">

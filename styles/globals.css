@@ -112,6 +112,9 @@ body {
   display: none;
 }
 
+.showfilterbtn {
+  display: none;
+}
 /* 
 @media (prefers-color-scheme: dark) {
   html {
@@ -290,6 +293,34 @@ body {
   .landingheader-menu {
     display: flex;
     gap: 10px;
+  }
+
+  .banner {
+    display: none;
+  }
+
+  .filterlist {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .hide {
+    display: none;
+  }
+
+  .showfilterbtn {
+    display: block;
+  }
+
+  .selectedfilters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .showfilterlist {
+    display: flex;
+    flex-direction: column;
   }
 }
 

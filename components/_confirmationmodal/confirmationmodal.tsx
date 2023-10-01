@@ -42,9 +42,15 @@ export const ConfirmationModal = (props: Props) => {
             </div>
             <div>
               <Button
-                label={<IoCloseCircleOutline className="w-5 h-5" />}
+                label={
+                  <IoCloseCircleOutline
+                    className={`w-7 h-7 ${
+                      theme === "light" && "text-neutral-500"
+                    } `}
+                  />
+                }
                 onClick={() => props.setOpen(false)}
-                bgColor="other"
+                btnType="icon"
                 size="xs"
               />
             </div>

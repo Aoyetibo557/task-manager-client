@@ -31,8 +31,8 @@ const TrashPage = () => {
               title: "Dashboard",
             },
             {
-              href: "/dashboard/pinned",
-              title: "Pinned Tasks",
+              href: "/dashboard/deletedtasks",
+              title: "Deleted Tasks",
             },
           ]}
         />

@@ -65,7 +65,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isBoardActionDispatched, setIsBoardAction] = useState(false);
 
   const handleSetUser = (user: {}) => {
-    localStorage.setItem("task-user", JSON.stringify(user));
+    localStorage.setItem(
+      "task-user",
+      JSON.stringify({ ...user, isLoggedIn: true })
+    );
     setIsLoggedIn(true);
     setUser(user);
     setLoading(false);
@@ -108,6 +111,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   const signOut = async () => {
+    setLoading(true);
     try {
       await auth.signOut();
       localStorage.removeItem("task-user");
@@ -115,6 +119,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setIsLoggedIn(false);
     } catch (error: any) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -128,16 +134,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }
 
   const checkIsLoggedIn = () => {
+    setLoading(true);
     try {
-      // const user = JSON.parse(localStorage.getItem("task-user") || "{}");
-      const user = localStorage.getItem("task-user");
+      const storedUser = localStorage.getItem("task-user");
 
-      if (user) {
-        setUser(JSON.parse(user));
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
         setIsLoggedIn(true);
       }
     } catch (error: any) {
       console.error(error);
+      setIsLoggedIn(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -170,9 +179,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    checkIsLoggedIn();
-    // const unsubscribe = auth.onAuthStateChanged(handleAuthStateChanged);
-    // return () => unsubscribe();
+    checkIsLoggedIn(); // Check if user is logged in
   }, []);
 
   const value: AuthContextType = {

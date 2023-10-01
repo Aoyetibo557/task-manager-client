@@ -3,7 +3,6 @@ import { useEffect, useState, useContext } from "react";
 import { ThemeContext } from "@/components/Layout/_contexts/themecontext";
 import { useAuth } from "@/lib/hooks/useAuth";
 import DashboardLayout from "@/components/Layout/dashboardlayout";
-import DashboardHeader from "@/components/Layout/Header/dashboardheader";
 import { AiFillSetting } from "react-icons/ai";
 import { SettingsTab } from "@/components/_setting/settingstab";
 
@@ -17,10 +16,6 @@ const AccountSetting = () => {
       className={`w-full h-screen overflow-auto
     ${theme === "light" ? "bg-task-light" : "bg-task-sidebar-dark"}
     `}>
-      <div className="settings-search-header">
-        <DashboardHeader />
-      </div>
-
       <div className="p-8">
         <div className="flex flex-row items-center gap-4">
           <AiFillSetting

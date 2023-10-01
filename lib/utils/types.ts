@@ -14,6 +14,8 @@ export interface Task {
   isStarred?: boolean | undefined;
   returnObject?: ReturnObject | undefined;
   message?: string | undefined;
+  labels?: string[] | undefined;
+  duedate?: number | undefined;
 }
 
 export interface User {

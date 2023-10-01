@@ -18,6 +18,9 @@ const GET_USER_TASKS_ROUTE = "/tasks/getusertasks";
 const GET_FILTERED_TASKS = "/tasks/gettasks";
 const HANDLE_STAR_TASK_ROUTE = "/tasks/startask";
 const GET_DELETED_TASKS_ROUTE = "/tasks/getdeletedtasks";
+const ADD_LABEL_TO_TASK_ROUTE = "/tasks/addlabel";
+const REMOVE_LABEL_FROM_TASK_ROUTE = "/tasks/removelabel";
+const SET_DUE_DATE_ROUTE = "/tasks/setduedate";
 
 // create a new task
 async function createTask(task: Task | any) {
@@ -137,6 +140,37 @@ async function getDeletedTasks(userid: string | any) {
   return data;
 }
 
+// add label to task
+async function addLabelToTask(taskid: string, label: string) {
+  const { data } = await API.put<ReturnObject>(
+    `${ADD_LABEL_TO_TASK_ROUTE}/${taskid}`,
+    { label }
+  );
+
+  return data;
+}
+
+// remove label from task
+async function removeLabelFromTask(taskid: string, label: string) {
+  const { data } = await API.put<ReturnObject>(
+    `${REMOVE_LABEL_FROM_TASK_ROUTE}/${taskid}`,
+    { label }
+  );
+
+  return data;
+}
+
+// set due date
+async function setDueDate(taskid: string, dueDate: number) {
+  console.log("This is dueDate: ", dueDate);
+  const { data } = await API.put<ReturnObject>(
+    `${SET_DUE_DATE_ROUTE}/${taskid}`,
+    { dueDate }
+  );
+
+  return data;
+}
+
 export {
   createTask,
   getBoardTasks,
@@ -154,4 +188,7 @@ export {
   getFilteredTasks,
   setStarTask,
   getDeletedTasks,
+  addLabelToTask,
+  removeLabelFromTask,
+  setDueDate,
 };
