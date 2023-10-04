@@ -160,6 +160,7 @@ async function addLabelToTask(taskid: string | undefined, label: string) {
 
 // remove label from task
 async function removeLabelFromTask(taskid: string | undefined, label: string) {
+  console.log(taskid, label);
   const { data } = await API.put<ReturnObject>(
     `${REMOVE_LABEL_FROM_TASK_ROUTE}/${taskid}`,
     { label }
@@ -170,7 +171,6 @@ async function removeLabelFromTask(taskid: string | undefined, label: string) {
 
 // set due date
 async function setDueDate(taskid: string | undefined, dueDate: number) {
-  console.log("This is dueDate: ", dueDate);
   const { data } = await API.put<ReturnObject>(
     `${SET_DUE_DATE_ROUTE}/${taskid}`,
     { dueDate }

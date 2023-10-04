@@ -3,7 +3,7 @@ import { Button } from "@/components/base-components/button/button";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { Spin } from "antd";
+import { Spin, message } from "antd";
 import { AuthType } from "@/lib/utils/types";
 
 const Login = () => {
@@ -19,14 +19,14 @@ const Login = () => {
       const response = (await findUserByEmail(email.toLowerCase())) as any;
       const { user } = response;
       if (response.status === "success") {
-        setLoading(false);
         router.push(`/loginform?email=${user?.email}`);
       } else if (response.status === "error") {
-        setLoading(false);
         router.push("/signup");
       }
     } catch (error: any) {
-      console.error(error);
+      message.error(error.message);
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };

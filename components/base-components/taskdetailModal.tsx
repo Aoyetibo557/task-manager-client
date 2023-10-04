@@ -10,6 +10,7 @@ import {
   BsTrash,
   BsArchive,
   BsPlusCircle,
+  BsCalendar4Week,
 } from "react-icons/bs";
 import { AiOutlineClose } from "react-icons/ai";
 import { TbEdit } from "react-icons/tb";
@@ -67,7 +68,9 @@ const TaskDetailModal = (props: Props) => {
   const [addingLabel, setAddingLabel] = useState(false);
   const [label, setLabel] = useState("");
   const [deleteBtns, setShowDeleteBtns] = useState(false);
-  const [dueDate, setStateDueDate] = useState(0);
+  const [dueDate, setStateDueDate] = useState(props.task?.dueDate || 0);
+  const [savedDueDate, setSavedDueDate] = useState(props.task?.dueDate || 0);
+  const [changeDate, setChangeDate] = useState(false);
   const [initLabels, setInitLabels] = useState(props.task.labels || []);
 
   const initialStatus = props.task.status;
@@ -198,7 +201,7 @@ const TaskDetailModal = (props: Props) => {
           message.error(res.message);
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       message.error("Something went wrong. Try again later!");
     }
   };
@@ -252,42 +255,52 @@ const TaskDetailModal = (props: Props) => {
           setAddingLabel(false);
         }
       }
-    } catch (err) {
+    } catch (err: any) {
       message.error("Something went wrong. Try again later!");
     }
   };
 
   const handleRemoveLabel = async (label: string) => {
-    const res = await removeLabelFromTask(props.task?.taskId, label as any);
+    try {
+      const res = await removeLabelFromTask(props.task?.taskId, label as any);
 
-    if (res.status === "success") {
-      message.success(res.message);
-      props.setOpen(true);
-      setInitLabels(initLabels.filter((l) => l !== label));
-      // dispatch({
-      //   type: ActionTypes.TASK_UPDATED,
-      //   payload: true,
-      // });
-    } else {
-      if (res.status === "error") {
-        message.error(res.message);
+      if (res.status === "success") {
+        message.success(res.message);
+        props.setOpen(true);
+        setInitLabels(initLabels.filter((l) => l !== label));
+        // dispatch({
+        //   type: ActionTypes.TASK_UPDATED,
+        //   payload: true,
+        // });
+      } else {
+        if (res.status === "error") {
+          message.error(res.message);
+        }
       }
+    } catch (err: any) {
+      message.error("Something went wrong. Try again later!");
     }
   };
 
   const handleDueDate = async () => {
-    const res = await setDueDate(props.task?.taskId, dueDate);
-    if (res?.status === "success") {
-      message.success(res.message);
-      props.setOpen(true);
-      dispatch({
-        type: ActionTypes.TASK_UPDATED,
-        payload: true,
-      });
-    } else {
-      if (res?.status === "error") {
-        message.error(res.message);
+    try {
+      const res = await setDueDate(props.task?.taskId, dueDate);
+      if (res?.status === "success") {
+        message.success(res.message);
+        setSavedDueDate(dueDate);
+        setChangeDate(false);
+        props.setOpen(true);
+        // dispatch({
+        //   type: ActionTypes.TASK_UPDATED,
+        //   payload: true,
+        // });
+      } else {
+        if (res?.status === "error") {
+          message.error(res.message);
+        }
       }
+    } catch (err: any) {
+      message.error("Something went wrong. Try again later!", err.message);
     }
   };
 
@@ -414,35 +427,56 @@ const TaskDetailModal = (props: Props) => {
               <span className={`text-neutral-500`}>Status</span>
               <TaskStatusModal
                 status={status}
+                isActive={props.task?.isActive}
                 onUpdateStatus={handleUpdateInput as any}
               />
             </div>
 
-            <div className={`flex flex-row gap-7 golos-font text-[15px]`}>
-              <span className={`text-neutral-500`}>Asignee</span>
-              <span>
+            <div className={`flex flex-row gap-5 golos-font text-[15px]`}>
+              <span className={`text-neutral-500 opacity-40`}>Asignee</span>
+              <span className={`opacity-40`}>
                 {props.task?.assignes?.length === 0
                   ? "None"
                   : "upcoming feature"}{" "}
               </span>
               <BsPlusCircle
-                className={`w-5 h-5 opacity-40 hover:opacity-100 cursor-pointer`}
+                title="Add assignee (upcoming feature)"
+                aria-label="Add assignee (upcoming feature)"
+                className={`w-5 h-5 opacity-40 hover:none cursor-pointer `}
               />
             </div>
 
             <div className={`flex flex-row gap-7 golos-font text-[15px]`}>
               <span className={`text-neutral-500`}>Due date</span>
               <span>
-                {!props.task?.duedate ? (
+                {!savedDueDate || changeDate === true ? (
                   <div className={`flex flex-row items-center gap-3 `}>
                     <DatePicker onChange={onChange} />
                     <MdArrowForwardIos
                       className={`w-5 h-5 cursor-pointer hover:scale-110 opacity-50 hover:opacity-75`}
                       onClick={handleDueDate}
                     />
+                    {savedDueDate ? (
+                      <AiOutlineClose
+                        title={`Cancel`}
+                        aria-label={`Cancel`}
+                        className={`w-4 h-4 ml-2 opacity-50 cursor-pointer hover:scale-110 hover:opacity-75`}
+                        onClick={() => setChangeDate(false)}
+                      />
+                    ) : (
+                      ""
+                    )}
                   </div>
                 ) : (
-                  <div>{formatDate(props.task?.duedate)}</div>
+                  <div className={`flex flex-row`}>
+                    <div className={`text-sm`}>{formatDate(savedDueDate)}</div>
+                    <BsCalendar4Week
+                      title={`Change due date`}
+                      aria-label={`Change due date`}
+                      className={`w-4 h-4 ml-2 opacity-50 cursor-pointer hover:scale-110 hover:opacity-75`}
+                      onClick={() => setChangeDate(true)}
+                    />
+                  </div>
                 )}
               </span>
             </div>
@@ -509,10 +543,12 @@ const TaskDetailModal = (props: Props) => {
                     Add label
                     <BsPlus className={`w-5 h-5 opacity-40 cursor-pointer`} />
                   </button>
-                  <TbEdit
-                    className={`w-5 h-5 opacity-50 hover:opacity-75 cursor-pointer`}
-                    onClick={() => setShowDeleteBtns(!deleteBtns)}
-                  />
+                  {initLabels?.length > 0 && (
+                    <TbEdit
+                      className={`w-5 h-5 opacity-50 hover:opacity-75 cursor-pointer`}
+                      onClick={() => setShowDeleteBtns(!deleteBtns)}
+                    />
+                  )}
                 </div>
               )}
             </div>

@@ -7,6 +7,8 @@ export interface Task {
   userId: string;
   status: string;
   priority: string;
+  category?: string;
+  isActive?: boolean | undefined;
   subtasks?: Task[];
   timestamp: string | number | undefined;
   parentTaskId?: string | null | undefined;
@@ -15,7 +17,7 @@ export interface Task {
   returnObject?: ReturnObject | undefined;
   message?: string | undefined;
   labels?: string[] | undefined;
-  duedate?: number | undefined;
+  dueDate?: number | undefined;
   assignes?: string[] | undefined;
 }
 

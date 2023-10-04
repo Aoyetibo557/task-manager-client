@@ -17,6 +17,7 @@ import { HiMenuAlt1 } from "react-icons/hi";
 import DropdownMenu from "../_menu/dropdownmenu";
 import { SidebarModal } from "../_sidebar/sidebarmodal";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+
 interface BoardLink {
   title: string;
   url: string;
@@ -82,12 +83,16 @@ const MobileSidebar = () => {
   };
 
   const getBoards = async () => {
-    const data = await getUserBoards(user.userid);
-    if (data.status === "success") {
-      setUserBoards(data.boards);
-      setBoardCount(data.boards?.length);
-    } else {
-      if (data.status === "error") setError(data.message);
+    try {
+      const data = await getUserBoards(user.userid);
+      if (data.status === "success") {
+        setUserBoards(data.boards);
+        setBoardCount(data.boards?.length);
+      } else {
+        if (data.status === "error") setError(data.message);
+      }
+    } catch (err: any) {
+      message.error(err.message);
     }
   };
 
