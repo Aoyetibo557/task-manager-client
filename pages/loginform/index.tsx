@@ -8,7 +8,7 @@ import {
   usePasswordValidate,
 } from "@/lib/hooks/useFormValidation";
 import { useAuth } from "@/lib/hooks/useAuth";
-import { Spin } from "antd";
+import { Spin, message } from "antd";
 import { AuthType } from "@/lib/utils/types";
 import { NextPage } from "next/types";
 import Link from "next/link";
@@ -20,7 +20,7 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  const { signIn, setUser } = useAuth() as AuthType;
+  const { user, signIn, setUser } = useAuth() as AuthType;
 
   const { errorMessage: emailErrorMessage, validate: validateEmail } =
     useEmailValidate();
@@ -58,16 +58,16 @@ const LoginForm = () => {
       )) as any;
       if (response.status === "error") {
         setLoginError(response.message);
-        setLoading(false);
       } else if (response.status === "success") {
         setLoading(true);
         setLoginError("");
         setUser(response.user);
         router.push("/dashboard");
-        setLoading(false);
       }
     } catch (error: any) {
-      console.log(error);
+      message.error(error.message);
+      setLoading(false);
+    } finally {
       setLoading(false);
     }
   };
@@ -138,15 +138,15 @@ const LoginForm = () => {
           </div> */}
 
           <div className="flex flex-row w-full">
-            {loading ? (
+            {loading && !user ? (
               <Spin size="large" className="w-full bg-transparent" />
             ) : (
               <Button
                 label={"Login"}
+                theme="light"
                 onClick={handleLogin}
-                className="w-full bg-transparent"
+                className="w-full"
                 bgColor="secondary"
-                btnType="button"
               />
             )}
           </div>

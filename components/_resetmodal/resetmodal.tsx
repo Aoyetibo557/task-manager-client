@@ -82,7 +82,6 @@ const ResetModal = (props: Props) => {
                 }
                 onClick={() => props.setOpen(false)}
                 size="xs"
-                btnType="icon"
               />
             </div>
           </div>

@@ -50,7 +50,6 @@ export const ConfirmationModal = (props: Props) => {
                   />
                 }
                 onClick={() => props.setOpen(false)}
-                btnType="icon"
                 size="xs"
               />
             </div>
