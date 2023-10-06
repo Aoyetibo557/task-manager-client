@@ -551,14 +551,12 @@ const TaskDetailModal = (props: Props) => {
               label="cancel"
               bgColor="other"
               size="sm"
-              btnType="button"
               onClick={resetState}
             />
             <Button
               label="save changes"
               bgColor="secondary"
               size="sm"
-              btnType="button"
               onClick={handleClick}
             />
           </div>

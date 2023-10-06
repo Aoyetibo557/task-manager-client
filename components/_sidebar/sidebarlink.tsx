@@ -2,11 +2,13 @@ import { useRouter } from "next/router";
 import { useContext } from "react";
 import { ThemeContext } from "../Layout/_contexts/themecontext";
 import Link from "next/link";
+import { Icon } from "../base-components/icon/icon";
+import { FaReact } from "react-icons/fa";
 
 type Props = {
   title: string | JSX.Element;
   url: string;
-  icon?: JSX.Element;
+  icon?: string | JSX.Element | any;
   isActive: boolean;
   isMobileLink?: boolean;
   onClick?: () => void;
@@ -29,7 +31,7 @@ export const SidebarLink = ({
   return (
     <Link
       href={url}
-      className={`w-full flex flex-row items-center space-x-2 cursor-pointer p-1  ${
+      className={`w-full flex flex-row items-center cursor-pointer p-2  ${
         isActive
           ? "bg-blue-500 text-task-light-white rounded-lg"
           : "hover:bg-task-sidebar-hover"
@@ -42,10 +44,10 @@ export const SidebarLink = ({
       `}
       onClick={handleOnclick}>
       <div
-        className={`flex flex-row items-center justify-center w-8 h-8 rounded-full ${
+        className={`flex flex-row items-center justify-center rounded-full ${
           isMobileLink && "text-task-light-white"
         }`}>
-        {icon}
+        <Icon icon={icon} theme={theme} />
       </div>
       <div
         className={`text-[13px] golos-font font-light
