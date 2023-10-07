@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Button } from "@/components/base-components/button/button";
 import { message, Spin, Progress, Avatar } from "antd";
 import { updateUserById } from "@/lib/queries/user";
+import { createNotification } from "@/lib/queries/notification";
 import { useAuth } from "@/lib/hooks/useAuth";
 import {
   getStorage,
@@ -13,6 +14,7 @@ import {
 } from "firebase/storage";
 import { v4 as uuidv4 } from "uuid";
 import { ActionTypes } from "@/lib/utils/actions";
+import dayjs from "dayjs";
 
 type Props = {
   theme?: string;
@@ -47,38 +49,61 @@ const ProfileDetails = ({ theme }: Props) => {
     }
   };
 
-  const handleUpdate = async () => {
-    setLoading(true);
+  const handleCreateNotification = async () => {
+    // use this for now, later add a helper function to utils for deciding which type of notification, (password change, account closeure, plan change, etc)
+    const newNotification = {
+      title: `${user?.firstName} ${user?.lastName}, an update has been made to your profile Bio. Please check your profile for more details.`,
+      message: `We wanted to inform you that your bio was updated from ${user?.bio} to ${bio}`,
+      type: "password-reset",
+      userId: user?.userid,
+    };
 
-    if (!username || !bio) {
-      // message.error("Please fill all fields");
-      setLoading(false);
-      if (!username) {
-        message.error("Please fill username field");
-      } else if (!bio) {
-        message.error("Please fill bio field");
+    try {
+      const res = await createNotification(newNotification);
+      if (res.status === "success") {
+        message.success("Notification created successfully");
       }
-      return;
+    } catch (error: any) {
+      message.error(`${error.message}`);
     }
+  };
 
-    const updatedUser = await updateUserById(user?.userid, {
-      username,
-      bio,
-    });
+  const handleUpdate = async () => {
+    try {
+      setLoading(true);
 
-    if (updatedUser.status === "error") {
-      message.error(updatedUser.message);
-      setLoading(false);
-    } else {
-      if (updatedUser.status === "success") {
-        message.success("Profile updated successfully");
+      if (!username || !bio) {
         setLoading(false);
-        dispatch({
-          type: ActionTypes.UPDATE_USER,
-          payload: true,
-        });
-        handleSetUser(updatedUser.user);
+        if (!username) {
+          message.error("Please fill username field");
+        } else if (!bio) {
+          message.error("Please fill bio field");
+        }
+        return;
       }
+
+      const updatedUser = await updateUserById(user?.userid, {
+        username,
+        bio,
+      });
+
+      if (updatedUser.status === "error") {
+        message.error(updatedUser.message);
+      } else {
+        if (updatedUser.status === "success") {
+          message.success("Profile updated successfully");
+          dispatch({
+            type: ActionTypes.UPDATE_USER,
+            payload: true,
+          });
+          handleSetUser(updatedUser.user);
+          handleCreateNotification();
+        }
+      }
+    } catch (error: any) {
+      message.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 

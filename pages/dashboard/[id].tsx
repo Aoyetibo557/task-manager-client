@@ -73,7 +73,7 @@ const BoardDetail = () => {
 
   return (
     <div
-      className={`w-full h-full overflow-auto ${
+      className={`w-full h-screen overflow-auto ${
         theme === "light" ? "bg-task-light" : "bg-task-sidebar-dark"
       }
     `}>

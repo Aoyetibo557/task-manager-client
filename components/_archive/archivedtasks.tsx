@@ -15,16 +15,18 @@ const ArchivedTasks = () => {
   const router = useRouter();
 
   const handleAllArchivedTasks = async () => {
-    const data = (await getUserArchivedTasks(user?.userid)) as any;
+    try {
+      const data = (await getUserArchivedTasks(user?.userid)) as any;
 
-    if (data.status === "success") {
-      setArchivedTasks(data.tasks);
-      message.success(data.message);
-    } else {
-      if (data.status === "error") {
-        message.error(data.message);
-        console.log(data.message);
+      if (data.status === "success") {
+        setArchivedTasks(data.tasks);
+      } else {
+        if (data.status === "error") {
+          message.error(data.message);
+        }
       }
+    } catch (error: any) {
+      message.error(`Something went wrong, ${error.message}`);
     }
   };
 

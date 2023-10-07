@@ -51,7 +51,7 @@ const DashboardHeader = (props: Props) => {
 
   return (
     <div
-      className={`flex flex-row justify-between items-center p-4 dashboard-header
+      className={`flex flex-row z-50 justify-between items-center p-4 dashboard-header
       ${
         theme === "light"
           ? "bg-task-light-white border-b-[0.6px] border-neutral-300"

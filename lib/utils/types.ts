@@ -39,6 +39,16 @@ export interface User {
   returnObject?: ReturnObject | undefined;
   subscription?: SubscriptionPlan | undefined;
   isAdmin?: boolean | undefined;
+  notifications: Notification[];
+}
+
+export interface Notification {
+  title: string;
+  message: string;
+  type: string;
+  userId: string;
+  read?: boolean;
+  timestamp?: string | number | undefined;
 }
 
 export interface Board {

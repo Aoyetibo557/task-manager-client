@@ -9,8 +9,6 @@ import { useAuth } from "@/lib/hooks/useAuth";
 import { useRouter } from "next/router";
 import { ThemeContext } from "../Layout/_contexts/themecontext";
 import {
-  BsSun,
-  BsCloudMoon,
   BsPlus,
   BsPin,
   BsTrash,
@@ -33,11 +31,9 @@ import CreateBoardModal from "../base-components/createboardModal";
 import { getUserBoards, createBoard } from "@/lib/queries/board";
 import { SidebarLink } from "../_sidebar/sidebarlink";
 import { message } from "antd";
-import { Toggle } from "../base-components/toggle/toggle";
 import Link from "next/link";
 import { AuthType, Board } from "@/lib/utils/types";
 import { ActionTypes } from "@/lib/utils/actions";
-import { ProfileCard } from "../base-components/profilecard/profilecard";
 
 interface BoardLink {
   title: string;
@@ -70,7 +66,6 @@ export const SidebarLinks = ({
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
-  const [toggle, setToggle] = useState(false);
   const [showBoards, setShowBoards] = useState(true);
 
   const [userBoards, setUserBoards] = useState<BoardLink[]>([]);
@@ -132,11 +127,6 @@ export const SidebarLinks = ({
     }
   };
 
-  const handleToggle = () => {
-    setToggle(!toggle);
-    toggleTheme();
-  };
-
   // use the getUserBoards hook to get the boards from the database
   useEffect(() => {
     getBoards();
@@ -146,7 +136,7 @@ export const SidebarLinks = ({
   }, [isLoggedIn, user, router, isTaskActionDispatched]);
 
   return (
-    <div className={`flex flex-col justify-between h-[86vh]`}>
+    <div className={`flex flex-col`}>
       <div className={`flex flex-col ${isMobileView ? "gap-0" : "gap-2"}`}>
         <SidebarLink
           title="Overview"
@@ -297,28 +287,6 @@ export const SidebarLinks = ({
             </div>
           )}
         </div>
-      </div>
-
-      <div>
-        <div>
-          <Toggle
-            checked={toggle}
-            theme={theme}
-            onChange={handleToggle}
-            iconOff={<BsCloudMoon />}
-            iconOn={<BsSun />}
-            label="Task Mode"
-          />
-        </div>
-
-        <ProfileCard
-          name={`${user?.firstName} ${user?.lastName}`}
-          username={user?.username}
-          image={user?.profileImage || ""}
-          imagesize="md"
-          theme={theme}
-          isAdmin={user?.isAdmin}
-        />
       </div>
 
       <>
