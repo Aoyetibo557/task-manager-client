@@ -203,17 +203,6 @@ export const SidebarLinks = ({
           icon={IoIosHelpCircleOutline}
         />
 
-        {/* Update this when page is ready! */}
-        {user.isAdmin && (
-          <SidebarLink
-            title="Notifications"
-            url="/notifications"
-            isActive={path === "/notifications" ? true : false}
-            icon={BsBell}
-            onClick={handleClick}
-          />
-        )}
-
         <SidebarLink
           title="Settings"
           url={`/setting/${user?.userid}`}

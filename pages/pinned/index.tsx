@@ -16,14 +16,13 @@ const PinnedPage = () => {
   const { user, dispatch } = useAuth() as AuthType;
 
   const handleGetFilteredTasks = async () => {
-    const res = await getPinnedTasks(user?.userid);
-
-    if (res.status === "success") {
-      setTasks(res.tasks);
-    } else {
-      if (res.status === "error") {
-        message.error(res.message);
+    try {
+      const res = await getPinnedTasks(user?.userid);
+      if (res.status === "success") {
+        setTasks(res.tasks);
       }
+    } catch (error: any) {
+      message.error(error.message);
     }
   };
 
