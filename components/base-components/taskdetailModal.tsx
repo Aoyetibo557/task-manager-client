@@ -29,6 +29,7 @@ import {
   removeLabelFromTask,
   setDueDate,
 } from "@/lib/queries/task";
+import { createNotification } from "@/lib/queries/notification";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { ActionTypes } from "@/lib/utils/actions";
 import { formatDate, formatRelativeTime } from "@/lib/utils/util";
@@ -70,6 +71,8 @@ const TaskDetailModal = (props: Props) => {
   const [dueDate, setStateDueDate] = useState(0);
   const [initLabels, setInitLabels] = useState(props.task.labels || []);
 
+  const { user } = useAuth() as AuthType;
+
   const initialStatus = props.task.status;
   const initialPriority = props.task.priority;
   const initialDescription = props.task.description;
@@ -100,8 +103,44 @@ const TaskDetailModal = (props: Props) => {
     props.updateTask && props.updateTask(name, value);
   };
 
+  // a function to return text, based on which of the task's properties was updated, either description, status or priority
+  const getUpdatedText = () => {
+    if (status !== props.task.status) {
+      return `Status was updated from -> ${props.task.status} to -> ${status}`;
+    } else if (priority !== props.task.priority) {
+      return `Priority was updated from -> ${props.task.priority} to  ->${priority}`;
+    } else if (description !== props.task.description) {
+      return `Description was updated from ${props.task.description} to ${description}`;
+    } else {
+      return "";
+    }
+  };
+
+  const handleCreateNotification = async () => {
+    const notification = {
+      title: `Task ${props.task.name} was updated`,
+      message: `Task ${props.task.name} was updated by ${
+        props.task?.assignes?.[0]?.name || ""
+      }.`,
+      type: "task-update",
+      change: getUpdatedText(),
+      userId: user?.userid,
+    };
+    try {
+      const res = await createNotification(notification);
+      if (res.status === "success") {
+        message.success(res.message);
+      } else {
+        message.error(res.message);
+      }
+    } catch (err) {
+      message.error("Something went wrong. Try again later!");
+    }
+  };
+
   const handleClick = () => {
     props.onClick();
+    handleCreateNotification();
   };
 
   const handleArchive = async () => {

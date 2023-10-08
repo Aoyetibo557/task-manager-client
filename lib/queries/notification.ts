@@ -4,6 +4,7 @@ import { Notification, ReturnObject } from "../utils/types";
 
 const CREATE_NOTIFICATION_ROUTE = "/notifications/createnotification";
 const GET_USER_NOTIFICATIONS_ROUTE = "/notifications/getnotifications";
+const UPDATE_NOTIFICATION_ROUTE = "/notifications/updatenotification";
 
 // create a new notification
 async function createNotification(notification: Notification | any) {
@@ -21,4 +22,16 @@ async function getUserNotifications(userid: string) {
   return data;
 }
 
-export { createNotification, getUserNotifications };
+// update a notification
+async function updateNotification(
+  notificationId: Notification | any,
+  actionType: string
+) {
+  const { data } = await API.put<Notification>(
+    `${UPDATE_NOTIFICATION_ROUTE}/${notificationId}`,
+    actionType
+  );
+  return data;
+}
+
+export { createNotification, getUserNotifications, updateNotification };

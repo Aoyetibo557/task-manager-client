@@ -3,6 +3,7 @@ import API from "../../../lib/hooks/axios";
 import { auth } from "../../../lib/firebase";
 import { ActionTypes } from "@/lib/utils/actions";
 import { User, ReturnObject } from "@/lib/utils/types";
+import { getUserNotifications } from "@/lib/queries/notification.ts";
 
 const LOGIN_ROUTE = "/auth/login";
 const SIGNUP_ROUTE = "/auth/signup";
@@ -63,6 +64,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isTaskPinned, setIsTaskPinned] = useState(false);
   const [isUserActionDispatched, setIsUserAction] = useState(false);
   const [isBoardActionDispatched, setIsBoardAction] = useState(false);
+  const [hasNotifications, setHasNotifications] = useState(false);
 
   const handleSetUser = (user: {}) => {
     localStorage.setItem(
@@ -133,6 +135,22 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   }
 
+  async function checkIfUserHasUnreadNotifications(
+    userid: string
+  ): Promise<void> {
+    try {
+      const response = await getUserNotifications(userid);
+      if (response.status === "success") {
+        const unreadNotifications = response.notifications.filter(
+          (notification) => !notification.read
+        );
+        setHasNotifications(unreadNotifications.length > 0);
+      }
+    } catch (error: any) {
+      console.error(error);
+    }
+  }
+
   const checkIsLoggedIn = () => {
     setLoading(true);
     try {
@@ -140,6 +158,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       if (storedUser) {
         setUser(JSON.parse(storedUser));
+        checkIfUserHasUnreadNotifications(JSON.parse(storedUser).userid);
         setIsLoggedIn(true);
       }
     } catch (error: any) {
@@ -182,6 +201,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkIsLoggedIn(); // Check if user is logged in
   }, []);
 
+  useEffect(() => {
+    checkIfUserHasUnreadNotifications(user.userid);
+  }, []);
+
   const value: AuthContextType = {
     user,
     loading,
@@ -198,6 +221,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     isTaskActionDispatched,
     isUserActionDispatched,
     isBoardActionDispatched,
+    hasNotifications,
   };
 
   return (

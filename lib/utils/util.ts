@@ -23,3 +23,23 @@ export const formatDate = (timestamp: any): string => {
 export const formatRelativeTime = (timestamp: any): string => {
   return dayjs().to(dayjs.unix(parseInt(timestamp)));
 };
+
+export const NOTIFICATION_TYPE_COLOR = {
+  "user-change": "#f50",
+  "password-reset": "#2db7f5",
+  "email-notification": "#87d068",
+  "feature-update": "#4D5ACE",
+  "task-update": "#2db7f5",
+  "task-create": "#FF4366",
+  "task-deadline": "#f50",
+};
+
+export const NOTIFICATION_TYPES = {
+  "email-notification": "Email Notification",
+  "user-change": "User Change",
+  "password-reset": "Password Change",
+  "feature-update": "Feature Update",
+  "task-update": "Task Updated",
+  "task-create": "Task Created",
+  "task-deadline": "Task Deadline",
+};

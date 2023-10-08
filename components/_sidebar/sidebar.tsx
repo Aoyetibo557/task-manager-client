@@ -13,7 +13,7 @@ import { ProfileCard } from "../base-components/profilecard/profilecard";
 import { Toggle } from "@/components/base-components/toggle/toggle";
 
 const Sidebar = () => {
-  const { user, loading, isLoggedIn } = useAuth() as AuthType;
+  const { user, loading, isLoggedIn, hasNotifications } = useAuth() as AuthType;
   const { theme, toggleTheme } = useContext(ThemeContext);
   const router = useRouter();
 
@@ -27,7 +27,7 @@ const Sidebar = () => {
 
   return (
     <div
-      className={`w-80 p-3 z-50 flex flex-col justify-between h-screen hide-sidebar ${
+      className={`w-80 p-3  flex flex-col justify-between h-screen hide-sidebar ${
         theme === "light"
           ? "bg-task-light-white border-r-[0.6px] border-neutral-300"
           : "bg-task-sidebar-light-dark border-r-[0.6px] border-neutral-500"
@@ -39,9 +39,12 @@ const Sidebar = () => {
             icon={BsBell}
             theme={theme}
             link="/notification"
-            clx={`${
-              theme === "light" ? "text-task-dark" : "text-task-light-white"
+            clx={`p-2 rounded-sm ${
+              theme === "light"
+                ? "text-task-dark bg-gray-200"
+                : "text-task-light-white bg-gray-500"
             }`}
+            hasbadge={hasNotifications}
           />
         </div>
         <SidebarLinks />

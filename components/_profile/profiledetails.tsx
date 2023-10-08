@@ -53,8 +53,9 @@ const ProfileDetails = ({ theme }: Props) => {
     // use this for now, later add a helper function to utils for deciding which type of notification, (password change, account closeure, plan change, etc)
     const newNotification = {
       title: `${user?.firstName} ${user?.lastName}, an update has been made to your profile Bio. Please check your profile for more details.`,
-      message: `We wanted to inform you that your bio was updated from ${user?.bio} to ${bio}`,
-      type: "password-reset",
+      message: `We wanted to inform you that your bio was updated. `,
+      type: "user-change",
+      change: `from ${user?.bio} to ${bio}`,
       userId: user?.userid,
     };
 
@@ -64,6 +65,7 @@ const ProfileDetails = ({ theme }: Props) => {
         message.success("Notification created successfully");
       }
     } catch (error: any) {
+      console.log(error);
       message.error(`${error.message}`);
     }
   };

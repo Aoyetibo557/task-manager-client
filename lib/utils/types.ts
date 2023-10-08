@@ -43,11 +43,13 @@ export interface User {
 }
 
 export interface Notification {
+  _id?: string;
   title: string;
   message: string;
   type: string;
   userId: string;
   read?: boolean;
+  change?: string;
   timestamp?: string | number | undefined;
 }
 

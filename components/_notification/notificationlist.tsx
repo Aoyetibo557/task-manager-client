@@ -9,7 +9,7 @@ import { message, Spin } from "antd";
 
 const localstorage = typeof window !== "undefined" ? localStorage : null;
 
-function NotificationList({ notifications }: props) {
+function NotificationList() {
   const { user } = useAuth() as AuthType;
   const { theme } = useContext(ThemeContext);
   const [stateNotifications, setStateNotifications] = useState<Notification[]>(
