@@ -7,20 +7,30 @@ import {
   useEmailValidate,
   usePasswordValidate,
 } from "@/lib/hooks/useFormValidation";
-import { useAuth } from "@/lib/hooks/useAuth";
 import { Spin, message } from "antd";
 import { AuthType } from "@/lib/utils/types";
 import { NextPage } from "next/types";
+import { signIn } from "@/lib/queries/user";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import {
+  setUser,
+  setError,
+  setToken,
+  selectUser,
+  selectUserError,
+} from "@/redux/features/auth-slice";
 
 const LoginForm = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [emailinput, setEmail] = useState<string | any>("");
-  const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState<string | null>(null);
+  const user = useSelector(selectUser);
+  const loginError = useSelector(selectUserError);
+  const dispatch = useDispatch<AppDispatch>();
 
-  const { user, signIn, setUser } = useAuth() as AuthType;
+  const [loading, setLoading] = useState(false);
+  const [emailinput, setEmail] = useState<string | any>(user.email || "");
+  const [password, setPassword] = useState("");
 
   const { errorMessage: emailErrorMessage, validate: validateEmail } =
     useEmailValidate();
@@ -40,14 +50,12 @@ const LoginForm = () => {
 
   const handleLogin = async () => {
     setLoading(true);
-    setLoginError("");
-
     const isEmailValid = validateEmail(emailinput as any);
     const isPasswordValid = validatePassword(password as any);
 
     if (!isEmailValid || !isPasswordValid) {
       setLoading(false);
-      setLoginError("Please enter valid email and password");
+      dispatch(setError("Please enter valid email and password"));
       return;
     }
 
@@ -56,12 +64,14 @@ const LoginForm = () => {
         emailinput.toLowerCase(),
         password
       )) as any;
+      console.log(response);
       if (response.status === "error") {
-        setLoginError(response.message);
+        dispatch(setError(response.message));
       } else if (response.status === "success") {
         setLoading(true);
-        setLoginError("");
-        setUser(response.user);
+        dispatch(setError(""));
+        dispatch(setUser(response.user));
+        dispatch(setToken(response.token));
         router.push("/dashboard");
       }
     } catch (error: any) {

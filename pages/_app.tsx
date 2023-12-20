@@ -4,6 +4,7 @@ import { ThemeProvider } from "@/components/Layout/_contexts/themecontext";
 import { AppContext, AppInitialProps, AppLayoutProps } from "next/app";
 import type { NextComponentType } from "next";
 import { AuthProvider } from "@/components/Layout/_contexts/authcontext";
+import { ReduxProvider } from "@/redux/provider";
 
 const App: NextComponentType<AppContext, AppInitialProps, AppLayoutProps> = ({
   Component,
@@ -12,7 +13,7 @@ const App: NextComponentType<AppContext, AppInitialProps, AppLayoutProps> = ({
   const getLayout = Component.getLayout || ((page: ReactNode) => page);
   return (
     <ThemeProvider>
-      <AuthProvider>{getLayout(<Component {...pageProps} />)}</AuthProvider>
+      <ReduxProvider>{getLayout(<Component {...pageProps} />)}</ReduxProvider>
     </ThemeProvider>
   );
 };

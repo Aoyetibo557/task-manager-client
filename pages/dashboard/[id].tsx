@@ -8,39 +8,50 @@ import { getBoardTasks } from "@/lib/queries/task";
 import { useAuth } from "@/lib/hooks/useAuth";
 import { AuthContext } from "@/components/Layout/_contexts/authcontext";
 import { Task, AuthType } from "@/lib/utils/types";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import {
+  setBoardLoading,
+  setBoardError,
+  setBoardTasks,
+  selectBoardError,
+  selectBoardLoading,
+  fetchBoardTasks,
+  selectedBoardTasks,
+} from "@/redux/features/board-slice";
 
 const BoardDetail = () => {
+  const { theme } = useContext(ThemeContext);
+
+  const dispatch = useDispatch<AppDispatch>();
+  const boardError = useSelector(selectBoardError);
+
   const router = useRouter();
   const { id, name } = router.query;
-  const { theme } = useContext(ThemeContext);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [tasks, setTasks] = useState<Task[]>([]);
-  const [searchQuery, setSearchQuery] = useState("");
 
-  const {
-    user,
-    loading: authLoading,
-    isLoggedIn,
-    isTaskActionDispatched,
-    isTaskPinned,
-    isBoardActionDispatched,
-    dispatch,
-  } = useAuth() as AuthType;
+  const [searchQuery, setSearchQuery] = useState("");
+  const [boardtasks, setBoardtasks] = useState<Task[]>([]);
+  const [loading, setLoading] = useState(false);
 
   const handleGetBoardTasks = async () => {
-    setTasks([]);
-    const boardtasks = await getBoardTasks(id as string);
+    dispatch(setBoardLoading(true));
+    setBoardtasks([]);
+    setLoading(true);
+    try {
+      const boardtasks = await getBoardTasks(id as string);
 
-    if (boardtasks.status === "error") {
-      setError(boardtasks.message);
-      setLoading(false);
-    } else {
-      setLoading(false);
       if (boardtasks.status === "success") {
-        setTasks(boardtasks.tasks);
-        setLoading(false);
+        dispatch(setBoardTasks(boardtasks.tasks));
+        setBoardtasks(boardtasks.tasks);
+      } else {
+        dispatch(setBoardTasks([]));
+        dispatch(setBoardError(boardtasks.message));
       }
+    } catch (error: any) {
+      dispatch(setBoardError(error.message));
+    } finally {
+      dispatch(setBoardLoading(false));
+      setLoading(false);
     }
   };
 
@@ -49,27 +60,14 @@ const BoardDetail = () => {
   };
 
   useEffect(() => {
-    setLoading(true);
-    const unsubscribe = handleGetBoardTasks();
-    // if (isTaskActionDispatched || isTaskPinned) {
-    //   handleGetBoardTasks();
-    // }
-
-    return () => {
-      unsubscribe;
-      dispatch({
-        type: "TASK_CREATED",
-        payload: false,
-      });
-    };
-  }, [
-    id,
-    name,
-    isLoggedIn,
-    isTaskActionDispatched,
-    dispatch,
-    isBoardActionDispatched,
-  ]);
+    // dispatch(setBoardLoading(true));
+    // const unsubscribe = handleGetBoardTasks();
+    // return () => {
+    //   unsubscribe;
+    //   dispatch(setBoardLoading(false));
+    // };
+    handleGetBoardTasks();
+  }, [id, name]);
 
   return (
     <div
@@ -94,8 +92,8 @@ const BoardDetail = () => {
       </div>
       <div className="">
         <BoardTable
+          boardtasks={boardtasks}
           boardId={id as string}
-          boardtasks={tasks as Task[]}
           loading={loading}
           searchQuery={searchQuery}
         />

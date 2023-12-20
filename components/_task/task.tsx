@@ -4,10 +4,11 @@ import TaskDetailModal from "../base-components/taskdetailModal";
 import { truncate, formatRelativeTime } from "@/lib/utils/util";
 import { Task, AuthType } from "@/lib/utils/types";
 import { updateTask } from "@/lib/queries/task";
-import { useAuth } from "@/lib/hooks/useAuth";
 import { message, Tag, Avatar } from "antd";
-import { ActionTypes } from "@/lib/utils/actions";
 import { BsStar, BsFillStarFill } from "react-icons/bs";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { updateTaskOnBoard } from "@/redux/features/board-slice";
 
 type Props = {
   task: Task;
@@ -15,6 +16,8 @@ type Props = {
 };
 
 export const TaskCard = ({ task, theme }: Props) => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [status, setStatus] = useState("");
   const [priority, setPriority] = useState("");
@@ -24,8 +27,6 @@ export const TaskCard = ({ task, theme }: Props) => {
     priority: "",
     description: "",
   });
-
-  const { user, dispatch, isTaskActionDispatched } = useAuth() as AuthType;
 
   const updateTaskInput = (name: keyof Task, value: string) => {
     setUpdateValues((prev) => ({ ...prev, [name]: value }));
@@ -44,11 +45,7 @@ export const TaskCard = ({ task, theme }: Props) => {
       if (res.status === "success") {
         message.success(res.message);
         setIsModalOpen(false);
-
-        dispatch({
-          type: ActionTypes.TASK_UPDATED,
-          payload: true,
-        });
+        dispatch(updateTaskOnBoard(task?.boardId, task?.taskId, taskValues));
       } else {
         if (res.status === "error") {
           message.error(res.message);

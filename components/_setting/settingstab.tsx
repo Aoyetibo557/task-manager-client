@@ -7,23 +7,26 @@ import { message } from "antd";
 import { User, AuthType } from "@/lib/utils/types";
 import dayjs from "dayjs";
 import { useAuth } from "@/lib/hooks/useAuth";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { selectUser } from "@/redux/features/auth-slice";
 
 type Props = {
   children?: React.ReactNode;
   theme?: string;
-  userId: string | any;
 };
 
 export const SettingsTab = (props: Props) => {
   const [userDetails, setStateUser] = useState<User>();
   const [loading, setLoading] = useState<boolean>(false);
   const { dispatch, isUserActionDispatched, setUser } = useAuth() as AuthType;
+  const user = useSelector(selectUser);
   const tabs = [
     {
       name: "General settings",
       content: (
         <div>
-          <AccountSetting user={userDetails} theme={props.theme} />
+          <AccountSetting user theme={props.theme} />
         </div>
       ),
     },
@@ -31,31 +34,30 @@ export const SettingsTab = (props: Props) => {
       name: "Subscription",
       content: (
         <div>
-          <SubscriptionSetting user={userDetails} theme={props.theme} />
+          <SubscriptionSetting user theme={props.theme} />
         </div>
       ),
     },
   ];
 
   // get the user deailts with the id
-  const handleUserProfile = async () => {
-    const res = await getUserDetails(props?.userId);
-    if (res.status === "error") {
-      message.error(`Something went wrong!  ${res.message}`);
-    } else {
-      if (res.status === "success") {
-        setStateUser(res?.user);
-        return res.user;
-      }
-    }
-  };
+  // const handleUserProfile = async () => {
+  //   const res = await getUserDetails(props?.userId);
+  //   if (res.status === "error") {
+  //     message.error(`Something went wrong!  ${res.message}`);
+  //   } else {
+  //     if (res.status === "success") {
+  //       setStateUser(res?.user);
+  //       return res.user;
+  //     }
+  //   }
+  // };
   useEffect(() => {
     try {
       if (props?.userId.length < 0) {
         setLoading(true);
       } else {
         setLoading(false);
-        handleUserProfile();
       }
 
       if (isUserActionDispatched) {

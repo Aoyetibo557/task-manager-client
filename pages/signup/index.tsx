@@ -6,23 +6,31 @@ import {
   useEmailValidate,
   usePasswordValidate,
 } from "@/lib/hooks/useFormValidation";
-import { useAuth } from "@/lib/hooks/useAuth";
+import { signUp } from "@/lib/queries/user";
 import { Spin, message } from "antd";
-import { AuthType } from "@/lib/utils/types";
 import Link from "next/link";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import {
+  setUser,
+  setLoading,
+  setError,
+  selectUserError,
+  selectUserLoading,
+} from "@/redux/features/auth-slice";
 
 const Signup = () => {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
+  const loading = useSelector(selectUserLoading);
+  const signupError = useSelector(selectUserError);
+
   const [firstName, setFirstName] = useState<string | any>("");
   const [lastName, setLastName] = useState<string | any>("");
   const [emailinput, setEmail] = useState<string | any>("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [signupError, setSignupError] = useState<string | any>(null);
   const [checkbox, setCheckbox] = useState<boolean | any>(false);
-
-  const { signUp } = useAuth() as AuthType;
 
   const { errorMessage: emailErrorMessage, validate: validateEmail } =
     useEmailValidate();
@@ -49,8 +57,8 @@ const Signup = () => {
   };
 
   const handleSignup = async () => {
-    setLoading(true);
-    setSignupError("");
+    dispatch(setLoading(true));
+    dispatch(setError(null));
 
     const isEmailValid = validateEmail(emailinput as any);
     const isPasswordValid = validatePassword(password as any);
@@ -58,17 +66,17 @@ const Signup = () => {
 
     if (!isEmailValid || !isPasswordValid || !passwordMatch) {
       if (!isEmailValid) {
-        setSignupError(emailErrorMessage);
+        dispatch(setError(emailErrorMessage));
       } else if (!isPasswordValid) {
-        setSignupError(passwordErrorMessage);
+        dispatch(setError(passwordErrorMessage));
       }
       setLoading(false);
       return;
     }
 
     if (!checkbox) {
-      setSignupError("Please agree to the terms and conditions");
-      setLoading(false);
+      dispatch(setError("Please agree to the terms and conditions"));
+      dispatch(setLoading(false));
       return;
     }
 
@@ -79,8 +87,8 @@ const Signup = () => {
       !password ||
       !confirmPassword
     ) {
-      setSignupError("Please fill in all fields");
-      setLoading(false);
+      dispatch(setError("Please fill in all fields"));
+      dispatch(setLoading(false));
       return;
     }
 
@@ -93,18 +101,26 @@ const Signup = () => {
       )) as any;
 
       if (response.status === "error") {
-        setSignupError(response.message);
-        setLoading(false);
+        dispatch(setError(response.message));
+        dispatch(setLoading(false));
       } else if (response.status === "success") {
-        message.success(response.message);
+        dispatch(setUser(response.user));
         router.push("/dashboard");
-        setLoading(false);
+        dispatch(setLoading(false));
       }
     } catch (error: any) {
-      console.log(error);
-      setSignupError(error.message);
+      dispatch(setError(error.message));
     }
   };
+
+  useEffect(() => {
+    /**
+     * this is needed because the initail state for the loading that it is sharing is set to true,
+     * If we change the initial state to false, then that affects the logic in loggedinwrapper.tsx
+     * where it checks if the user is logged in or not.
+     *  */
+    dispatch(setLoading(false));
+  }, []);
 
   return (
     <div>

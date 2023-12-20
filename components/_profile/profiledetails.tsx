@@ -15,14 +15,19 @@ import {
 import { v4 as uuidv4 } from "uuid";
 import { ActionTypes } from "@/lib/utils/actions";
 import dayjs from "dayjs";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { signOut, selectUser } from "@/redux/features/auth-slice";
 
 type Props = {
   theme?: string;
 };
 
 const ProfileDetails = ({ theme }: Props) => {
-  const { user, dispatch, isUserActionDispatched, handleSetUser } =
+  const { dispatch, isUserActionDispatched, handleSetUser } =
     useAuth() as AuthType;
+
+  const user = useSelector(selectUser);
 
   const [profileImage, setProfileImage] = useState("");
   const [username, setUsername] = useState(user?.username);

@@ -6,10 +6,17 @@ import { Task } from "@/lib/utils/types";
 import { Spin, message } from "antd";
 import { FilterList } from "@/components/_filter/filterlist";
 import dayjs from "dayjs";
+import { useSelector } from "react-redux";
+import {
+  selectDoneTasks,
+  selectDoingTasks,
+  selectTodoTasks,
+  selectedBoardTasks,
+} from "@/redux/features/board-slice";
 
 type Props = {
-  boardId: string;
   boardtasks: Task[];
+  boardId: string;
   loading: boolean;
   searchQuery: string;
 };
@@ -21,6 +28,8 @@ type Filter = {
 
 const BoardTable = ({ boardtasks, loading, searchQuery, boardId }: Props) => {
   const { theme } = useContext(ThemeContext);
+  const temp = useSelector(selectedBoardTasks);
+
   const [donetasks, setDonetasks] = useState<Task[]>([]);
   const [doingtasks, setDoingtasks] = useState<Task[]>([]);
   const [todo, setTodo] = useState<Task[]>([]);
@@ -51,7 +60,7 @@ const BoardTable = ({ boardtasks, loading, searchQuery, boardId }: Props) => {
 
     // Apply searchQuery filter
     if (searchQuery || filterList.length === 0) {
-      filteredTasks = boardtasks.filter((task) =>
+      filteredTasks = boardtasks?.filter((task) =>
         task?.name?.toLowerCase().includes(searchQuery?.toLowerCase())
       );
     }
@@ -104,7 +113,7 @@ const BoardTable = ({ boardtasks, loading, searchQuery, boardId }: Props) => {
     const doingtasks = filteredTasks.filter((task) => task.status === "doing");
     const todo = filteredTasks.filter((task) => task.status === "todo");
 
-    if (filteredTasks.length > 0) {
+    if (filteredTasks?.length > 0) {
       setDonetasks(donetasks);
       setDoingtasks(doingtasks);
       setTodo(todo);
@@ -114,8 +123,6 @@ const BoardTable = ({ boardtasks, loading, searchQuery, boardId }: Props) => {
       setTodo([]);
     }
   }, [boardtasks, searchQuery, filterList]);
-
-  //
 
   return boardtasks.length === 0 ? (
     <div className="flex flex-col h-full w-full p-5 ">

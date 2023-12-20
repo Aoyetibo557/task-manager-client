@@ -31,7 +31,8 @@ export const AccountSetting = ({ user, theme }: Props) => {
           className={`text-sm golos-font font-normal mt-5
           ${theme === "light" ? "text-neutral-500" : "text-neutral-400"}
           `}>
-          This account was created on {formatDate(user?.timestamp || 0)}
+          This account was created on {formatDate(user?.timestamp || 0)}{" "}
+          {user.email}
         </div>
       </div>
     </div>

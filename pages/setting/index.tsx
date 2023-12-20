@@ -1,14 +1,10 @@
-import { useRouter } from "next/router";
 import { useEffect, useState, useContext } from "react";
 import { ThemeContext } from "@/components/Layout/_contexts/themecontext";
-import { useAuth } from "@/lib/hooks/useAuth";
 import DashboardLayout from "@/components/Layout/dashboardlayout";
 import { AiFillSetting } from "react-icons/ai";
 import { SettingsTab } from "@/components/_setting/settingstab";
 
 const AccountSetting = () => {
-  const router = useRouter();
-  const { id } = router.query;
   const { theme } = useContext(ThemeContext);
 
   return (
@@ -36,7 +32,7 @@ const AccountSetting = () => {
         </div>
 
         <div className="m-10 settingstab-container">
-          <SettingsTab theme={theme} userId={id} />
+          <SettingsTab theme={theme} />
         </div>
       </div>
     </div>

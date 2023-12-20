@@ -1,6 +1,8 @@
 import { StatsCardType } from "@/lib/utils/types";
 import { BsInfoCircle } from "react-icons/bs";
-import { Tooltip } from "antd";
+import { Tooltip, Spin } from "antd";
+import { useSelector } from "react-redux";
+import { selectUserLoading } from "@/redux/features/user-slice";
 
 type Props = {
   title: string;
@@ -29,6 +31,8 @@ export const StatsCard = ({
     }
   };
 
+  const loading = useSelector(selectUserLoading);
+
   const tooltipPropmpt = () => {
     return (
       <div className="flex flex-col gap-2 ">
@@ -56,7 +60,9 @@ export const StatsCard = ({
             </Tooltip>
           )}
         </div>
-        <div className={`golos-font font-semibold text-2xl`}>{value}</div>
+        <div className={`golos-font font-semibold text-2xl`}>
+          {loading ? <Spin size="large" /> : value}
+        </div>
       </div>
     </>
   );

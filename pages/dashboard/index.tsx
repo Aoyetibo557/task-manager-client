@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useAuth } from "@/lib/hooks/useAuth";
 import DashboardLayout from "@/components/Layout/dashboardlayout";
 import { useRouter } from "next/router";
 import { ThemeContext } from "@/components/Layout/_contexts/themecontext";
@@ -9,12 +8,23 @@ import { RecentActivity } from "@/components/_dashboard/recentactivity";
 import AppTour from "@/components/_tour/apptour";
 import GettingStarted from "@/components/_dashboard/gettingstarted";
 import DropdownMenu from "@/components/_menu/dropdownmenu";
-import { AuthType } from "@/lib/utils/types";
 import { StatsOverview } from "@/components/_stats/statsoverview";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { selectUser } from "@/redux/features/auth-slice";
+import {
+  selectBoardLoading,
+  selectUserBoards,
+  fetchTasksForAllBoards,
+} from "@/redux/features/board-slice";
+import { setUserLoading } from "@/redux/features/user-slice";
 
 const Dashboard = () => {
   const router = useRouter();
-  const { user } = useAuth() as AuthType;
+  const user = useSelector(selectUser);
+  const userBoards = useSelector(selectUserBoards);
+  const loading = useSelector(selectBoardLoading);
+  const dispatch = useDispatch<AppDispatch>();
   const { theme } = useContext(ThemeContext);
 
   return (

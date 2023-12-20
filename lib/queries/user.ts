@@ -2,11 +2,34 @@ import API from "../hooks/axios";
 import { auth } from "../firebase.js";
 import { User, ReturnObject } from "../utils/types";
 
+const SIGNIN_ROUTE = "/auth/login";
+const SIGNUP_ROUTE = "/auth/signup";
 const USER_DETAILS_ROUTE = "/auth/finduserbyid";
 const UPDATE_USER_BY_ID = "/auth/updateuserbyid";
 const RESET_PASSWORD = "/auth/resetpassword";
 const FIND_USER_BY_EMAIL_ROUTE = "/auth/finduser";
 const GET_USER_STATS_ROUTE = "/auth/userstats";
+
+async function signIn(email: string, password: string) {
+  const { data } = await API.post(SIGNIN_ROUTE, { email, password });
+  return data;
+}
+
+// Sign up
+async function signUp(
+  email: string,
+  password: string,
+  firstname: string,
+  lastname: string
+) {
+  const { data } = await API.post(SIGNUP_ROUTE, {
+    email,
+    password,
+    firstname,
+    lastname,
+  });
+  return data;
+}
 
 // Update a user by id
 async function updateUserById(userid: User | any, rec: any) {
@@ -41,6 +64,8 @@ async function getUserStats(userid: string) {
 }
 
 export {
+  signIn,
+  signUp,
   getUserDetails,
   updateUserById,
   resetPassword,

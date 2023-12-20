@@ -11,9 +11,12 @@ import { Icon } from "@/components/base-components/icon/icon";
 import { Logo } from "@/components/_logo/logo";
 import { ProfileCard } from "../base-components/profilecard/profilecard";
 import { Toggle } from "@/components/base-components/toggle/toggle";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/redux/features/auth-slice";
 
 const Sidebar = () => {
-  const { user, loading, isLoggedIn, hasNotifications } = useAuth() as AuthType;
+  const { hasNotifications } = useAuth() as AuthType;
+  const user = useSelector(selectUser);
   const { theme, toggleTheme } = useContext(ThemeContext);
   const router = useRouter();
 

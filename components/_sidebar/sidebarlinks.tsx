@@ -34,6 +34,23 @@ import { message } from "antd";
 import Link from "next/link";
 import { AuthType, Board } from "@/lib/utils/types";
 import { ActionTypes } from "@/lib/utils/actions";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import {
+  signOut,
+  selectUser,
+  selectUserIsLoggedIn,
+} from "@/redux/features/auth-slice";
+import {
+  setBoard,
+  setUserBoards,
+  setBoardLoading,
+  setBoardError,
+  selectUserBoards,
+  selectBoardLoading,
+  selectBoardError,
+  fetchTasksForAllBoards,
+} from "@/redux/features/board-slice";
 
 interface BoardLink {
   title: string;
@@ -53,27 +70,27 @@ export const SidebarLinks = ({
   setOpen = null,
   isMobileView = false,
 }: Props) => {
-  const {
-    user,
-    dispatch,
-    loading,
-    isLoggedIn,
-    signOut,
-    isBoardActionDispatched,
-    isTaskActionDispatched,
-  } = useAuth() as AuthType;
+  // make sure when creating and working on the board slice, theres a loading state, before it shows either text or the boards it has to load
+  const user = useSelector(selectUser);
+  const isLoggedIn = useSelector(selectUserIsLoggedIn);
+  const userBoards = useSelector(selectUserBoards);
+  const boardLoading = useSelector(selectBoardLoading);
+  const boardError = useSelector(selectBoardError);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { isBoardActionDispatched, isTaskActionDispatched } =
+    useAuth() as AuthType;
   const { theme, toggleTheme } = useContext(ThemeContext);
   const [openModal, setOpenModal] = useState(false);
   const [input, setInput] = useState("");
-  const [error, setError] = useState("");
   const [showBoards, setShowBoards] = useState(true);
 
-  const [userBoards, setUserBoards] = useState<BoardLink[]>([]);
   const [activeBoard, setActiveBoard] = useState<BoardLink>({
     title: "",
     url: "",
     isActive: false,
   });
+
   const handleClick = () => {
     if (setOpen) setOpen(!open);
   };
@@ -88,7 +105,7 @@ export const SidebarLinks = ({
   };
 
   const handleSignOut = () => {
-    signOut();
+    dispatch(signOut());
     router.push("/loginform");
   };
 
@@ -100,40 +117,42 @@ export const SidebarLinks = ({
     } as Board;
 
     const data = await createBoard(newBoard);
-    console.log("Data:", data);
     if (data.status === "success") {
       getBoards();
-      dispatch({
-        type: ActionTypes.BOARD_ACTION,
-        payload: true,
-      });
       message.success(data.message);
       setOpenModal(false);
     } else {
       if (data.status === "error") {
         message.error(data.message);
-        setError(data.message as string);
+        dispatch(setBoardError(data.message));
       }
     }
   };
 
   const getBoards = async () => {
-    const data = await getUserBoards(user.userid);
-    if (data.status === "success") {
-      setUserBoards(data.boards);
-      setBoardCount(data.boards?.length);
-    } else {
-      if (data.status === "error") setError(data.message);
+    dispatch(setBoardLoading(true));
+    try {
+      const data = await getUserBoards(user.userid);
+      if (data.status === "success") {
+        dispatch(setUserBoards(data.boards));
+        setBoardCount(data.boards?.length);
+      } else {
+        if (data.status === "error") dispatch(setBoardError(data.message));
+      }
+    } catch (error: any) {
+      dispatch(setBoardError(error.message));
+    } finally {
+      dispatch(setBoardLoading(false));
     }
   };
 
   // use the getUserBoards hook to get the boards from the database
   useEffect(() => {
-    getBoards();
-    if (isBoardActionDispatched || isTaskActionDispatched) {
-      getBoards();
-    }
-  }, [isLoggedIn, user, router, isTaskActionDispatched]);
+    const subscribe = getBoards();
+    return () => {
+      subscribe;
+    };
+  }, [isLoggedIn]);
 
   return (
     <div className={`flex flex-col`}>
@@ -235,7 +254,7 @@ export const SidebarLinks = ({
                       ? "text-task-dark"
                       : "text-task-light-white"
                   }`}>
-                  You have no boards yet {error}
+                  You have no boards yet {boardError}
                 </div>
               )}
 

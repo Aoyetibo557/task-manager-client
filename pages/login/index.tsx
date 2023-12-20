@@ -1,26 +1,32 @@
 import PageLayout from "@/components/Layout/layout";
 import { Button } from "@/components/base-components/button/button";
 import { useAuth } from "@/lib/hooks/useAuth";
+import { findUserByEmail } from "@/lib/queries/user";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { Spin } from "antd";
 import { AuthType } from "@/lib/utils/types";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { setUser, setLoading, setError } from "@/redux/features/auth-slice";
 
 const Login = () => {
-  const { findUserByEmail } = useAuth() as AuthType;
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
+  const dispatch = useDispatch<AppDispatch>();
+
   const handleLogin = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const response = (await findUserByEmail(email.toLowerCase())) as any;
       const { user } = response;
       if (response.status === "success") {
         setLoading(false);
-        router.push(`/loginform?email=${user?.email}`);
+        dispatch(setUser(user));
+        router.push(`/loginform`);
       } else if (response.status === "error") {
         setLoading(false);
         router.push("/signup");

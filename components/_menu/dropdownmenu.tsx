@@ -2,8 +2,7 @@ import { BsPlus } from "react-icons/bs";
 import { Button } from "../base-components/button/button";
 import { useRouter } from "next/router";
 import { useAuth } from "@/lib/hooks/useAuth";
-import { useState, useEffect, useContext } from "react";
-import { ThemeContext } from "../Layout/_contexts/themecontext";
+import { useState, useEffect } from "react";
 import type { MenuProps } from "antd";
 import { Dropdown, message, Avatar, Spin } from "antd";
 import Link from "next/link";
@@ -12,6 +11,9 @@ import { IoMdHelpCircleOutline } from "react-icons/io";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { MdLogout } from "react-icons/md";
 import { AuthType } from "@/lib/utils/types";
+import { useSelector, useDispatch } from "react-redux";
+import { AppDispatch } from "@/redux/store";
+import { signOut, selectUser } from "@/redux/features/auth-slice";
 
 type Props = {
   theme?: string;
@@ -20,18 +22,15 @@ type Props = {
 
 const DropdownMenu = ({ theme, isMobile }: Props) => {
   const router = useRouter();
-  const {
-    user,
-    signOut,
-    loading,
-    isLoggedIn,
-    dispatch,
-    isUserActionDispatched,
-  } = useAuth() as AuthType;
+  const user = useSelector(selectUser);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { isUserActionDispatched } = useAuth() as AuthType;
   const [image, setImage] = useState<any>(user?.profileImage);
 
   const handleSignOut = () => {
     signOut();
+    dispatch(signOut());
     router.push("/loginform");
   };
 
@@ -68,7 +67,7 @@ const DropdownMenu = ({ theme, isMobile }: Props) => {
       label: (
         <Link
           className="flex-flex-row items-center"
-          href={`/setting/${user?.userid}`}
+          href={`/setting`}
           type="submit"
           onClick={() => {}}>
           Account Settings

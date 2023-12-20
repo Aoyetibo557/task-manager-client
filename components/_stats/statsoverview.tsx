@@ -2,31 +2,17 @@ import { useState, useEffect, useContext } from "react";
 import { StatsGrid } from "./statsgrid/statsgrid";
 import { ThemeContext } from "@/components/Layout/_contexts/themecontext";
 import { useAuth } from "@/lib/hooks/useAuth";
-import { AuthType } from "@/lib/utils/types";
 import { getUserStats } from "@/lib/queries/user";
-import { StatsType } from "@/lib/utils/types";
 import { message } from "antd";
+import { useSelector } from "react-redux";
+import { selectUser } from "@/redux/features/auth-slice";
+import { selectUserStats } from "@/redux/features/user-slice";
 
+// going to add a slice for user, to save userstats and all pertinent information for a user to avoid repeated api calls in the redux store, but for now just update with auth user
 export const StatsOverview = () => {
   const { theme } = useContext(ThemeContext);
-  const { user, loading, isLoggedIn, isTaskPinned } = useAuth() as AuthType;
-  const [stats, setStats] = useState<StatsType>({} as StatsType);
-
-  const getStats = async () => {
-    const res = await getUserStats(user?.userid);
-
-    if (res.status === "success") {
-      setStats(res.userStats);
-    } else {
-      if (res.status === "error") {
-        console.log(res.message);
-      }
-    }
-  };
-
-  useEffect(() => {
-    getStats();
-  }, [user, isTaskPinned]);
+  const user = useSelector(selectUser);
+  const stats = useSelector(selectUserStats);
 
   return (
     <div className="stats-overview">
